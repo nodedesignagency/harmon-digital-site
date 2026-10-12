@@ -1,0 +1,21 @@
+# Normalize line endings so Windows and Mac/Linux edits produce clean diffs
+* text=auto eol=lf
+
+# Binary assets: never touch line endings, never diff as text
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.webp   binary
+*.avif   binary
+*.ico    binary
+*.mp4    binary
+*.webm   binary
+*.mov    binary
+*.woff   binary
+*.woff2  binary
+*.ttf    binary
+*.otf    binary
+*.eot    binary
+*.pdf    binary
+*.zip    binary
