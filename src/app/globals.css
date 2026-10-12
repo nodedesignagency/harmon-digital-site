@@ -1,0 +1,1248 @@
+@import "tailwindcss";
+@import "../styles/theme.css";
+/* Required by the smooth-scroll runtime: it drives native window scroll, and
+ * these rules keep the document sized so it can. */
+@import "lenis/dist/lenis.css";
+
+/* ---------------------------------------------------------------------------
+ * Base layer. Deliberately minimal — everything visual is a token.
+ * ------------------------------------------------------------------------- */
+@layer base {
+  html {
+    /* Anchor links and in-page nav must not land under the fixed header. */
+    scroll-padding-top: var(--header-height);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-bg-dynamic);
+    color: var(--color-fg);
+    font-family: var(--font-body);
+    font-size: var(--text-body-md);
+    line-height: var(--leading-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* The dynamic background crossfades as sections scroll past. */
+    transition: background-color var(--duration-base) var(--ease-in-out);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-heading);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* No scrollbar, anywhere.
+   *
+   * The owner hides it in Framer with a `::-webkit-scrollbar` of zero width,
+   * and the site is a full-bleed dark surface where a grey gutter down the
+   * right edge is the one piece of furniture the design does not draw.
+   *
+   * Three declarations because three engines answer to different ones:
+   * `scrollbar-width` is the standard property, the `-webkit-` pseudo-element
+   * is what Chrome and Safari read, and `-ms-overflow-style` is Edge's older
+   * one. Any one of them alone leaves the bar showing on some machine, which
+   * is invisible from whichever one this was written on.
+   *
+   * Hiding it takes away no scrolling — wheel, trackpad, touch, keyboard and
+   * the scroll position itself are all untouched. It is the bar that goes.
+   *
+   * `.no-scrollbar` in the utilities below now says the same thing for one
+   * element. It is kept: the marquees and the chip rail name it deliberately,
+   * and a rule that happens to cover them today is not the same as a rule
+   * that says why. */
+  html {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  /* Anything that can be pressed says so.
+   *
+   * Tailwind's own base layer sets `cursor: default` on buttons — the HTML
+   * spec's answer, and a deliberate change in v4 from the pointer v3 gave
+   * them. It is the wrong answer for this site: every button here is a
+   * control someone is meant to click, and the FAQ's rows, the testimonial
+   * and team arrows, the pricing toggle, the blog's filter chips and both
+   * forms' submits were all handing back the plain arrow.
+   *
+   * Buttons and selects only. A card that merely reacts to the pointer is not
+   * a control — the case study and blog cards are links and take the pointer
+   * from the anchor over them, while the feature and benefit cards have a
+   * hover and nowhere to go, and must keep the arrow that says so.
+   *
+   * A disabled button is exempt: it cannot be pressed, and saying otherwise
+   * with the cursor is the one place this rule would lie. */
+  button:not(:disabled),
+  select:not(:disabled) {
+    cursor: pointer;
+  }
+
+  /* Framer templates routinely ship with focus rings removed. Keep them, and
+   * make them visible against every surface in the palette. */
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Only for mouse users who never asked for a ring. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Media never overflows its column. */
+  img,
+  video,
+  svg,
+  canvas {
+    max-width: 100%;
+    height: auto;
+  }
+
+}
+
+/* ---------------------------------------------------------------------------
+ * Reduced motion. A global backstop: Framer Motion components each honour
+ * useReducedMotion(), but this catches CSS-driven motion (marquee, hovers)
+ * and anything added later that forgets.
+ *
+ * Note this kills *animation*, not *visibility* — every entrance animation is
+ * authored so its resting state is the visible one.
+ * ------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Background pattern density
+ *
+ * Columns have fixed pixel widths, so a tablet viewport cannot comfortably fit
+ * all seven beside the content. Trailing columns are dropped in CSS rather than
+ * by branching on viewport width in JS, which would make the server and client
+ * render different markup.
+ *
+ * Mobile needs no rule here: the vertical fields are hidden wholesale below the
+ * tablet breakpoint and replaced by the horizontal bands.
+ * ------------------------------------------------------------------------- */
+@media (min-width: 810px) and (max-width: 1199.98px) {
+  .mh-track:nth-child(n + 6) {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Button hover sweep
+ *
+ * Four accent bars parked off the left edge that slide in staggered on hover
+ * and slide back out on leave, reproducing the original's rectangle stack. The
+ * per-bar numbers — travel distance and the two delays — arrive as custom
+ * properties from `buttonSweep` in src/config/animation.ts.
+ *
+ * The delay lives on the rule rather than in the shorthand so the two
+ * directions can differ: the resting rule carries the leave delay, the hover
+ * rule overrides it with the enter delay. That asymmetry is the effect — the
+ * stack fills top-down and empties bottom-up, so the bar that arrives first is
+ * the one that leaves last and the four read as a stack rather than as a
+ * queue. See `buttonSweep.bars`, which is where that order is set.
+ *
+ * Only `transform` animates, so the whole thing stays on the compositor.
+ *
+ * `:focus-visible` is included for parity: Framer's hover variant leaves
+ * keyboard users with a button that never reacts.
+ * ------------------------------------------------------------------------- */
+.mh-sweep {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  background-color: var(--color-accent);
+  transform: translate3d(var(--mh-sweep-from), 0, 0);
+  transition: transform var(--duration-button-sweep) var(--ease-button-spring);
+  transition-delay: var(--mh-sweep-delay-out);
+}
+
+/* Hover is gated on a real pointer, matching how Tailwind compiles its own
+ * `group-hover:` utilities. Without it a tap on a touch device leaves `:hover`
+ * stuck and the button keeps its fill after the finger lifts. Focus is handled
+ * separately, outside the query, so keyboard users on a touch-capable laptop
+ * still get the state. */
+@media (hover: hover) {
+  .group:hover .mh-sweep {
+    transform: translate3d(0, 0, 0);
+    transition-delay: var(--mh-sweep-delay-in);
+  }
+
+  .group:hover .mh-sweep-label {
+    transition-delay: var(--mh-label-delay-in);
+  }
+}
+
+.group:focus-visible .mh-sweep {
+  transform: translate3d(0, 0, 0);
+  transition-delay: var(--mh-sweep-delay-in);
+}
+
+/* The label rides above the sweep and flips colour as the accent passes under
+ * it. Only the variants that need it get the custom properties. */
+.mh-sweep-label {
+  position: relative;
+  /* The owner's curve, not `--ease-out`. `--ease-out` reaches its control
+   * point's ceiling at a third of the way through, so almost the whole colour
+   * change happened in the first fraction of the run and the label read as
+   * snapping rather than turning — the duration was never the problem. This
+   * one is symmetric and slow at both ends, which is what makes a colour
+   * change legible as one. */
+  transition: color var(--mh-label-duration) var(--ease-in-out-soft)
+    var(--mh-label-delay-out);
+}
+
+.group:focus-visible .mh-sweep-label {
+  transition-delay: var(--mh-label-delay-in);
+}
+
+/* ---------------------------------------------------------------------------
+ * Utilities
+ * ------------------------------------------------------------------------- */
+@utility text-balance-display {
+  text-wrap: balance;
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
+}
+
+/* ---------------------------------------------------------------------------
+ * Nav links
+ *
+ * A link's colour is a mix between two endpoints — its resting ink and its
+ * hover accent — both supplied by the header, which carries a different pair
+ * on each surface. Hovering eases the mix; scrolling past the threshold eases
+ * the endpoints. Two independent animations on one declaration.
+ *
+ * That is why `--mh-nav-hover` is a registered number rather than a straight
+ * `color` transition: a `color` transition fires on *any* colour change, so a
+ * surface swap would run at hover speed and drag the rule along with it.
+ *
+ * The endpoints are registered too, so the header can ease them across the
+ * flip on its own curve. An unregistered custom property is a string as far as
+ * the animation engine is concerned and would jump.
+ *
+ * `text-decoration` is not animatable, so the rule is a pseudo-element and
+ * simply fades with the colour.
+ * ------------------------------------------------------------------------- */
+@property --mh-nav-hover {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --mh-nav-ink {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #ffffff;
+}
+
+@property --mh-nav-accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #8cffa7;
+}
+
+.mh-nav-link {
+  position: relative;
+  color: color-mix(
+    in srgb,
+    var(--mh-nav-accent) calc(var(--mh-nav-hover) * 100%),
+    var(--mh-nav-ink)
+  );
+  transition: --mh-nav-hover var(--duration-nav-hover) var(--ease-nav-hover);
+}
+
+.mh-nav-link::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -9px;
+  border-bottom: 1px dotted currentColor;
+  opacity: 0;
+  transition: opacity var(--duration-nav-hover) var(--ease-nav-hover);
+}
+
+.mh-nav-link:hover,
+.mh-nav-link:focus-visible {
+  --mh-nav-hover: 1;
+}
+
+.mh-nav-link:hover::after,
+.mh-nav-link:focus-visible::after {
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------------------------
+ * Mobile / tablet nav overlay
+ *
+ * Both animations here are CSS driven off a single `data-open` attribute on
+ * the panel, rather than per-element JS. The panel is only mounted while open,
+ * so the closed state exists purely as these declarations' starting point and
+ * the attribute flips on the frame after mount to give them something to
+ * transition from.
+ *
+ * Numbers come from `mobileNav` in src/config/animation.ts, arriving as custom
+ * properties. `--mh-nav-item` is the item's index, set inline, so the stagger
+ * is arithmetic in CSS rather than a delay computed per link in JS.
+ * ------------------------------------------------------------------------- */
+/* Opening is the header growing to fill the screen. The links and rules are
+ * already inside it and are revealed as it passes them, which is why the page
+ * behind stays visible until the edge reaches it.
+ *
+ * `overflow: clip` rather than `hidden`: the two behave identically for the
+ * closed strip, but `clip` does not create a scroll container, so it cannot
+ * be scrolled programmatically and — with `overflow-clip-margin` below —
+ * still lets the links show outside their own rows. */
+/* Every transition the header runs is declared here, together, because it has
+ * to be: this rule is unlayered and so outranks anything Tailwind emits into
+ * `@layer utilities`. A `transition` shorthand for the height alone silently
+ * replaced the surface-flip list and the scroll change went instant.
+ *
+ * Two groups, two durations, one curve. The surface swap is the short one; the
+ * height is the owner's full second. */
+/**
+ * The header's surface.
+ *
+ * Every colour it wears is here rather than on the component, because what it
+ * should wear is a fact about the page underneath it — see PageSurface. The
+ * page declares itself, `:has()` finds the declaration anywhere in the
+ * document, and the strip is styled from it: no route table, and nothing to
+ * get wrong where the app renders without its real path.
+ *
+ * The default is the light strip on white. `--mh-nav-border` is the hairline
+ * the CTA and the menu toggle draw themselves in, so they change with the
+ * strip instead of each carrying their own copy of the rule.
+ */
+.mh-nav-shell {
+  background-color: var(--color-bg-white);
+  border-color: var(--color-border-on-light);
+  color: var(--color-fg-on-light);
+  --mh-nav-border: var(--color-border-on-light);
+  --mh-nav-accent: var(--color-fg-on-light-hover);
+  --mh-nav-ink: var(--color-fg-on-light);
+  --mh-nav-rule-color: var(--color-border-nav-on-light);
+}
+
+/* A beige page changes the fill and nothing else. */
+body:has([data-page-surface="beige"]) .mh-nav-shell {
+  background-color: var(--color-bg-light);
+}
+
+/* ---------------------------------------------------------------------------
+ * The colour a page opens on.
+ *
+ * `--color-bg-dynamic` is initialised to the dark surface, which is right for
+ * every page that opens dark and wrong for the one that does not. The section
+ * observer corrects it, but only once it has run — so a beige page painted
+ * dark green for a frame and then crossfaded to beige, which reads as a flash
+ * on load rather than as the handover it is meant to be.
+ *
+ * Taken from the page's own surface declaration, the same one the strip above
+ * reads, so the opening colour cannot disagree with the header over it.
+ * ------------------------------------------------------------------------- */
+body:has([data-page-surface="beige"]) {
+  --color-bg-dynamic: var(--color-bg-light);
+  --color-fg-dynamic: var(--color-fg-on-light);
+}
+
+/* Dark all the way down, or over a hero that has not been scrolled past. */
+body:has([data-page-surface="dark"]) .mh-nav-shell,
+body:has([data-page-surface="hero"]) .mh-nav-shell:not([data-scrolled="true"]) {
+  background-color: var(--color-bg);
+  border-color: var(--color-border);
+  color: var(--color-fg);
+  --mh-nav-border: var(--color-border);
+  --mh-nav-accent: var(--color-accent);
+  --mh-nav-ink: var(--color-fg);
+  --mh-nav-rule-color: var(--color-fg);
+}
+
+/* ---------------------------------------------------------------------------
+ * The wordmark
+ *
+ * Every other part of the strip takes `color` and is carried across by the
+ * transition below. The wordmark cannot: it is a file, and an `<img>` paints
+ * what it was exported at. So both cuts are in the document, stacked, and what
+ * crossfades is their opacity — on the same duration and curve, so the mark
+ * arrives with the surface rather than after it.
+ *
+ * Black rests, which is the white header and the beige one. The two selectors
+ * that turn the strip dark are the two that bring the white cut up, and they
+ * are written out rather than derived so that a third surface added later has
+ * to say which mark it wants.
+ * ------------------------------------------------------------------------- */
+.mh-nav-mark img {
+  transition: opacity var(--duration-nav-flip) var(--ease-nav-flip);
+}
+
+.mh-nav-mark img[data-mark="white"] {
+  opacity: 0;
+}
+
+body:has([data-page-surface="dark"]) .mh-nav-shell .mh-nav-mark img[data-mark="white"],
+body:has([data-page-surface="hero"])
+  .mh-nav-shell:not([data-scrolled="true"])
+  .mh-nav-mark
+  img[data-mark="white"] {
+  opacity: 1;
+}
+
+body:has([data-page-surface="dark"]) .mh-nav-shell .mh-nav-mark img[data-mark="black"],
+body:has([data-page-surface="hero"])
+  .mh-nav-shell:not([data-scrolled="true"])
+  .mh-nav-mark
+  img[data-mark="black"] {
+  opacity: 0;
+}
+
+.mh-nav-shell {
+  overflow: clip;
+  transition:
+    background-color var(--duration-nav-flip) var(--ease-nav-flip),
+    border-color var(--duration-nav-flip) var(--ease-nav-flip),
+    color var(--duration-nav-flip) var(--ease-nav-flip),
+    --mh-nav-ink var(--duration-nav-flip) var(--ease-nav-flip),
+    --mh-nav-accent var(--duration-nav-flip) var(--ease-nav-flip),
+    height var(--mh-nav-open-duration) var(--ease-nav-flip);
+}
+
+/* Position only, no fade. The row is clipped to the panel's width, so a link
+ * outside its own row is already invisible — fading it as well would make it
+ * materialise in place rather than arrive from somewhere. */
+.mh-nav-item {
+  transform: translate3d(var(--mh-nav-item-from), 0, 0);
+  transition: transform var(--mh-nav-item-duration) var(--ease-button-spring)
+    var(--mh-nav-item-delay);
+}
+
+[data-open="true"] .mh-nav-item {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+}
+
+/* The hairline under each link. A wrapper clipped to the row's width holds a
+ * bar that grows from zero — the same construction as the owner's BorderReveal,
+ * which animates `width` rather than a transform so the rule's end stays sharp
+ * instead of being scaled from a 1px sliver. */
+/* The resting declaration is the *exit*: closing clears every rule at once
+ * while the links are still walking out. The entrance — the owner's
+ * BorderReveal timing — is the one under `[data-open]`, so each direction
+ * keeps its own duration instead of one being the other reversed. */
+.mh-nav-rule {
+  display: block;
+  width: 0;
+  height: 1px;
+  /* Supplied by the header, which carries a different one per surface. */
+  background-color: var(--mh-nav-rule-color);
+  transition: width var(--mh-nav-rule-exit-duration) var(--ease-out);
+}
+
+[data-open="true"] .mh-nav-rule {
+  width: 100%;
+  transition: width var(--mh-nav-rule-duration) var(--ease-border-reveal)
+    var(--mh-nav-rule-delay);
+}
+
+/* Two bars, not three, crossing into the close mark. Both properties run at
+ * once over a single duration: staging the slide ahead of the rotation drew
+ * the eye to an intermediate single-bar shape that is not part of either
+ * state, and read as two separate moves rather than one mark folding. */
+.mh-burger-bar {
+  display: block;
+  height: 1.5px;
+  width: 100%;
+  background-color: currentColor;
+  transition:
+    translate var(--duration-hover) var(--ease-out),
+    rotate var(--duration-hover) var(--ease-out);
+}
+
+[aria-expanded="true"] .mh-burger-bar:first-child {
+  translate: 0 3.25px;
+  rotate: 45deg;
+}
+
+[aria-expanded="true"] .mh-burger-bar:last-child {
+  translate: 0 -3.25px;
+  rotate: -45deg;
+}
+
+/* ---------------------------------------------------------------------------
+ * Case study card hover
+ *
+ * Blocks parked just outside the card's four edges, sliding in on hover. Each
+ * is positioned against its own edge and translated out along the axis it will
+ * travel, so the offset never has to be computed from its size in JS.
+ *
+ * Gated on a real pointer, like the button sweep: on a touch device `:hover`
+ * sticks after a tap and the blocks would stay put. Nothing here carries
+ * meaning, so there is no keyboard equivalent to provide — the card's link is
+ * focusable in its own right.
+ * ------------------------------------------------------------------------- */
+/* The parked position arrives as a custom property rather than as an inline
+ * `translate`. An inline declaration outranks every stylesheet rule, so setting
+ * it directly meant the hover rule below could never take effect. */
+.mh-case-block {
+  position: absolute;
+  background-color: var(--mh-case-shape);
+  translate: var(--mh-case-from);
+  transition: translate var(--mh-case-duration) var(--ease-case-hover);
+}
+
+/* The cover image grows behind the blocks, on the same curve and duration, so
+ * the two read as one gesture. `scale` rather than `transform` keeps it clear
+ * of anything else that might want the transform property later. */
+.mh-case-cover {
+  transition: scale var(--mh-case-duration) var(--ease-case-hover);
+}
+
+@media (hover: hover) {
+  .group:hover .mh-case-block {
+    translate: 0 0;
+  }
+
+  .group:hover .mh-case-cover {
+    scale: var(--mh-case-scale);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Trust statistic hover
+ *
+ * The same mechanism as the case cards, on four panels that each have their
+ * own arrangement of blocks. Separate class and custom properties rather than
+ * reusing the case ones: the two live in different sections and should be
+ * retunable apart, even while they share a curve today.
+ *
+ * The blocks sit behind the panel's text, so the figure stays legible with a
+ * block passing under it.
+ * ------------------------------------------------------------------------- */
+.mh-stat-block {
+  position: absolute;
+  background-color: var(--mh-stat-shape);
+  translate: var(--mh-stat-from);
+  transition: translate var(--mh-stat-duration) var(--ease-case-hover);
+}
+
+@media (hover: hover) {
+  .group:hover .mh-stat-block {
+    translate: 0 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Scrolled rails
+ *
+ * The team row is a scroll container so its card count per screen is CSS's
+ * business rather than JS's. It is driven by its arrows and by touch, and a
+ * visible scrollbar under it would be a second, uglier control for the same
+ * thing — hidden in both engines, since neither property is standard in the
+ * other. Keyboard users still reach every card: the cards hold links and
+ * focus scrolls the rail to them.
+ * ------------------------------------------------------------------------- */
+.mh-rail {
+  scrollbar-width: none;
+}
+
+.mh-rail::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * Page transition
+ *
+ * Three cards that cross the screen on the way out of a page and carry on
+ * crossing on the way into the next, so the two halves read as one pass.
+ *
+ * Right to left, and the axis is the only thing that decides it: the cards
+ * wait off the right edge, come to rest over the page, and leave past the
+ * left. Nothing else in here knows which way they travel.
+ *
+ * The state lives on the document element rather than on the overlay, and that
+ * is what makes the whole thing possible. A page arrived at through the wipe
+ * has to render *already covered*, on its very first paint — and the server
+ * cannot know that, because whether it happened is in sessionStorage. So a
+ * small script sets the attribute before the body is painted, the overlay
+ * itself is plain server-rendered markup parked off the right edge, and React never
+ * owns the attribute. There is no state for the server and the client to
+ * disagree about, and no frame of the page showing through.
+ *
+ * `--mh-wipe-index` is the card's place in the stack, set inline. The stagger
+ * is arithmetic in CSS rather than three delays computed in JS — and it runs
+ * *backwards* on the way out. The last card in is the first card out, so the
+ * stack is peeled in the order it was laid; the same order twice reads as a
+ * curtain dropped and then dropped again.
+ * ------------------------------------------------------------------------- */
+/* The resting position, off the right edge, and deliberately without a
+ * transition of its own.
+ *
+ * This is where the cards return to when the attribute is dropped at the end
+ * of a pass — and they are sitting off the *left* edge at that moment, having
+ * just swept out that way. A transition declared here is a transition on that
+ * return, so the cards travel the whole width of the screen a second time and
+ * the wipe appears to run twice.
+ *
+ * A transition is a property of the state being moved *to*, so the two states
+ * that move carry their own and the two that are only ever arrived at
+ * instantly carry none. */
+.mh-wipe {
+  position: absolute;
+  inset: 0;
+  translate: 100% 0;
+}
+
+/* Covering: the cards cross into place, first to last. */
+[data-wipe="covering"] .mh-wipe {
+  translate: 0 0;
+  /* Shorthand first: it resets `transition-delay`, so the stagger below has to
+   * come after it or it is thrown away. */
+  transition: translate var(--mh-wipe-duration) var(--ease-wipe);
+  transition-delay: calc(var(--mh-wipe-index) * var(--mh-wipe-stagger));
+}
+
+/* Covered, and holding. This is where a page arrived at through the wipe
+ * begins, not something it travels to — stated explicitly so it stays true if
+ * a transition is ever added to the resting rule above. */
+[data-wipe="covered"] .mh-wipe {
+  translate: 0 0;
+  transition: none;
+}
+
+/* And out past the left edge, last to first. */
+[data-wipe="revealing"] .mh-wipe {
+  translate: -100% 0;
+  transition: translate var(--mh-wipe-duration) var(--ease-wipe);
+  transition-delay: calc(
+    (var(--mh-wipe-count) - 1 - var(--mh-wipe-index)) * var(--mh-wipe-stagger)
+  );
+}
+
+/* Asked for less motion, the wipe simply does not happen: it carries no
+ * information, and a full-screen colour crossing the view is the single most
+ * disturbing thing on the site for anyone who asked not to see movement.
+ * Navigation still works — the component skips the animation and goes. */
+@media (prefers-reduced-motion: reduce) {
+  .mh-wipe {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Careers photo fan
+ *
+ * Seven frames that rise from below, settle, and open into a shallow arc. A
+ * port of the owner's `Image Animation` component; its four variants are the
+ * four `[data-fan]` states below, and every number arrives as a custom
+ * property from `photoFan` in src/config/animation.ts.
+ *
+ * There is no breakpoint here, deliberately. The fan is one object of a fixed
+ * size — seven 184px frames, 1104 wide — and a narrow window clips it at both
+ * edges rather than reflowing it, so the same arrangement and the same
+ * sequence serve every width.
+ *
+ * Two things about the transforms are load-bearing, and both were got wrong
+ * before they were looked at in a browser.
+ *
+ * Every state lists the same functions in the same order. A transition between
+ * two transform lists only interpolates if they match function for function;
+ * drop `scale` from one state and the pile jumps instead of travelling.
+ *
+ * And each frame turns about its own centre. Turning about the foot is the
+ * obvious choice and it is wrong: the feet stay level in theory, but each
+ * frame's lower outside corner rises past its neighbour's and the row's bottom
+ * edge comes out as a staircase of notches. About the centre the corners splay
+ * symmetrically and the overlap closes them.
+ * ------------------------------------------------------------------------- */
+
+/* ── The container ──────────────────────────────────────────────────────────
+ *
+ * The rise, the turn and the scale are all here, on the row itself, because in
+ * the owner's file they belong to the Image Container and not to the frames
+ * inside it.
+ *
+ * Turning the row is only the same thing as turning the pile because the pile
+ * sits on the middle frame, and the middle frame's centre is the row's centre —
+ * which is exactly where the default `transform-origin` is. By the time the
+ * frames leave that spot the row is back at zero degrees, so the two transforms
+ * never fight.
+ *
+ * The resting state is the finished fan: upright, true size, in place. */
+.mh-fan {
+  transform: translateY(0) rotate(0deg) scale(1);
+  transition: transform var(--mh-fan-duration, 0ms) var(--ease-fan);
+}
+
+/* Below its place and turned hard over. No transition — this is where the
+ * sequence starts, not something it travels from. */
+[data-fan="out"] {
+  transform: translateY(var(--mh-fan-lift)) rotate(var(--mh-fan-rotate-out))
+    scale(var(--mh-fan-scale-piled));
+  transition: none;
+}
+
+/* Risen and unwound, still oversized. */
+[data-fan="piled"] {
+  --mh-fan-duration: var(--mh-fan-rise);
+  transform: translateY(0) rotate(var(--mh-fan-rotate-piled))
+    scale(var(--mh-fan-scale-piled));
+}
+
+/* Upright and down to its true size. `open` inherits the same resting
+ * transform, so the settle simply runs on underneath the spread. */
+[data-fan="settled"],
+[data-fan="open"] {
+  --mh-fan-duration: var(--mh-fan-settle);
+}
+
+/* ── The frames ─────────────────────────────────────────────────────────────
+ *
+ * These only ever change position. Each keeps its own angle from the arc at
+ * every stage, piled and fanned alike — that is what shows the pile's edges
+ * and stops seven identical squares reading as one photograph. */
+.mh-fan-card {
+  margin-inline-start: var(--mh-fan-overlap);
+  transform: translateX(0) translateY(var(--mh-fan-drop))
+    rotate(var(--mh-fan-rotate));
+  transition: transform var(--mh-fan-card-duration, 0ms) var(--ease-fan);
+}
+
+/* The first frame has nothing to overlap. Without this the whole row is pulled
+ * off its own left edge by one frame's worth of overlap. */
+.mh-fan-card:first-child {
+  margin-inline-start: 0;
+}
+
+/* Piled: every frame carried back onto the middle one, which is the only one
+ * that never moves — its step is zero. */
+[data-fan="out"] .mh-fan-card,
+[data-fan="piled"] .mh-fan-card,
+[data-fan="settled"] .mh-fan-card {
+  transform: translateX(calc(var(--mh-fan-step) * var(--mh-fan-advance)))
+    translateY(0) rotate(var(--mh-fan-rotate));
+}
+
+[data-fan="out"] .mh-fan-card {
+  transition: none;
+}
+
+/* Opening. All seven together — one container, one transition, no stagger. */
+[data-fan="open"] .mh-fan-card {
+  --mh-fan-card-duration: var(--mh-fan-open);
+}
+
+
+/* ---------------------------------------------------------------------------
+ * Testimonial carousel
+ *
+ * The rectangles' trigger is state, not a pointer: a card plays them when it
+ * takes the centre, so the parked position is the default and `data-in` is
+ * what brings them home. Held back by a delay, so they arrive after the card
+ * has finished sliding rather than travelling with it.
+ * ------------------------------------------------------------------------- */
+.mh-quote-block {
+  position: absolute;
+  background-color: var(--mh-quote-shape);
+  translate: var(--mh-quote-from);
+  transition: translate var(--mh-quote-duration) var(--ease-case-hover);
+}
+
+.mh-quote-block[data-in="true"] {
+  translate: 0 0;
+  transition-delay: var(--mh-quote-delay);
+}
+
+/* ---------------------------------------------------------------------------
+ * Tech stack tile hover
+ *
+ * The whole effect is inverted relative to the other two: what the tile shows
+ * without a pointer — mark at true size, name legible, no board — is the
+ * *hovered* state. The resting state is declared inside the hover query, so a
+ * touch device, which can never leave it, is given the finished tile instead
+ * of an oversized mark and an invisible name.
+ * ------------------------------------------------------------------------- */
+.mh-tool-block {
+  position: absolute;
+  display: none;
+  background-color: var(--mh-tool-shape);
+  transition: translate var(--mh-tool-duration) var(--ease-case-hover);
+}
+
+/* The mark's box is centred in the tile at rest and rises to make room for
+ * the name, which hangs below it and out of the flow. `translate` rather than
+ * a transform, so the label's own centring transform is left alone. */
+.mh-tool-stack {
+  transition: translate var(--mh-tool-duration) var(--ease-case-hover);
+}
+
+.mh-tool-mark,
+.mh-tool-label {
+  transition:
+    scale var(--mh-tool-duration) var(--ease-case-hover),
+    opacity var(--mh-tool-duration) var(--ease-case-hover);
+}
+
+/* On a touch screen none of the above applies: there is no hover to reveal the
+ * name, so the name is simply there, and the checkerboard and the rise that
+ * make room for it never run.
+ *
+ * Which left the pair sitting low. The mark's box is centred in the tile and
+ * the name is hung off the bottom of it, out of the flow — the right way round
+ * on a pointer, where the box lifts by --mh-tool-rise as the name fades in and
+ * the two end up centred together. With nothing lifting, the mark holds the
+ * exact middle and the name hangs below it: measured on a 390px phone, the
+ * visible pair sat 28px below the tile's centre, which is what reads as the
+ * tile's contents being off.
+ *
+ * So on touch the name goes back into the flow and the box becomes the column
+ * it already looks like. The tile is items-center justify-center already, so
+ * the pair is centred by the tile itself rather than by arithmetic here — no
+ * number to keep in step with the label's height, its leading or its padding.
+ *
+ * The label's own top margin survives as the gap between the two. Only the
+ * absolute positioning, and the half-width shift that went with it, are undone.
+ */
+@media (hover: none) {
+  .mh-tool-stack {
+    width: auto;
+    height: auto;
+    flex-direction: column;
+  }
+
+  .mh-tool-label {
+    position: static;
+    translate: none;
+  }
+}
+@media (hover: hover) {
+  .mh-tool-block {
+    display: block;
+    translate: var(--mh-tool-from);
+  }
+
+  .mh-tool-mark {
+    scale: var(--mh-tool-rest-scale);
+  }
+
+  .mh-tool-label {
+    opacity: 0;
+  }
+
+  .group:hover .mh-tool-block {
+    translate: 0 0;
+  }
+
+  .group:hover .mh-tool-stack {
+    translate: 0 calc(-1 * var(--mh-tool-rise));
+  }
+
+  .group:hover .mh-tool-mark {
+    scale: 1;
+  }
+
+  .group:hover .mh-tool-label {
+    opacity: 1;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Feature marquee
+ *
+ * The row holds the cards twice and slides left by exactly one copy, so the
+ * moment it loops the second copy sits where the first began and the seam is
+ * invisible. Distance and duration arrive as custom properties, derived from
+ * the card count so adding a card changes how long a lap takes, never how fast
+ * it travels.
+ * ------------------------------------------------------------------------- */
+@keyframes mh-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(calc(-1 * var(--mh-marquee-cycle)), 0, 0);
+  }
+}
+
+.mh-marquee {
+  animation: mh-marquee var(--mh-marquee-duration) linear infinite;
+  will-change: transform;
+}
+
+/* Both ends dissolve rather than being cut.
+ *
+ * A row that loops has no first or last item, and a hard edge says otherwise:
+ * a logo sliced down the middle at the frame's edge reads as a clipping bug
+ * rather than as a strip that carries on past the window. Fading it out says
+ * the row continues.
+ *
+ * A mask rather than a gradient laid over the ends, because the three frames
+ * sit on three different grounds — the trust strip's white, the contact
+ * panel's blue, the feature rail's beige — and an overlay would have to be
+ * given each one's colour and then kept in step with it. A mask takes whatever
+ * is behind, so there is nothing to keep in step.
+ *
+ * The width scales with the frame and is held between two bounds: 6% is right
+ * for the 1440 feature rail and would be a sliver on the contact panel's 472,
+ * where the floor takes over. `mask-image` is the modern property and
+ * `-webkit-mask-image` is what older Safari answers to; both are set because
+ * one without the other is a frame with no fade rather than a broken one, and
+ * that is invisible until someone opens it on the wrong browser.
+ * ------------------------------------------------------------------------- */
+.mh-marquee-frame {
+  --mh-marquee-fade: clamp(2rem, 6%, 6rem);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--mh-marquee-fade),
+    #000 calc(100% - var(--mh-marquee-fade)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--mh-marquee-fade),
+    #000 calc(100% - var(--mh-marquee-fade)),
+    transparent 100%
+  );
+}
+
+/* The global backstop clamps every animation to 0.01ms, which would leave the
+ * row parked a full copy to the left rather than stopped. Stop it properly and
+ * hand scrolling back to the reader. */
+@media (prefers-reduced-motion: reduce) {
+  .mh-marquee {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .mh-marquee-frame {
+    overflow-x: auto !important;
+  }
+}
+
+/* A horizontal scroll strip whose bar is not part of the design. Scrolling
+ * stays available to pointer, touch and keyboard — only the bar is hidden. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Text that lives in the changing-background zone: its colour follows the
+ * surface, fading on the same clock as the background so the two arrive
+ * together. Only for text sitting directly on the page — anything inside a
+ * tinted panel or card keeps a fixed ink, because its own surface never
+ * changes. */
+@utility text-ink-dynamic {
+  color: var(--color-fg-dynamic);
+  transition: color var(--duration-base) var(--ease-in-out);
+}
+
+/* Eyebrow / kicker label treatment, used above most section headings. */
+@utility eyebrow {
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-fg-muted);
+}
+
+/* ---------------------------------------------------------------------------
+ * Billing toggle
+ *
+ * The depth in the original is the whole character of the control: the track
+ * is carved into the surface and the knob sits proudly on top of it. Both are
+ * inset/outset shadow pairs rather than borders — a border would draw a line
+ * where the design has a lip.
+ * ------------------------------------------------------------------------- */
+.mh-toggle-track {
+  box-shadow:
+    inset 0 2px 4px rgb(0 0 0 / 0.16),
+    inset 0 -1px 1px rgb(255 255 255 / 0.7),
+    0 1px 0 rgb(255 255 255 / 0.6);
+}
+
+.mh-toggle-knob {
+  box-shadow:
+    0 4px 8px rgb(0 0 0 / 0.22),
+    0 1px 2px rgb(0 0 0 / 0.16),
+    inset 0 1px 0 rgb(255 255 255 / 0.95),
+    inset 0 -2px 3px rgb(0 0 0 / 0.06);
+}
+
+/* ---------------------------------------------------------------------------
+ * The preloader.
+ *
+ * A sheet of green over the whole page, tiled into rectangles that each swipe
+ * themselves out along their own axis. Every position and every timing is
+ * here; the component holds only the decision about whether it runs at all.
+ *
+ * It is CSS and not the motion library for one reason, and it is the reason
+ * the whole component exists: a preloader has to be finished 1.7 seconds after
+ * the reader sees it, and everything JavaScript can start begins at hydration
+ * instead — a few hundred milliseconds later on this bundle, and later still
+ * on a cold connection, which is exactly the case a preloader is for. An
+ * animation declared here starts when the sheet paints.
+ *
+ * ── Why nothing below is behind a state ────────────────────────────────────
+ *
+ * The obvious shape is to hold the run behind `[data-preloader="run"]` on the
+ * document, set by a blocking script. It does not work, and the way it fails
+ * is worth recording: hydration reconciles `<html>` against what the layout
+ * rendered and takes anything else on it away, which *cancels* every animation
+ * below, and putting the attribute back *restarts* them from zero. The whole
+ * run silently re-anchors itself to hydration — measured at 2.0s end to end
+ * instead of 1.7s, with the sheet cut off a quarter of the way through its
+ * swipe because the component was still counting from the first paint.
+ *
+ * So the run is unconditional and it is the *skip* that carries a state. An
+ * animation nothing can cancel keeps the clock it started on.
+ *
+ * `--mh-preload-delay` is the tile's own offset, set inline. Everything else
+ * is set once on the overlay from the config.
+ * ------------------------------------------------------------------------- */
+
+/* The sheet at rest: whole, and covering. This is what the server renders and
+ * what the first paint shows, so no state has to be reached for the page to be
+ * hidden — only for it to be uncovered.
+ *
+ * The outline is not decoration. Tiles divide the viewport by flex weight, so
+ * their edges land on fractional pixels and the page shows through the
+ * rounding as a hairline between every pair of them — a dark grid ruled across
+ * the cover, plainly visible on the measured frame. A one-pixel outline in the
+ * tile's own colour closes the gaps, and being an outline it scales away with
+ * the transform instead of surviving as a hairline of its own. */
+.mh-preload-tile {
+  transform: scale(1);
+  outline: 1px solid var(--color-preloader);
+}
+
+.mh-preload-tile-x {
+  animation: mh-preload-out-x var(--mh-preload-collapse) var(--ease-preload)
+    calc(var(--mh-preload-start) + var(--mh-preload-delay)) forwards;
+}
+
+.mh-preload-tile-y {
+  animation: mh-preload-out-y var(--mh-preload-collapse) var(--ease-preload)
+    calc(var(--mh-preload-start) + var(--mh-preload-delay)) forwards;
+}
+
+@keyframes mh-preload-out-x {
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes mh-preload-out-y {
+  to {
+    transform: scaleY(0);
+  }
+}
+
+/* The wordmark arrives, holds, and is gone before the sheet starts to come
+ * apart — so the two never move at once.
+ *
+ * It rises into place rather than fading on the spot: the owner's Enter
+ * Effect, opacity 0 and 80 on Y, on the spring in `--ease-preload-word`. A
+ * plain fade at the same duration read as the page being slow to draw; the
+ * movement is what makes it an entrance.
+ *
+ * Two animations rather than one set of keyframes because the hold between
+ * them is a configured number, not a percentage: expressing it as keyframe
+ * stops would mean computing them from the run and rewriting them whenever
+ * any of it changed. `forwards` and no backwards fill is what makes the pair
+ * compose — the second contributes nothing until its delay elapses, and then
+ * wins on opacity by being later in the list, while the transform stays where
+ * the first one left it. */
+.mh-preload-word {
+  animation:
+    mh-preload-word-in var(--mh-preload-word-in) var(--ease-preload-word)
+      forwards,
+    mh-preload-word-out var(--mh-preload-word-fade) var(--ease-out)
+      var(--mh-preload-word-out) forwards;
+}
+
+@keyframes mh-preload-word-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--mh-preload-word-rise));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mh-preload-word-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Skipped, which now means one thing only: the reader asked for less motion.
+ * The attribute is set by a blocking script, so the sheet is out of the way
+ * before the first paint rather than removed after one. Hydration takes the
+ * attribute off again, but the component unmounts the sheet in that same
+ * commit, so nothing is uncovered between the two. */
+[data-preloader="skip"] .mh-preload {
+  display: none;
+}
+
+/* A full-screen colour is the most disturbing thing this site can do to
+ * someone who asked for less motion, and a preloader carries no information
+ * they would lose. The script already skips it; this is the backstop for a
+ * preference that changes while the page is open. */
+@media (prefers-reduced-motion: reduce) {
+  .mh-preload {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * The strategy-call card's hover.
+ *
+ * Two things move, and the card is neither of them. Numbers in `ctaCardHover`,
+ * set on the card as custom properties.
+ * ------------------------------------------------------------------------- */
+
+/* The fill, as its own layer.
+ *
+ * It cannot be the card's own background: a background is exactly the box it
+ * paints, so there is nothing there to grow. A layer can be told to sit two
+ * pixels outside its parent on every side, which is what the file asks for —
+ * 378x80 at inset 0 becoming 382x84 at inset -2. Stated as the overhang rather
+ * than the size, since the card is fluid here and only the overhang is fixed. */
+.mh-cta-fill {
+  inset: 0;
+  transition: inset var(--mh-cta-duration) var(--ease-out);
+}
+
+.mh-cta-card:hover .mh-cta-fill,
+.mh-cta-card:focus-visible .mh-cta-fill {
+  inset: calc(var(--mh-cta-grow) * -1);
+}
+
+/* The arrow is replaced, not moved.
+ *
+ * One leaves through the top right corner while another arrives from the
+ * bottom left, each travelling the same distance, so the corner is never empty
+ * and never shows the same mark twice. The corner clips them, which is what
+ * makes it read as a swap rather than as two arrows sliding around. */
+.mh-cta-arrow-out {
+  transform: translate(0, 0);
+  transition: transform var(--duration-arrow-swap) var(--ease-arrow-swap);
+}
+
+.mh-cta-arrow-in {
+  transform: translate(
+    calc(var(--mh-cta-travel) * -1),
+    var(--mh-cta-travel)
+  );
+  transition: transform var(--duration-arrow-swap) var(--ease-arrow-swap);
+}
+
+/* The same swap on every button that carries an arrow — `.mh-arrow-swap` is on
+ * the button itself, so the gesture answers the whole of it rather than the
+ * corner the arrows sit in. The distance is set per size of icon box, because
+ * clearing a 24px box and a 36px one are not the same throw; see
+ * `arrowTravels` in Button.tsx. */
+.mh-cta-card:hover .mh-cta-arrow-out,
+.mh-cta-card:focus-visible .mh-cta-arrow-out,
+.mh-arrow-swap:hover .mh-cta-arrow-out,
+.mh-arrow-swap:focus-visible .mh-cta-arrow-out {
+  transform: translate(var(--mh-cta-travel), calc(var(--mh-cta-travel) * -1));
+}
+
+.mh-cta-card:hover .mh-cta-arrow-in,
+.mh-cta-card:focus-visible .mh-cta-arrow-in,
+.mh-arrow-swap:hover .mh-cta-arrow-in,
+.mh-arrow-swap:focus-visible .mh-cta-arrow-in {
+  transform: translate(0, 0);
+}
+
+/* Asked for less motion, the card still answers the pointer — the fill and the
+ * arrow simply arrive rather than travelling. */
+@media (prefers-reduced-motion: reduce) {
+  .mh-cta-fill,
+  .mh-cta-arrow-out,
+  .mh-cta-arrow-in {
+    transition-duration: 1ms;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * The buy badge's shimmering label
+ *
+ * A gradient clipped to the glyphs and slid across them. `background-clip:
+ * text` is what paints the sweep into the letters rather than behind them, and
+ * it needs the text's own colour out of the way — hence `transparent`, with
+ * the resting colour supplied by the gradient's own ends.
+ *
+ * The gradient is 250% of the box so the bright band is off one edge at each
+ * end of its travel; at 100% it would sit parked on the first and last words.
+ * `alternate` sends it back the way it came, which is the movement the owner's
+ * two variants describe between them.
+ * ------------------------------------------------------------------------- */
+.mh-shimmer {
+  background-image: linear-gradient(
+    100deg,
+    var(--mh-shimmer-base) 40%,
+    var(--mh-shimmer-light) 50%,
+    var(--mh-shimmer-base) 60%
+  );
+  background-size: 250% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: mh-shimmer var(--mh-shimmer-duration) ease-in-out infinite alternate;
+}
+
+@keyframes mh-shimmer {
+  from {
+    background-position: 100% 50%;
+  }
+  to {
+    background-position: 0% 50%;
+  }
+}
+
+/* A reader who asked for less motion gets the words, in ink, and no sweep. The
+ * base layer's blanket rule caps the animation at one iteration rather than
+ * stopping it, which would leave the gradient parked wherever it finished — so
+ * the clip is undone here instead and the label is simply text again. */
+@media (prefers-reduced-motion: reduce) {
+  .mh-shimmer {
+    animation: none;
+    background-image: none;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    color: var(--mh-shimmer-base);
+  }
+}

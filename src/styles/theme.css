@@ -1,0 +1,831 @@
+/**
+ * Mahadeva — design tokens.
+ *
+ * Every value here is extracted from the original Framer site's published CSS,
+ * not approximated. This is the single file to edit when re-theming: no
+ * component hardcodes a colour, size, duration or easing curve.
+ *
+ * Breakpoints match Framer's three exactly — desktop >= 1200px,
+ * tablet 810-1199.98px, mobile <= 809.98px.
+ */
+
+/* ---------------------------------------------------------------------------
+ * Raw palette — the 58 tokens from the original, grouped by role.
+ * Literal hex values live here and nowhere else.
+ * ------------------------------------------------------------------------- */
+:root {
+  /* Base / dark surfaces */
+  --mh-ink: #0e1e1d;
+  --mh-ink-raised: #10201f;
+  --mh-ink-elevated: #1a2928;
+  --mh-ink-border: #263434;
+  --mh-ink-a0: #0e1e1d00;
+  --mh-ink-a5: #0e1e1d0d;
+  --mh-ink-a10: #0e1e1d1a;
+  --mh-ink-a50: #0e1e1d80;
+  --mh-ink-a75: #0e1e1dbf;
+
+  /* Light / foreground */
+  --mh-white: #ffffff;
+  --mh-white-a60: #ffffff99;
+  --mh-white-a50: #ffffff80;
+  --mh-white-a10: #ffffff1a;
+  --mh-white-a4: #ffffff0a;
+  --mh-white-a0: #ffffff00;
+  /* The rule between mobile nav links on the white header. Opaque rather than
+   * a tint of ink, so it does not shift with whatever is behind it. */
+  --mh-mist: #e3e2e5;
+
+  /* Primary accent — the green CTA fill */
+  --mh-green: #8cffa7;
+  --mh-green-200: #abffa8;
+  --mh-green-150: #b0ffd1;
+  --mh-green-140: #b0ffe5;
+  --mh-green-300: #a0dfa9;
+  --mh-green-100: #dcffe4;
+  --mh-green-75: #ebffe0;
+  --mh-green-50: #f6fff1;
+  --mh-green-25: #d9fae7;
+
+  /* Beige section wrapper */
+  --mh-beige: #f6f4f0;
+
+  /* Pastel accents, used across the pixel cards and illustration backdrops */
+  --mh-lavender: #c2bfff;
+  --mh-lavender-200: #c8b0ff;
+  --mh-lavender-50: #eadfff;
+  --mh-lavender-25: #f3f1ff;
+  --mh-periwinkle: #c7d5ff;
+  --mh-periwinkle-200: #d4d5ff;
+  --mh-blue: #80ceff;
+  --mh-blue-200: #a8deff;
+  --mh-blue-150: #b0e3ff;
+  --mh-blue-100: #bedfff;
+  --mh-blue-50: #dcecff;
+  --mh-blue-25: #d8f1ff;
+  --mh-blue-10: #f1faff;
+  --mh-peach: #ffd9a8;
+  --mh-peach-50: #fff1df;
+  --mh-peach-10: #fff8f2;
+  --mh-pink: #ffb0c9;
+  --mh-magenta: #ffa8f6;
+  --mh-magenta-200: #ffb0f8;
+  --mh-magenta-50: #ffe5f9;
+  --mh-magenta-25: #fcdcfa;
+  --mh-magenta-10: #fef2ff;
+  --mh-rose-50: #fce1e9;
+  /* Added for the tech stack hover, which needs a step deeper than the tile
+   * it draws on. The same distance from -50 as the other families' -200. */
+  --mh-rose-200: #f8bcc9;
+  --mh-rose-10: #fff2f2;
+  --mh-yellow: #ffe8a8;
+  --mh-yellow-50: #fffbdd;
+  /* Sampled from the About page's team row rather than taken from the
+   * original's set — nothing else on the site carries a tone this deep. */
+  --mh-amber: #e8a317;
+
+  /* Neutrals & status */
+  --mh-slate: #4d5564;
+  --mh-slate-a5: #4d55640d;
+  --mh-grey-100: #f3f4f4;
+  --mh-grey-200: #e3e3e3;
+  --mh-grey-250: #e3e2e5;
+  --mh-grey-300: #dbdbdb;
+  /* Was #808080, which reads at 3.60:1 on the beige and 3.95:1 on white —
+   * under the 4.5:1 AA asks of text this size. Every ground it is set on was
+   * measured and #707070 is the first step dark enough to clear all of them
+   * (4.51 on the beige, 4.95 on white). It carries the pricing column heads,
+   * the billing toggle's unselected side and the buy-template label. */
+  --mh-grey-mid: #707070;
+  --mh-red: #ff1c1c;
+}
+
+/* ---------------------------------------------------------------------------
+ * Semantic tokens. Components reference only these, so a brand swap is a
+ * change of assignment rather than a find-and-replace.
+ * ------------------------------------------------------------------------- */
+:root {
+  --color-bg: var(--mh-ink);
+  --color-bg-raised: var(--mh-ink-raised);
+  --color-surface: var(--mh-ink-elevated);
+  --color-surface-hover: var(--mh-ink-border);
+  --color-bg-light: var(--mh-beige);
+  /** The original alternates dark sections with white and beige wrappers. */
+  --color-bg-white: var(--mh-white);
+  /**
+   * Feature card fills. One per card, cycling through the palette's pastels —
+   * the tint is what distinguishes a card, so they are named by role and
+   * assigned in content rather than picked in the component.
+   */
+  --color-card-blue: var(--mh-blue-10);
+  --color-card-magenta: var(--mh-magenta-10);
+  --color-card-green: var(--mh-green-50);
+  --color-card-rose: var(--mh-rose-10);
+  --color-card-lavender: var(--mh-lavender-25);
+  --color-card-peach: var(--mh-peach-10);
+
+  /* Trust statistics panels. Deeper than the feature-card tints — these are
+   * four large blocks on white, where a 10% tint would read as off-white. */
+  --color-stat-peach: var(--mh-peach-50);
+  --color-stat-green: var(--mh-green-100);
+  --color-stat-blue: var(--mh-blue-25);
+  --color-stat-magenta: var(--mh-magenta-50);
+
+  /* The hover blocks: one step deeper than the panel each sits in, so the
+   * shape reads against the fill without introducing a fifth colour. */
+  --color-stat-shape-peach: var(--mh-peach);
+  --color-stat-shape-green: var(--mh-green-200);
+  --color-stat-shape-blue: var(--mh-blue-200);
+  --color-stat-shape-magenta: var(--mh-magenta-200);
+
+  /* Tech stack tiles. The same family of tints as the statistics, plus the
+   * two the checkerboard needs to get through six without repeating. */
+  --color-tool-rose: var(--mh-rose-50);
+  --color-tool-green: var(--mh-green-100);
+  --color-tool-magenta: var(--mh-magenta-50);
+  --color-tool-peach: var(--mh-peach-50);
+  --color-tool-blue: var(--mh-blue-25);
+  --color-tool-lavender: var(--mh-lavender-50);
+
+  /* The closing call-to-action panel. */
+  --color-cta: var(--mh-green-100);
+
+  /* The footer's column labels: the settled colour of the scramble that
+   * brings them in, which the original calls Green 4. Its churning colour is
+   * the accent, Green 8. Named for the role rather than `--color-label`,
+   * which would collide with the `--text-label` size under `text-label`. */
+  --color-footer-label: var(--mh-green-100);
+
+  /* Testimonial cards, and the blocks that slide in when one takes the
+   * centre — the same one-step-deeper relationship as everywhere else. */
+  --color-quote-blue: var(--mh-blue-50); /* DCECFF */
+  --color-quote-green: var(--mh-green-100); /* DCFFE4 */
+  --color-quote-yellow: var(--mh-yellow-50); /* FFFBDD */
+  --color-quote-shape-blue: var(--mh-blue-200); /* A8DEFF */
+  --color-quote-shape-green: var(--mh-green-200); /* ABFFA8 */
+  --color-quote-shape-yellow: var(--mh-yellow); /* FFE8A8 */
+
+  /* The contact panel's reassurance half, and the oversized quote mark laid
+   * over it. Deeper than any card tint on the site: this panel is half of one
+   * object and has a white form beside it to hold its own against. */
+  --color-contact-panel: var(--mh-blue-200); /* A8DEFF */
+  --color-contact-mark: var(--mh-blue); /* 80CEFF */
+
+  /* The About page's mission card, one fill per variant. Palest tints on the
+   * site: the card is a page of prose held on the screen, so its ground has to
+   * stay under the words rather than compete with them. */
+  --color-mission-blue: var(--mh-blue-10); /* F1FAFF — the owner's Blue 1 */
+  --color-mission-green: var(--mh-green-50); /* F6FFF1 */
+  --color-mission-lavender: var(--mh-lavender-25); /* F3F1FF */
+
+  /* The marks beside the About page's six principles. Full-strength tints,
+   * unlike the card fills: each is a 64px square carrying a drawing, not a
+   * field behind a paragraph, so it has to hold its own on the beige. */
+  --color-principle-blue: var(--mh-blue-200);
+  --color-principle-peach: var(--mh-peach);
+  --color-principle-lavender: var(--mh-lavender-200);
+  --color-principle-rose: var(--mh-rose-200);
+  --color-principle-green: var(--mh-green-150);
+  --color-principle-magenta: var(--mh-magenta-200);
+
+  /* The panel the team portraits are cut out against. The one warm tone on
+   * the site — it belongs to this row and nothing else. */
+  --color-team-panel: var(--mh-amber);
+
+  /* The three cards that wipe the screen between pages, in the order they
+   * climb. The site's own accents rather than colours of their own: the wipe
+   * is the only thing on screen for half a second, and anything else would be
+   * the one moment the site looked like a different site. */
+  --color-wipe-1: var(--mh-green); /* 8CFFA7 */
+  --color-wipe-2: var(--mh-blue); /* 80CEFF */
+  --color-wipe-3: var(--mh-peach); /* FFD9A8 */
+
+  /* The preloader: one flat sheet of green over the whole page, broken into
+   * tiles that swipe away. A single fill rather than the wipe's three — the
+   * tiles are read as one surface coming apart, and three colours would read
+   * as three things leaving. Green-200 is what the owner's Framer component
+   * fills its rectangles with. */
+  --color-preloader: var(--mh-green-200); /* ABFFA8 */
+  --color-preloader-fg: var(--mh-ink);
+
+  /* Blog cards. One tint per card, cycling through the palette's pastels in
+   * the order the index lays them out — the tint is what distinguishes a card,
+   * so it is assigned in content rather than picked in the component.
+   *
+   * A step lighter than the case study panels: a case card is one wide panel
+   * carrying a whole argument, where these are six small heads above six
+   * photographs and a fill that strong would be all anyone saw. */
+  --color-post-sky: var(--mh-blue-25); /* D8F1FF */
+  --color-post-lavender: var(--mh-lavender-50); /* EADFFF */
+  --color-post-rose: var(--mh-rose-50); /* FCE1E9 */
+  --color-post-mint: var(--mh-green-25); /* D9FAE7 */
+  --color-post-peach: var(--mh-peach-50); /* FFF1DF */
+  --color-post-magenta: var(--mh-magenta-25); /* FCDCFA */
+
+  /* The facts card on a role's page: salary, location, and the apply button.
+   * A step deeper than the feature-card tints, which are drawn to sit
+   * six-across on a dark field — this is one panel on white, where a 50 tint
+   * lands within a few points of the page and the card stops reading as a
+   * card at all. */
+  --color-facts-panel: var(--mh-green-75);
+
+  /* The checkerboard that slides in on hover: one step deeper than the tile,
+   * the same relationship the trust panels' blocks have to theirs. */
+  --color-tool-shape-rose: var(--mh-rose-200);
+  --color-tool-shape-green: var(--mh-green-200);
+  --color-tool-shape-magenta: var(--mh-magenta-200);
+  --color-tool-shape-peach: var(--mh-peach);
+  --color-tool-shape-blue: var(--mh-blue-200);
+  --color-tool-shape-lavender: var(--mh-lavender-200);
+
+  /* Pricing plan cards: the header strip's fill, which is also the card's
+   * border. Deeper tints than the stats — each strip is a label, not a
+   * field. */
+  --color-plan-sky: var(--mh-blue-150);
+  --color-plan-lavender: var(--mh-lavender-50);
+  --color-plan-peach: var(--mh-peach);
+
+  /* Case study panels. A full step stronger than the feature-card tints: those
+   * sit six-across on a dark field where a saturated fill would shout, these
+   * are one big panel per card carrying the whole left half. */
+  --color-case-sky: var(--mh-blue-100);
+  --color-case-lavender: var(--mh-lavender-50);
+  --color-case-peach: var(--mh-peach-50);
+  /* The index carries more studies than the home page shows, so the set runs
+   * two tints further than the three the demo entries use. */
+  --color-case-mint: var(--mh-green-140);
+  --color-case-periwinkle: var(--mh-periwinkle);
+
+  --color-fg: var(--mh-white);
+  /**
+   * Both were white at 60% and 50%. The site does not dim white text — a
+   * paragraph on the dark surface is as white as the heading above it, and a
+   * step down in opacity reads as a step down in importance that none of this
+   * copy has. They stay named for the roles components already ask for, so
+   * one edit here is the whole rule.
+   *
+   * Ink on a light surface is a different matter and still steps down: dark
+   * type at 70% on a pastel panel is legible where white at 70% on the dark
+   * surface simply looks switched off.
+   */
+  --color-fg-muted: var(--mh-white);
+  --color-fg-subtle: var(--mh-white);
+  --color-fg-inverse: var(--mh-ink);
+  --color-fg-on-light: var(--mh-ink);
+  --color-fg-on-light-muted: var(--mh-slate);
+  /* Nav link hover on the white header. The dark surface hovers to the accent
+   * green, which on white measures about 1.6:1; this is the light surface's
+   * counterpart — the same ink the links already wear, softened to 75%. */
+  --color-fg-on-light-hover: var(--mh-ink-a75);
+
+  --color-border: var(--mh-white-a10);
+  --color-border-subtle: var(--mh-white-a4);
+  --color-border-strong: var(--mh-ink-border);
+  --color-border-on-light: var(--mh-ink-a10);
+  --color-border-nav-on-light: var(--mh-mist);
+  /* Neutral block standing in for photography until the file lands. */
+  --color-placeholder: var(--mh-grey-200);
+  /* The comparison table.
+   *
+   * Only the plan heads are white; the table below them tints the page's own
+   * surface — the group bands by 5% of the slate, the cells under them by 4%
+   * white. Both are mixed down to an opaque colour rather than left
+   * translucent, because these fills are what a pinned head and a pinned
+   * label column hide the rows travelling under them behind. */
+  --color-compare-band: color-mix(in srgb, var(--mh-slate) 5%, var(--mh-beige));
+  --color-compare-cell: color-mix(in srgb, var(--mh-white) 4%, var(--mh-beige));
+  --color-border-compare: var(--mh-grey-250);
+  /* And the ink inside those cells: the page's own at 75%, which is the
+   * owner's value. It is what separates a row from the band heading it sits
+   * under — the band keeps the full ink, and every label and value below it
+   * steps back from it. Left translucent rather than mixed down, so the cell
+   * fill it sits on is what shows through. */
+  --color-fg-compare-cell: var(--mh-ink-a75);
+  /* The comparison button's icon frame: a quiet grey, no border of its own. */
+  --color-icon-box-quiet: var(--mh-grey-100);
+  /* The meta chips on a post's page — its category and its date. The same
+   * grey as the icon frame above and its own name all the same: the two are
+   * unrelated objects, and retuning the frame behind an arrow should not
+   * quietly restyle the date on every post. */
+  --color-chip: var(--mh-grey-100);
+  /* The same frame, one step deeper, for the careers list's arrows. The quiet
+   * one is tuned for the comparison table's pastel column heads; on beige it
+   * is within three points of the surface and the frame simply is not there.
+   * Two greys rather than one because the object appears on both. */
+  --color-icon-box: var(--mh-grey-200);
+  /* The billing toggle's off-state track and the grey of the pricing cards'
+   * "PLAN INCLUDES:" labels. */
+  --color-track: var(--mh-grey-250);
+  --color-fg-label: var(--mh-grey-mid);
+
+  --color-accent: var(--mh-green);
+  --color-accent-fg: var(--mh-ink);
+  /** Secondary button fill. Solid, with no border. */
+  --color-button-secondary: var(--mh-ink-border);
+  --color-danger: var(--mh-red);
+  --color-focus: var(--mh-green);
+
+  /* Start colour of the per-word heading reveal — fully transparent text. */
+  --color-reveal-from: var(--mh-white-a0);
+
+  /* Written to by the section-linked background transition. Initialised to the
+   * page background so SSR output is correct before any JS runs. */
+  --color-bg-dynamic: var(--color-bg);
+
+  /* The ink that contrasts whatever --color-bg-dynamic currently is, written
+   * by the same component in the same breath. Text in the changing-background
+   * zone takes its colour from this one token, which is the original's
+   * animated/static two-copy swap collapsed into a single element: instead of
+   * two headings in two colours traded on scroll, one heading whose colour
+   * travels with the surface underneath it. */
+  --color-fg-dynamic: var(--color-fg);
+}
+
+/* ---------------------------------------------------------------------------
+ * Typography.
+ *
+ * Almarai is the display face (weight 400, tight tracking, line-height 1) —
+ * this is the original's heading treatment. Geist and Inter cover UI and body.
+ * Families are injected by next/font in app/layout.tsx, so swapping a typeface
+ * is a one-line change in src/config/fonts.ts.
+ *
+ * The scale interpolates with clamp() between the original's fixed per-
+ * breakpoint sizes: an intentional divergence that matches at the endpoints
+ * and behaves better in between.
+ * ------------------------------------------------------------------------- */
+:root {
+  /* Almarai carries both display and body in the original, so both tokens
+   * point at the same loaded family. */
+  --font-display: var(--font-display-family), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-display-family), ui-sans-serif, system-ui, sans-serif;
+  --font-ui: var(--font-ui-family), ui-sans-serif, system-ui, sans-serif;
+
+  /* Hero h1 and the About statement: 36px mobile -> 48px tablet -> 60px
+   * desktop. The interpolation is solved so it lands exactly on 48 at the
+   * tablet breakpoint and exactly on 60 at the desktop one, rather than
+   * drifting past them — the previous curve only reached 60px at ~1371px, so
+   * a 1200px desktop got 55px where the design asks for 60. */
+  /**
+   * The floor is 2rem and not the 2.25 it was, because at 2.25 it was not a
+   * floor at all — it sat above the fluid curve for every width a phone has.
+   * The curve reaches 36 at about 420px, so every screen narrower than that
+   * was pinned at 36 and the scale simply stopped scaling where it was needed
+   * most.
+   *
+   * What that cost is the About statement, whose eight authored lines are each
+   * their own reveal block: a line too wide for the column wraps inside its
+   * block, the bars run across two visual lines, and the line-by-line reveal
+   * is gone. Measured at 360 with the section's padding already halved, three
+   * of the eight still wrapped.
+   *
+   * At 2rem the floor only takes over below about 290px, which is narrower
+   * than any phone still being sold, and between there and 420 the curve runs
+   * as it was drawn. Nothing at tablet width or above moves: the curve passes
+   * 36 long before then and reaches its 3.75rem cap at 1200 either way.
+   */
+  --text-display-xl: clamp(2rem, 1.442rem + 3.077vw, 3.75rem);
+  /* Every other section heading: 32 -> 40 -> 48, solved the same way. */
+  --text-display-lg: clamp(2rem, 1.461rem + 2.051vw, 3rem);
+  /* 28 -> 32 -> 40 */
+  --text-display-md: clamp(1.75rem, 1.4rem + 1.1vw, 2.5rem);
+  /* The trust figures and the prefix and unit either side of them. Flat, not
+   * a curve: the original sets 100 and 50 at every breakpoint, and a phone
+   * shows one panel at a time where the figure has all the room it needs. */
+  --text-stat: 6.25rem; /* 100 */
+  /* The pricing page's figures, which are set smaller than the trust panels'
+   * against the same 50px affix. */
+  --text-stat-sm: 3.5rem; /* 56 */
+  --text-stat-affix: 3.125rem; /* 50 */
+  /* The unit beside a case study's result. Smaller against its figure than the
+   * pricing affix is against its own — these are read as a set of four at a
+   * glance, where a unit at nearly full height competes with the number. */
+  --text-stat-unit: 2.25rem; /* 36 */
+
+  /* Testimonial quote and its attribution.
+   *
+   * Both curves are solved to land exactly on the owner's L values at the
+   * 1200px breakpoint where L begins — 48 and 24 — rather than reaching them
+   * at some wider width the design never specifies. The quote works out at a
+   * flat 4vw between its stops. */
+  --text-quote: clamp(1.5rem, 4vw, 3rem); /* 24 -> 48 at 1200 */
+  --text-quote-by: clamp(1.125rem, 0.6rem + 1.2vw, 1.5rem); /* 18 -> 24 at 1200 */
+
+  --text-heading-lg: clamp(1.5rem, 1.3rem + 0.7vw, 1.75rem); /* 24 -> 28 */
+  --text-heading-md: clamp(1.25rem, 1.15rem + 0.4vw, 1.375rem); /* 20 -> 22 */
+  --text-heading-sm: 1.125rem; /* 18 */
+  /* Mobile nav links. Flat at every width the overlay appears at, rather than
+   * heading-lg's clamp, which would grow it on a tablet.
+   *
+   * Was 24, which set the list a fifth larger than the owner's file and, with
+   * the row padding that went with it, ran the five links a long way down the
+   * screen. Measured off the phone: the label at 0.8 of the width ours drew,
+   * and the rows at 0.8 of the pitch. */
+  --text-nav-mobile: 1.2rem; /* 19.2 */
+
+  --text-body-lg: 1.125rem; /* 18 */
+  /* The case study meta row's values — client, timeline, services. Geist at a
+   * flat 22, not the heading clamp beside it, which would set them at 20 on a
+   * phone. */
+  --text-meta: 1.375rem; /* 22 */
+  /* The facts card on a role's page — salary, location, job type. `--text-meta`
+   * is the same object one page over, and this is its smaller sibling: five
+   * values stacked in a narrow column rather than three across a full row.
+   * Flat, and Geist at medium, for the same reason the meta row is. */
+  --text-fact: 1.25rem; /* 20 */
+  --text-body-md: 1rem; /* 16 */
+  --text-body-sm: 0.875rem; /* 14 */
+  --text-label: 0.75rem; /* 12 */
+
+  --leading-display: 1;
+  --leading-heading: 1.15;
+  /**
+   * 175%. The original's preset is 150, which read tight at every size on this
+   * palette; 160 was not enough of a move to see. This is the one place that
+   * decides it — no component sets its own, because a literal in a class is
+   * how one paragraph ends up a step tighter than the one beside it, which is
+   * exactly what happened here.
+   */
+  --leading-body: 1.75;
+  /**
+   * The feature cards' body setting. Was 1.4, the one paragraph on the site
+   * set tighter than the rest — which read as cramped beside every other
+   * paragraph and answered to nothing in the design.
+   */
+  --leading-card: 1.75;
+  /**
+   * Long-form reading matter: a role's description, and the quotation beside
+   * its form.
+   *
+   * 1.75 is right for a paragraph or two on a marketing page, where the copy
+   * is spaced to be scanned. It is loose for a page someone reads top to
+   * bottom — four paragraphs, then two lists — where the eye has to find the
+   * next line rather than the next block.
+   *
+   * A token and not a literal in a class, which is the whole point of the note
+   * above: the moment one paragraph carries its own number, the paragraph
+   * beside it drifts. Anything set at this measure uses this.
+   */
+  --leading-prose: 1.6;
+
+  /** Gap between the display heading's lines. */
+  --space-heading-line: 4px;
+
+  --tracking-display: -0.02em;
+  --tracking-label: 0.08em;
+  /* The testimonial quote is set tighter than any heading on the site. */
+  --tracking-quote: -0.05em;
+}
+
+/* ---------------------------------------------------------------------------
+ * Spacing, layout, radii.
+ * ------------------------------------------------------------------------- */
+:root {
+  --container-max: 75rem; /* 1200px, matching the desktop breakpoint */
+  --container-max-wide: 90rem;
+  --container-gutter: clamp(1.25rem, 0.75rem + 2.5vw, 3.75rem);
+
+  --space-section-sm: clamp(3rem, 2rem + 4vw, 5rem);
+  --space-section-md: clamp(4.5rem, 3rem + 5vw, 7.5rem);
+  --space-section-lg: clamp(6rem, 4rem + 7vw, 10rem);
+
+  --radius-sm: 0.5rem;
+  --radius-button: 0.25rem; /* 4px */
+  /* A form field takes the button's corner. The two sit in the same panel and
+   * are pressed one after the other, so they belong to the same family. */
+  --radius-input: 0.25rem;
+  --radius-icon: 0.125rem; /* 2px, the button's icon box */
+  --radius-card: 1.25rem;
+  --radius-lg: 2rem;
+  --radius-pill: 999px;
+
+  /* 80px — the height in the owner's file, and a fixed one there rather than
+   * a fluid step. Every hero's top padding and every pattern field's top
+   * offset is derived from this, so the strip and what sits under it move
+   * together when it changes. */
+  --header-height: 5rem;
+}
+
+/* ---------------------------------------------------------------------------
+ * Motion tokens.
+ *
+ * `--ease-reveal` is the original's curve, taken verbatim from the inline
+ * transition on the heading reveal spans. Mirrored in src/lib/motion.ts.
+ * ------------------------------------------------------------------------- */
+:root {
+  --ease-reveal: cubic-bezier(0.7, 0, 0.3, 1);
+  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* The owner's "Ease In Out", from the Framer transition panels: bezier
+   * 0.44, 0, 0.56, 1. Gentler at either end than `--ease-in-out`, and the
+   * curve the file reaches for again and again — the nav's links, the arrow
+   * swap and the sweep's label all carry it, over three different times.
+   *
+   * One declaration, three names. It was written out three times, which is
+   * how a palette starts to drift: a curve corrected in one place and not the
+   * other two is three curves that used to be one. The times stay apart,
+   * because the file does give those separately. */
+  --ease-in-out-soft: cubic-bezier(0.44, 0, 0.56, 1);
+
+  /* The nav's links, straight off the owner's Framer panel: Ease In Out at
+   * bezier 0.44, 0, 0.56, 1 over 0.4s, white at rest and the accent on hover,
+   * with the rule under the link on the same clock.
+   *
+   * Both numbers were moved once and moved back. The complaint they were
+   * chasing — that a link holds white for a moment before it turns green —
+   * is real, and neither an ease-out nor half the time fixed it, because
+   * neither is the cause. `--mh-green` is 140 255 167: 115 of red and 88 of
+   * blue from white, and not one step of green. The half-way tint is
+   * rgb(198 255 211), which almost nobody reads as green, so the opening half
+   * of this fade looks like nothing has happened no matter what carries it.
+   * Faster only makes the whole thing brisker; it does not put the colour
+   * anywhere the eye catches it sooner.
+   *
+   * So it stays as the file has it. If the white moment is ever worth losing,
+   * the thing to change is the rule under the link — it fades in on hover
+   * here, and the panel has it on the base state as well, which would make
+   * hovering change one thing rather than two. That is the difference, not
+   * the curve. */
+  --ease-nav-hover: var(--ease-in-out-soft);
+  --duration-nav-hover: 400ms;
+
+  /* The arrow swap — the buttons' icon boxes and the strategy-call card, where
+   * one arrow leaves the box as another arrives. From the owner's Framer
+   * transition panel: Ease In Out at bezier 0.44, 0, 0.56, 1 over 0.5s.
+   *
+   * The same curve the nav's links hover on, and written out again rather than
+   * reusing that token: the file gives the nav 0.4s and this 0.5, so one
+   * standing for the other would tie two numbers the design keeps apart. The
+   * half second is the point — at the site's 250 the swap read as a flicker
+   * rather than as one mark handing over to another. */
+  --ease-arrow-swap: var(--ease-in-out-soft);
+  --duration-arrow-swap: 500ms;
+
+  /* The header's scroll flip, from the owner's Framer transition panel: Ease
+   * Custom at bezier 0.8, 0, 0.2, 1 over 1s, applied to the whole nav. The
+   * curve is what makes a full second work — it is almost flat at both ends
+   * and steep through the middle, so the crossover where the surface and the
+   * labels are both mid-tone passes in a fraction of that second. */
+  --ease-nav-flip: cubic-bezier(0.8, 0, 0.2, 1);
+  /* The owner's panel says 1s, which read as sluggish once it was on screen —
+   * long enough that you watch the surface change rather than register that it
+   * did. Same curve, shorter: enough that the swap is clearly eased, not so
+   * much that it becomes an event. Also shrinks the crossover where surface
+   * and labels are both mid-tone, which scales with the duration. */
+  --duration-nav-flip: 400ms;
+
+  /* The hairline between mobile nav links, from the owner's BorderReveal
+   * component. The negative first control point is deliberate and legal: the
+   * rule backs up a hair before it draws. */
+  --ease-border-reveal: cubic-bezier(0.85, -0.02, 0.31, 0.96);
+
+  /* Case study card hover, from the owner's transition panel. Same shape as
+   * the header's scroll flip; its own token because the two are unrelated and
+   * retuning one should not move the other. */
+  --ease-case-hover: cubic-bezier(0.8, 0, 0.2, 1);
+
+  /* The careers photo fan, from the owner's transition panel: Framer's "Ease
+   * In Out" preset, bezier 0.44, 0, 0.56, 1, on all four of its states.
+   *
+   * The same curve as --ease-nav-hover, and deliberately not that token: the
+   * nav hover and a four-state entrance have nothing to do with each other,
+   * and retuning one should not silently move the other. */
+  --ease-fan: cubic-bezier(0.44, 0, 0.56, 1);
+
+  /* The page wipe, from the owner's transition panel. Steep through the middle
+   * and almost flat at both ends, which is what lets a card cross the whole
+   * screen in 0.7s without reading as a swipe. */
+  --ease-wipe: cubic-bezier(0.76, 0, 0.24, 1);
+
+  /* The preloader's tiles. The same 0.3/0.7 pair the heading wipe and the
+   * pattern field move on, so the sheet leaves on the site's own curve rather
+   * than a fourth one — and a bezier rather than a spring, because a spring
+   * approaches zero asymptotically and every tile would hold a hairline of
+   * green for the frames it took to get there. */
+  --ease-preload: cubic-bezier(0.3, 0, 0.7, 1);
+
+  /* The preloader wordmark's entrance. The owner's Enter Effect is a spring —
+   * Based On Time, Time 1s, Bounce 0.2 — and a bezier cannot be one: the
+   * overshoot past the resting position and the settle back are the whole
+   * character of it.
+   *
+   * So the curve is the spring itself, sampled from the same motion library
+   * the rest of the site animates with (`spring({duration: 1000, bounce:
+   * 0.2})`) and thinned to the stops below, which track it to within 0.003.
+   * It peaks at 1.0142 — that is the bounce, and it is why the values run
+   * past 1. */
+  --ease-preload-word: linear(
+    0 0%, 0.001 0.5%, 0.0039 1%, 0.0085 1.5%, 0.0147 2%, 0.0224 2.5%,
+    0.0315 3%, 0.0418 3.5%, 0.0533 4%, 0.0659 4.5%, 0.0937 5.5%,
+    0.1247 6.5%, 0.1581 7.5%, 0.2115 9%, 0.4375 15%, 0.5096 17%,
+    0.5608 18.5%, 0.6093 20%, 0.6548 21.5%, 0.6971 23%, 0.7361 24.5%,
+    0.7718 26%, 0.8044 27.5%, 0.8338 29%, 0.8602 30.5%, 0.8838 32%,
+    0.9111 34%, 0.9341 36%, 0.9532 38%, 0.9722 40.5%, 0.9891 43.5%,
+    1.0036 47.5%, 1.0142 54.5%, 1 100%
+  );
+
+  --duration-word: 250ms; /* per-word heading reveal, from the original */
+  --duration-fast: 180ms;
+  --duration-hover: 250ms;
+  --duration-base: 600ms;
+  --duration-slow: 800ms;
+  --duration-transition: 700ms;
+
+  /* The button hover sweep's spring, from the original: physics-based, mass 1,
+   * stiffness 300, damping 100. Damping ratio 2.89 — overdamped, so it never
+   * overshoots and the closed-form solution is
+   *
+   *   x(t) = 1.0330·e^(-3.0958t) − 0.0330·e^(-96.9042t)
+   *
+   * sampled below as progress (1 − x) on a grid that is dense early, where the
+   * fast second term lives, and sparse through the tail. Deviation from the
+   * true curve stays under a pixel across the longest bar's 570px of travel.
+   *
+   * A cubic-bezier cannot express this: the two exponentials differ in rate by
+   * a factor of 31, giving a shape with no four-point equivalent.
+   *
+   * The stops are the spring's shape, normalised to reach 1 at the end of
+   * --duration-button-sweep. Changing that duration therefore stretches the
+   * same spring in time rather than distorting it — the result is exactly a
+   * softer spring with an identical damping ratio, so it still never
+   * overshoots. Only a change to the shape itself needs these regenerated. */
+  --ease-button-spring: linear(
+    0 0%, 0.0032 0.3%, 0.015 0.6%, 0.0338 1%, 0.0605 1.5%, 0.102 2.3%,
+    0.1425 3%, 0.194 4%, 0.2425 5%, 0.2991 6.3%, 0.3515 7.5%, 0.4092 9%,
+    0.4701 10.8%, 0.532 12.8%, 0.5932 15%, 0.6518 17.5%, 0.7112 20.5%,
+    0.7679 24%, 0.8193 28%, 0.8637 32.5%, 0.9006 37.5%, 0.9321 43.5%,
+    0.9553 50%, 0.9727 57.5%, 0.9847 66%, 0.9928 76%, 0.9975 87.5%, 1 100%
+  );
+  --duration-button-sweep: 2500ms;
+}
+
+/* ---------------------------------------------------------------------------
+ * Expose tokens to Tailwind. `@theme inline` preserves the var() reference so
+ * utilities stay live against runtime overrides.
+ * ------------------------------------------------------------------------- */
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-bg-raised: var(--color-bg-raised);
+  --color-bg-dynamic: var(--color-bg-dynamic);
+  --color-bg-light: var(--color-bg-light);
+  --color-bg-white: var(--color-bg-white);
+  --color-card-blue: var(--color-card-blue);
+  --color-card-magenta: var(--color-card-magenta);
+  --color-card-green: var(--color-card-green);
+  --color-card-rose: var(--color-card-rose);
+  --color-card-lavender: var(--color-card-lavender);
+  --color-card-peach: var(--color-card-peach);
+  --color-stat-peach: var(--color-stat-peach);
+  --color-stat-green: var(--color-stat-green);
+  --color-stat-blue: var(--color-stat-blue);
+  --color-stat-magenta: var(--color-stat-magenta);
+  --color-stat-shape-peach: var(--color-stat-shape-peach);
+  --color-stat-shape-green: var(--color-stat-shape-green);
+  --color-stat-shape-blue: var(--color-stat-shape-blue);
+  --color-stat-shape-magenta: var(--color-stat-shape-magenta);
+  --color-tool-rose: var(--color-tool-rose);
+  --color-tool-green: var(--color-tool-green);
+  --color-tool-magenta: var(--color-tool-magenta);
+  --color-tool-peach: var(--color-tool-peach);
+  --color-tool-blue: var(--color-tool-blue);
+  --color-tool-lavender: var(--color-tool-lavender);
+  --color-cta: var(--color-cta);
+  --color-footer-label: var(--color-footer-label);
+  --color-quote-blue: var(--color-quote-blue);
+  --color-quote-green: var(--color-quote-green);
+  --color-quote-yellow: var(--color-quote-yellow);
+  --color-tool-shape-rose: var(--color-tool-shape-rose);
+  --color-tool-shape-green: var(--color-tool-shape-green);
+  --color-tool-shape-magenta: var(--color-tool-shape-magenta);
+  --color-tool-shape-peach: var(--color-tool-shape-peach);
+  --color-tool-shape-blue: var(--color-tool-shape-blue);
+  --color-tool-shape-lavender: var(--color-tool-shape-lavender);
+  --color-contact-panel: var(--color-contact-panel);
+  --color-contact-mark: var(--color-contact-mark);
+  --color-mission-blue: var(--color-mission-blue);
+  --color-mission-green: var(--color-mission-green);
+  --color-mission-lavender: var(--color-mission-lavender);
+  --color-principle-blue: var(--color-principle-blue);
+  --color-principle-peach: var(--color-principle-peach);
+  --color-principle-lavender: var(--color-principle-lavender);
+  --color-principle-rose: var(--color-principle-rose);
+  --color-principle-green: var(--color-principle-green);
+  --color-principle-magenta: var(--color-principle-magenta);
+  --color-team-panel: var(--color-team-panel);
+  --color-facts-panel: var(--color-facts-panel);
+  --color-post-sky: var(--color-post-sky);
+  --color-post-lavender: var(--color-post-lavender);
+  --color-post-rose: var(--color-post-rose);
+  --color-post-mint: var(--color-post-mint);
+  --color-post-peach: var(--color-post-peach);
+  --color-post-magenta: var(--color-post-magenta);
+  --color-wipe-1: var(--color-wipe-1);
+  --color-wipe-2: var(--color-wipe-2);
+  --color-wipe-3: var(--color-wipe-3);
+  --color-preloader: var(--color-preloader);
+  --color-preloader-fg: var(--color-preloader-fg);
+  --color-plan-sky: var(--color-plan-sky);
+  --color-plan-lavender: var(--color-plan-lavender);
+  --color-plan-peach: var(--color-plan-peach);
+  --color-case-sky: var(--color-case-sky);
+  --color-case-lavender: var(--color-case-lavender);
+  --color-case-peach: var(--color-case-peach);
+  --color-case-mint: var(--color-case-mint);
+  --color-case-periwinkle: var(--color-case-periwinkle);
+  --color-surface: var(--color-surface);
+  --color-surface-hover: var(--color-surface-hover);
+  --color-fg: var(--color-fg);
+  --color-fg-muted: var(--color-fg-muted);
+  --color-fg-subtle: var(--color-fg-subtle);
+  --color-fg-inverse: var(--color-fg-inverse);
+  --color-fg-on-light: var(--color-fg-on-light);
+  --color-fg-on-light-muted: var(--color-fg-on-light-muted);
+  --color-fg-on-light-hover: var(--color-fg-on-light-hover);
+  --color-border: var(--color-border);
+  --color-border-subtle: var(--color-border-subtle);
+  --color-border-strong: var(--color-border-strong);
+  --color-border-on-light: var(--color-border-on-light);
+  --color-border-nav-on-light: var(--color-border-nav-on-light);
+  --color-placeholder: var(--color-placeholder);
+  --color-compare-band: var(--color-compare-band);
+  --color-compare-cell: var(--color-compare-cell);
+  --color-border-compare: var(--color-border-compare);
+  --color-fg-compare-cell: var(--color-fg-compare-cell);
+  --color-icon-box-quiet: var(--color-icon-box-quiet);
+  --color-icon-box: var(--color-icon-box);
+  --color-chip: var(--color-chip);
+  --color-track: var(--color-track);
+  --color-fg-label: var(--color-fg-label);
+  --color-accent: var(--color-accent);
+  --color-accent-fg: var(--color-accent-fg);
+  --color-button-secondary: var(--color-button-secondary);
+  --color-danger: var(--color-danger);
+  --color-focus: var(--color-focus);
+  --color-reveal-from: var(--color-reveal-from);
+
+  /* Pastels exposed for the pixel cards and illustration backdrops. */
+  --color-lavender: var(--mh-lavender);
+  --color-blue: var(--mh-blue);
+  --color-peach: var(--mh-peach);
+  --color-pink: var(--mh-pink);
+  --color-magenta: var(--mh-magenta);
+  --color-yellow: var(--mh-yellow);
+  --color-green-soft: var(--mh-green-100);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-ui: var(--font-ui);
+
+  --text-display-xl: var(--text-display-xl);
+  --text-display-lg: var(--text-display-lg);
+  --text-display-md: var(--text-display-md);
+  --text-stat: var(--text-stat);
+  --text-stat-sm: var(--text-stat-sm);
+  --text-stat-affix: var(--text-stat-affix);
+  --text-stat-unit: var(--text-stat-unit);
+  --text-quote: var(--text-quote);
+  --text-quote-by: var(--text-quote-by);
+  --text-heading-lg: var(--text-heading-lg);
+  --text-heading-md: var(--text-heading-md);
+  --text-heading-sm: var(--text-heading-sm);
+  --text-nav-mobile: var(--text-nav-mobile);
+  --text-body-lg: var(--text-body-lg);
+  --text-meta: var(--text-meta);
+  --text-fact: var(--text-fact);
+  --text-body-md: var(--text-body-md);
+  --text-body-sm: var(--text-body-sm);
+  --text-label: var(--text-label);
+
+  --radius-sm: var(--radius-sm);
+  --radius-button: var(--radius-button);
+  --radius-input: var(--radius-input);
+  --radius-icon: var(--radius-icon);
+  --radius-card: var(--radius-card);
+  --radius-lg: var(--radius-lg);
+  --radius-pill: var(--radius-pill);
+
+  --ease-reveal: var(--ease-reveal);
+  --ease-out: var(--ease-out);
+  --ease-in-out: var(--ease-in-out);
+  --ease-nav-hover: var(--ease-nav-hover);
+  --ease-in-out-soft: var(--ease-in-out-soft);
+  --ease-arrow-swap: var(--ease-arrow-swap);
+  --ease-nav-flip: var(--ease-nav-flip);
+  --ease-border-reveal: var(--ease-border-reveal);
+  --ease-fan: var(--ease-fan);
+  --ease-preload: var(--ease-preload);
+  --ease-preload-word: var(--ease-preload-word);
+  --ease-wipe: var(--ease-wipe);
+  --ease-button-spring: var(--ease-button-spring);
+
+  --spacing-section-sm: var(--space-section-sm);
+  --spacing-section-md: var(--space-section-md);
+  --spacing-section-lg: var(--space-section-lg);
+  --spacing-gutter: var(--container-gutter);
+  --spacing-header: var(--header-height);
+
+  /* Framer's actual breakpoints. `tablet` and `desktop` are the only two the
+   * original defines; everything else derives from them. */
+  --breakpoint-tablet: 810px;
+  --breakpoint-desktop: 1200px;
+}

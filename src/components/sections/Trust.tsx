@@ -1,0 +1,201 @@
+import Image from "next/image";
+import type { CSSProperties } from "react";
+import { Container } from "@/components/layout/Container";
+import { TextReveal } from "@/components/motion/TextReveal";
+import { StatCounter } from "@/components/ui/StatCounter";
+import {
+  featureMarquee,
+  sectionTextRevealDynamic,
+  statHover,
+} from "@/config/animation";
+import type { TrustTone, trustContent } from "@/content/home";
+import { clientMarks, MARK_HEIGHT } from "@/components/ui/clientMarks";
+import { cn } from "@/lib/cn";
+import { hoverRectBox, hoverRectFrom } from "@/lib/hoverRect";
+
+/**
+ * Trust section — "Why Top Companies Trust Us".
+ *
+ * Four statistics that descend across the row: each panel starts lower than
+ * the one before it and they all finish on the same line, so the block reads
+ * as a staircase rather than four equal boxes. Below them, a marquee of client
+ * marks.
+ *
+ * A server component. The marquee is CSS, and the heading and the counting
+ * figures declare their own client boundaries.
+ */
+
+/** Fills come from theme.css; the section never names a colour itself. */
+const tones: Record<TrustTone, string> = {
+  peach: "bg-stat-peach",
+  green: "bg-stat-green",
+  blue: "bg-stat-blue",
+  magenta: "bg-stat-magenta",
+};
+
+/** How much lower each panel starts than the one to its left. */
+const STEP = 32;
+
+/**
+ * Logo strip geometry, in px. The travel is derived from these rather than
+ * measured, so the markup is identical on the server and the client and the
+ * row is already moving on the first frame.
+ */
+const LOGO_SLOT = 140;
+const LOGO_GAP = 40;
+
+type TrustProps = {
+  content: typeof trustContent;
+};
+
+export function Trust({ content }: TrustProps) {
+  const cycle = content.logos.length * (LOGO_SLOT + LOGO_GAP);
+  const duration = Math.round((cycle / featureMarquee.speed) * 1000);
+
+  const logos = content.logos.map((logo, i) => (
+    <li
+      key={`${logo.name}-${i}`}
+      className={cn(
+        "flex w-[140px] shrink-0 items-center justify-center",
+        MARK_HEIGHT,
+      )}
+    >
+      {/* `contain` inside the slot: the five marks are different widths, and
+          stretching each to fill would set them at five different weights. The
+          slot's width and the gap beside it are the marquee's arithmetic and
+          do not change — only what sits in them. */}
+      <Image
+        src={clientMarks[logo.mark]}
+        alt={logo.name}
+        className="h-full w-full object-contain"
+      />
+    </li>
+  ));
+
+  return (
+    <section data-bg="white" className="bg-bg-white py-20 text-fg-on-light">
+      <Container className="px-10">
+        <div className="flex flex-col gap-8 tablet:flex-row tablet:items-start tablet:justify-between">
+          <TextReveal
+            as="h2"
+            lines={content.headingLines}
+            mobileLines={content.headingLinesMobile}
+            settings={sectionTextRevealDynamic}
+            className="flex flex-col items-start gap-(--space-heading-line) text-display-lg leading-(--leading-display) tracking-(--tracking-display) font-normal"
+          />
+          <p className="text-ink-dynamic max-w-[42ch] font-body text-body-md tablet:pt-2">
+            {content.subheading}
+          </p>
+        </div>
+
+        {/* The staircase is desktop-only, where four columns give it room —
+            each cell is as tall as the tallest and the descending top margin
+            eats into a panel from above, so the feet stay flush. Tablet is a
+            plain two-by-two with gutters, a phone a single stack, matching
+            the original's variants. */}
+        <ul className="mt-15 grid grid-cols-1 gap-6 tablet:grid-cols-2 desktop:grid-cols-4 desktop:gap-0">
+          {content.stats.map((stat, i) => (
+            <li
+              key={stat.label}
+              style={{ "--stat-step": `${i * STEP}px` } as CSSProperties}
+              className="desktop:mt-(--stat-step)"
+            >
+              <div
+                style={
+                  {
+                    "--mh-stat-shape": `var(--color-stat-shape-${stat.tone})`,
+                    "--mh-stat-duration": `${statHover.duration}ms`,
+                  } as CSSProperties
+                }
+                className={cn(
+                  // A flat 424 on a phone, where the panels are read one at a
+                  // time; from tablet up they fill the row, which is what the
+                  // staircase needs.
+                  "group relative flex h-[424px] flex-col overflow-clip p-6 tablet:h-full",
+                  tones[stat.tone],
+                )}
+              >
+                {/* Decorative: the blocks that slide in on hover, each panel
+                    with its own arrangement. Behind the text, so a block can
+                    pass under the figure without taking it with it. */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0"
+                >
+                  {statHover.rects[stat.tone].map((rect, r) => (
+                    <span
+                      key={r}
+                      className="mh-stat-block"
+                      style={
+                        {
+                          ...hoverRectBox(rect),
+                          "--mh-stat-from": hoverRectFrom(rect),
+                        } as CSSProperties
+                      }
+                    />
+                  ))}
+                </div>
+
+                <div className="relative flex h-full flex-col">
+                  {/* Label and figure are one stack 24px apart, per the owner.
+                      The label is set in caps, at its own tracking — this is
+                      the original's casing, not the widened eyebrow used above
+                      the section headings. */}
+                  <div className="flex flex-col gap-6">
+                    <p className="font-body text-body-md uppercase text-fg-on-light">
+                      {stat.label}
+                    </p>
+                    <StatCounter
+                      value={stat.value}
+                      prefix={stat.prefix}
+                      unit={stat.unit}
+                    />
+                  </div>
+
+                  {/* Pushed to the foot, which is the line all four share. */}
+                  <p className="mt-auto pt-16 font-body text-body-md text-fg-on-light">
+                    {stat.body}
+                  </p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-15 flex flex-col gap-8 tablet:flex-row tablet:items-center tablet:gap-16">
+          {/* Broken where the file breaks it, not where the measure runs out:
+              the caption sets this row's height beside the marquee, and a
+              line more or less moves the marquee with it. */}
+          {/* Centred on a phone, where the caption sits above the marquee as
+              its own full-width block and a left edge has nothing to line up
+              with. From tablet up it is the left half of a row beside the
+              logos and ranges left, as the file has it. */}
+          <p className="text-ink-dynamic flex shrink-0 flex-col text-center font-body text-body-sm tablet:text-left">
+            {content.logosCaptionLines.map((line) => (
+              <span key={line}>{line}</span>
+            ))}
+          </p>
+
+          <div className="mh-marquee-frame no-scrollbar min-w-0 flex-1 overflow-hidden">
+            <div
+              className="mh-marquee flex w-max items-center"
+              style={
+                {
+                  "--mh-marquee-cycle": `${cycle}px`,
+                  "--mh-marquee-duration": `${duration}ms`,
+                } as CSSProperties
+              }
+            >
+              <ul className="flex items-center gap-10 pr-10">{logos}</ul>
+              {/* The second copy exists to make the loop seamless. Same marks,
+                  so it is hidden from assistive tech. */}
+              <ul aria-hidden="true" className="flex items-center gap-10 pr-10">
+                {logos}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </Container>
+    </section>
+  );
+}

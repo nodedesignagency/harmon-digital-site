@@ -13,4 +13,10 @@ Client site for **Harmon Digital**. It is a customization of the owner's own **M
 - Client-supplied content and brand details live in `client-brief/`. Check there before writing placeholder copy.
 - Keep the template's existing structure, components and conventions; change content, branding, and only the sections the client asks for.
 - Never commit `node_modules/`, `.next/`, `.env*` files or zip archives (see `.gitignore`).
-- Before pushing, run `npm run build` (and `npm run lint` if the template defines it) and make sure both pass.
+- Before pushing, run `npm run lint` and `npm run build` and make sure both pass.
+
+# Template rules
+
+The template's own house rules follow. Read them before changing code.
+
+@AGENTS.md

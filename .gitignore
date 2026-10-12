@@ -1,6 +1,8 @@
-# Dependencies
-node_modules/
-.pnp
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -8,42 +10,53 @@ node_modules/
 !.yarn/releases
 !.yarn/versions
 
-# Next.js build output
-.next/
-out/
-build/
+# testing
+/coverage
 
-# Testing
-coverage/
+# next.js
+/.next/
+/out/
 
-# Environment variables (never commit secrets)
-.env*
-!.env.example
+# production
+/build
 
-# Vercel
-.vercel
-
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# OS / editor files
+# misc
 .DS_Store
 Thumbs.db
 desktop.ini
 *.pem
+
+# editors
 .idea/
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
 
-# Archives (the template zip is extracted, not committed)
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+# The template, which holds no values and is what buyers copy from.
+!.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Self-contained preview bundles from scripts/build-preview.mjs and
+# scripts/build-artifact.mjs. Both take an outfile, so match the shape rather
+# than the default names — a 12MB bundle is exactly as unwelcome in a commit.
+/preview*.html
+/site*.html
+
+# Archives: uploaded zips get extracted, never committed
 *.zip
 *.rar
 *.7z
