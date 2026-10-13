@@ -8,73 +8,92 @@
  */
 
 import { ctaHref } from "@/config/site.config";
+
 /**
- * Pricing — "Flexible Plans for Every Growth Stage".
+ * A plan card. `price` is optional: until the client's figures arrive a plan
+ * shows `priceLabel` in the price's place, and the monthly/yearly toggle stays
+ * hidden while no plan has a price to toggle.
+ */
+export type PricingPlan = {
+  name: string;
+  tone: "sky" | "lavender";
+  icon: PlanIcon;
+  /** Yearly is the *monthly* rate when billed for the year, not the year's
+   * total — which is why `period` stays `/month` across the toggle and only
+   * the number rolls. */
+  price?: { monthly: number; yearly: number; period: string };
+  priceLabel?: string;
+  body: string;
+  cta: { label: string; href: string };
+  includesTitle: string;
+  includes: readonly string[];
+};
+
+/**
+ * Pricing — the brief's three tiers: Do it yourself (Unstack), Done with you
+ * (1:1 training), Done for you (custom builds). The third is the wide card.
  *
- * Copy is verbatim from the owner's Framer cards, which differ from the Figma
- * draft: Launch is $199 not $299, Scale $299 not $699 and lists five items,
- * and the enterprise column order starts Security compliance second-column.
+ * ⚠️ No prices yet: the client is sending pricing details. Each card shows
+ * what the tier is in the price's place until then.
  */
 export const pricingContent = {
-  headingLines: ["Flexible Plans for Every", "Growth Stage"],
+  /** The three tier names. No phone variant, so each line fits a 360 phone. */
+  headingLines: ["Do It Yourself, With Us,", "or Done For You"],
   subheading:
-    "Mahadeva helps ambitious teams build intelligent automation systems that improve efficiency and unlock measurable growth.",
+    "Run it yourself on Unstack, get 1:1 training for your team, or hand us the whole build.",
   billing: { monthly: "Billed Monthly", yearly: "Billed Yearly" },
   plans: [
     {
-      name: "Launch",
+      name: "Do It Yourself",
       tone: "sky",
       icon: "launch",
-      /** The owner's figures. Yearly is the *monthly* rate when billed for
-       * the year, not the year's total — which is why `period` stays
-       * `/month` across the toggle and only the number rolls. */
-      price: { monthly: 199, yearly: 149, period: "/month" },
-      body: "Automation solutions designed to help early-stage teams streamline workflows, reduce manual effort, and improve execution speed.",
-      cta: { label: "Choose Launch", href: ctaHref("/contact") },
-      includesTitle: "Launch includes:",
+      priceLabel: "Unstack",
+      body: "Build your own tables, pages, automations and integrations on Unstack — the platform we use for our own client work.",
+      cta: { label: "Get Started", href: ctaHref("/contact") },
+      includesTitle: "Do It Yourself includes:",
       includes: [
-        "AI workflow audit",
-        "Core automation setup",
-        "Tool integration support",
-        "Single workflow system",
-        "Performance dashboard",
+        "Your own Unstack workspace",
+        "AI-built tables and pages",
+        "Automations and integrations",
+        "One platform, not six tools",
+        "Self-serve, at your own pace",
       ],
     },
     {
-      name: "Scale",
+      name: "Done With You",
       tone: "lavender",
       icon: "scale",
-      price: { monthly: 299, yearly: 199, period: "/month" },
-      body: "Advanced automation systems designed to improve team efficiency, accelerate growth, and support business operations.",
-      cta: { label: "Choose Scale", href: ctaHref("/contact") },
-      includesTitle: "Scale includes:",
+      priceLabel: "1:1 Training",
+      body: "We train your team 1:1 on Claude, ChatGPT and Unstack, and build alongside them until they can run it themselves.",
+      cta: { label: "Book Training", href: ctaHref("/contact") },
+      includesTitle: "Done With You includes:",
       includes: [
-        "Multiple workflows",
-        "Custom AI agents",
-        "Full integrations",
-        "Optimization cycles",
-        "Priority support",
+        "1:1 sessions with your team",
+        "Claude, ChatGPT and Unstack",
+        "Workflow and bottleneck mapping",
+        "Building alongside your people",
+        "SOPs your team keeps",
       ],
     },
-  ],
+  ] as readonly PricingPlan[],
   enterprise: {
-    name: "Enterprise",
+    name: "Done For You",
     tone: "peach",
     icon: "enterprise",
-    title: "Custom Quote",
-    body: "Fully customized automation infrastructure built to support complex operations and long-term scalable business transformation.",
-    cta: { label: "Request a Quote", href: ctaHref("/contact") },
-    includesTitle: "Enterprise includes:",
-    /** Two columns, read down each: exactly the owner's order. */
+    title: "Custom Builds",
+    body: "We audit the business, build the custom software and AI employees, deploy and train your team, then keep improving it.",
+    cta: { label: "Book a Call", href: ctaHref("/contact") },
+    includesTitle: "Done For You includes:",
+    /** Two columns, read down each. The brief's "How it works", then what gets built. */
     includes: [
-      ["Strategy workshops", "Unlimited workflows", "Advanced AI systems", "Custom automations", "Enterprise integrations"],
-      ["Security compliance", "Dedicated team support", "Performance optimization", "Reporting dashboards", "Long-term scaling roadmap"],
+      ["Full operations audit", "Visual process maps & SOPs", "Custom software builds", "AI employees", "Integrations with your stack"],
+      ["Automated follow-up", "Inbound & outbound systems", "Portfolio dashboards", "Team training", "Ongoing improvement"],
     ],
   },
 } as const;
 
 /** Which tint a plan's header strip and border are drawn in. */
-export type PlanTone = (typeof pricingContent.plans)[number]["tone"] | "peach";
+export type PlanTone = PricingPlan["tone"] | "peach";
 
 /** Keys the plan cards use to pick their header icon. */
 export type PlanIcon = "launch" | "scale" | "enterprise";

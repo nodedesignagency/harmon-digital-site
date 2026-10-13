@@ -125,12 +125,16 @@ type PricingPlansProps = {
 
 export function PricingPlans({ content }: PricingPlansProps) {
   const [yearly, setYearly] = useState(false);
+  // A toggle with no figure to roll would switch nothing, so it waits for one.
+  const hasPrices = content.plans.some((plan) => plan.price);
 
   return (
     <>
-      <div className="mt-10">
-        <BillingToggle yearly={yearly} onChange={setYearly} labels={content.billing} />
-      </div>
+      {hasPrices && (
+        <div className="mt-10">
+          <BillingToggle yearly={yearly} onChange={setYearly} labels={content.billing} />
+        </div>
+      )}
 
       <div className="mt-15 grid gap-3 desktop:grid-cols-2">
         {content.plans.map((plan) => (
@@ -149,18 +153,26 @@ export function PricingPlans({ content }: PricingPlansProps) {
                       is why every part carries `leading-[1em]`: mixed sizes
                       on default leading each build a different line box, and
                       the baselines drift apart. */}
-                  <p className="flex items-baseline font-ui leading-[1em] text-fg-on-light">
-                    <span className="text-[1.5rem] font-normal tracking-normal">$</span>
-                    <NumberFlow
-                      value={yearly ? plan.price.yearly : plan.price.monthly}
-                      // The library animates each digit itself; it needs the
-                      // plain number, and formats and rolls from there.
-                      className="text-[2.25rem] font-light tracking-normal leading-[1em]"
-                    />
-                    <span className="ml-1 font-body text-[1rem] font-normal leading-[1em] text-fg-on-light-muted">
-                      {plan.price.period}
-                    </span>
-                  </p>
+                  {plan.price ? (
+                    <p className="flex items-baseline font-ui leading-[1em] text-fg-on-light">
+                      <span className="text-[1.5rem] font-normal tracking-normal">$</span>
+                      <NumberFlow
+                        value={yearly ? plan.price.yearly : plan.price.monthly}
+                        // The library animates each digit itself; it needs the
+                        // plain number, and formats and rolls from there.
+                        className="text-[2.25rem] font-light tracking-normal leading-[1em]"
+                      />
+                      <span className="ml-1 font-body text-[1rem] font-normal leading-[1em] text-fg-on-light-muted">
+                        {plan.price.period}
+                      </span>
+                    </p>
+                  ) : (
+                    // Geist Light 36, matching the figure it stands in for —
+                    // the same treatment as the wide card's title.
+                    <p className="font-ui text-[2.25rem] font-light tracking-normal leading-[1em] text-fg-on-light">
+                      {plan.priceLabel}
+                    </p>
+                  )}
                   <p className="font-body text-[1rem]">{plan.body}</p>
                 </div>
                 <Button

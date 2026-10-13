@@ -4,9 +4,6 @@ import { useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import type { StaticImageData } from "next/image";
-import testimonialJames from "@public/uploads/images/testimonial-2.avif";
-import testimonialPriya from "@public/uploads/images/testimonial-3.avif";
-import testimonialRyan from "@public/uploads/images/testimonial-1.avif";
 import { CarouselArrowLeft, CarouselArrowRight } from "@/components/ui/SiteIcons";
 import { useInView } from "motion/react";
 import { Container } from "@/components/layout/Container";
@@ -40,12 +37,12 @@ import { viewport } from "@/lib/motion";
  * A client component: it holds which card is showing.
  */
 
-/** The cut-out a quote names. Content says which; this says what it is. */
-const portraits: Record<TestimonialPhoto, StaticImageData> = {
-  ryan: testimonialRyan,
-  james: testimonialJames,
-  priya: testimonialPriya,
-};
+/**
+ * The cut-out a quote names. Content says which; this says what it is. Empty
+ * until the client supplies cut-out portraits — import each here under the
+ * key its quote's `photo` uses.
+ */
+const portraits: Partial<Record<TestimonialPhoto, StaticImageData>> = {};
 
 /** Fills come from theme.css; the section never names a colour itself. */
 const tones: Record<TestimonialTone, string> = {
@@ -152,106 +149,121 @@ export function Testimonials({ content }: TestimonialsProps) {
             transform: `translateX(calc(${-shown * 100}% - ${shown * GAP}px))`,
           }}
         >
-          {content.items.map((item, i) => (
-            <article
-              key={item.name}
-              aria-roledescription="slide"
-              aria-label={`${i + 1} of ${content.items.length}`}
-              style={
-                {
-                  "--mh-quote-shape": `var(--color-quote-shape-${item.tone})`,
-                  "--mh-quote-duration": `${testimonialCarousel.reveal}ms`,
-                  "--mh-quote-delay": `${testimonialCarousel.revealDelay}ms`,
-                } as CSSProperties
-              }
-              className={cardClass(item.tone)}
-            >
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0"
+          {content.items.map((item, i) => {
+            const portrait = item.photo ? portraits[item.photo] : undefined;
+            return (
+              <article
+                key={item.name}
+                aria-roledescription="slide"
+                aria-label={`${i + 1} of ${content.items.length}`}
+                style={
+                  {
+                    "--mh-quote-shape": `var(--color-quote-shape-${item.tone})`,
+                    "--mh-quote-duration": `${testimonialCarousel.reveal}ms`,
+                    "--mh-quote-delay": `${testimonialCarousel.revealDelay}ms`,
+                  } as CSSProperties
+                }
+                className={cardClass(item.tone)}
               >
-                {testimonialCarousel.rects.map((rect, r) => (
-                  <span
-                    key={r}
-                    className="mh-quote-block"
-                    // The card plays its rectangles once it is both the one
-                    // showing and on screen — an arrow pressed above the fold
-                    // should not spend the effect where nobody is looking.
-                    data-in={inView && i === shown}
-                    style={
-                      {
-                        ...hoverRectBox(rect),
-                        "--mh-quote-from": hoverRectFrom(rect),
-                      } as CSSProperties
-                    }
-                  />
-                ))}
-              </div>
-
-              {/* The portrait: a 40% column beside the quote from tablet up,
-                  and a 300px band under it on a phone — which is why it is
-                  ordered last there and first above. It is a cut-out standing
-                  on the card's own fill, so it has no frame of its own.
-
-                  `contain` and not `cover`: the file is a person cut out of
-                  their background, and cropping one to fill a column takes the
-                  top of their head off. Anchored to the bottom so they stand
-                  on the card's floor rather than floating in the middle of it.
-
-                  Decorative: the caption below names them, and an alt here
-                  would have a screen reader say it twice. */}
-              <div className="relative order-last h-[300px] w-full shrink-0 max-tablet:mt-auto tablet:order-first tablet:h-auto tablet:w-2/5">
-                {/* `mt-auto` below the tablet: stacked, the cards are a flex
-                    row and all of them stretch to the tallest, but this band is
-                    a fixed 300 and does not grow — so on every card with a
-                    shorter quote than the longest the leftover height collected
-                    underneath it and stood the picture off the card's floor.
-                    36px of it at 760, and none at all on the one card that sets
-                    the height, which is why only that one looked right. The
-                    margin sends the slack above the picture instead. */}
-
-                {/* Four fifths of the card's height, standing on its floor —
-                    the owner's proportion, and the space it leaves above the
-                    head is what keeps the quote beside it from feeling
-                    crowded. Given here rather than left to the file: each
-                    cut-out is trimmed to its subject, so without a height to
-                    fill they would each come out at whatever size their own
-                    framing implied, which is exactly the inconsistency
-                    between these three that had to be fixed once already. */}
-                <div className="absolute inset-x-0 bottom-0 h-[85%]">
-                  <Image
-                    src={portraits[item.photo]}
-                    alt=""
-                    fill
-                    sizes="(max-width: 810px) 100vw, 40vw"
-                    className="object-contain object-bottom"
-                  />
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0"
+                >
+                  {testimonialCarousel.rects.map((rect, r) => (
+                    <span
+                      key={r}
+                      className="mh-quote-block"
+                      // The card plays its rectangles once it is both the one
+                      // showing and on screen — an arrow pressed above the fold
+                      // should not spend the effect where nobody is looking.
+                      data-in={inView && i === shown}
+                      style={
+                        {
+                          ...hoverRectBox(rect),
+                          "--mh-quote-from": hoverRectFrom(rect),
+                        } as CSSProperties
+                      }
+                    />
+                  ))}
                 </div>
-              </div>
 
-              {/* 40 all round from the tablet up, and 24 on a phone with none
-                  at the foot — the caption sits on the picture band below it
-                  rather than on a gutter of its own.
+                {/* The portrait: a 40% column beside the quote from tablet up,
+                    and a 300px band under it on a phone — which is why it is
+                    ordered last there and first above. It is a cut-out standing
+                    on the card's own fill, so it has no frame of its own.
 
-                  Longhands on both sides of the breakpoint rather than `p-10`
-                  against `pb-0`: Tailwind orders the shorthand and the
-                  longhands by property, not by the order they are written, so
-                  a shorthand at one breakpoint and a longhand at the other is
-                  a race whose winner is not visible from here. */}
-              <div className="relative flex w-full flex-col justify-between gap-10 px-6 pt-6 pb-0 tablet:w-3/5 tablet:px-10 tablet:pt-10 tablet:pb-10">
-                {/* The owner's L breakpoint: 48px, -0.05em, 1.2 line. Tighter
-                    tracking than any heading on the site, hence its own
-                    token rather than the display one. */}
-                <blockquote className="font-body text-quote leading-[1.2] tracking-(--tracking-quote) text-fg-on-light">
-                  {`“${item.quote}”`}
-                </blockquote>
+                    `contain` and not `cover`: the file is a person cut out of
+                    their background, and cropping one to fill a column takes the
+                    top of their head off. Anchored to the bottom so they stand
+                    on the card's floor rather than floating in the middle of it.
 
-                <figcaption className="font-body text-quote-by text-fg-on-light tablet:text-right">
-                  {`— ${item.name}, ${item.role}`}
-                </figcaption>
-              </div>
-            </article>
-          ))}
+                    Decorative: the caption below names them, and an alt here
+                    would have a screen reader say it twice.
+
+                    Left out entirely for a quote with no portrait, and the quote
+                    below takes the whole card. */}
+                {portrait && (
+                  <div className="relative order-last h-[300px] w-full shrink-0 max-tablet:mt-auto tablet:order-first tablet:h-auto tablet:w-2/5">
+                    {/* `mt-auto` below the tablet: stacked, the cards are a flex
+                        row and all of them stretch to the tallest, but this band is
+                        a fixed 300 and does not grow — so on every card with a
+                        shorter quote than the longest the leftover height collected
+                        underneath it and stood the picture off the card's floor.
+                        36px of it at 760, and none at all on the one card that sets
+                        the height, which is why only that one looked right. The
+                        margin sends the slack above the picture instead. */}
+
+                    {/* Four fifths of the card's height, standing on its floor —
+                        the owner's proportion, and the space it leaves above the
+                        head is what keeps the quote beside it from feeling
+                        crowded. Given here rather than left to the file: each
+                        cut-out is trimmed to its subject, so without a height to
+                        fill they would each come out at whatever size their own
+                        framing implied, which is exactly the inconsistency
+                        between these three that had to be fixed once already. */}
+                    <div className="absolute inset-x-0 bottom-0 h-[85%]">
+                      <Image
+                        src={portrait}
+                        alt=""
+                        fill
+                        sizes="(max-width: 810px) 100vw, 40vw"
+                        className="object-contain object-bottom"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* 40 all round from the tablet up, and 24 on a phone with none
+                    at the foot — the caption sits on the picture band below it
+                    rather than on a gutter of its own.
+
+                    Longhands on both sides of the breakpoint rather than `p-10`
+                    against `pb-0`: Tailwind orders the shorthand and the
+                    longhands by property, not by the order they are written, so
+                    a shorthand at one breakpoint and a longhand at the other is
+                    a race whose winner is not visible from here. */}
+                <div
+                  className={cn(
+                    "relative flex w-full flex-col justify-between gap-10 px-6 pt-6 tablet:px-10 tablet:pt-10 tablet:pb-10",
+                    // With a portrait under it on a phone the caption sits on the
+                    // picture band; without one it needs its own gutter.
+                    portrait ? "pb-0 tablet:w-3/5" : "pb-6",
+                  )}
+                >
+                  {/* The owner's L breakpoint: 48px, -0.05em, 1.2 line. Tighter
+                      tracking than any heading on the site, hence its own
+                      token rather than the display one. */}
+                  <blockquote className="font-body text-quote leading-[1.2] tracking-(--tracking-quote) text-fg-on-light">
+                    {`“${item.quote}”`}
+                  </blockquote>
+
+                  <figcaption className="font-body text-quote-by text-fg-on-light tablet:text-right">
+                    {`— ${item.name}, ${item.role}`}
+                  </figcaption>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </Container>
     </section>

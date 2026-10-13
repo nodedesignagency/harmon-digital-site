@@ -11,58 +11,59 @@ import { ctaHref } from "@/config/site.config";
 /**
  * FAQ — "Answers to Your Questions".
  *
- * ⚠️ Only the first answer is visible in the owner's screenshot; the other
- * seven are stand-ins to be replaced with the real copy.
+ * The client's current FAQ (cost, timing, risk, fit, hiring a developer),
+ * tightened, plus three the brief raises: working across a portfolio, what
+ * Unstack is, and training.
  */
 export const faqContent = {
   headingLines: ["Answers to Your", "Questions"],
   subheading:
-    "Find clear answers about how our AI systems work and how they help teams grow faster together.",
+    "Straight answers to what operating partners and portco leaders ask before we talk.",
   items: [
     {
-      question: "What industries do you specialize in?",
+      question: "Why not just hire a developer?",
       answer:
-        "We work with SaaS, ecommerce, agencies, finance, and fast-growing digital-first businesses globally.",
+        "You can. But a good full-time developer costs $80–150K a year, takes months to find and still needs managing. We build what you need and you’re live in weeks, not quarters — with ongoing support if you want it.",
     },
     {
-      question: "Are solutions customized for each client?",
+      question: "How long until we see results?",
       answer:
-        "Yes — every system is designed around your workflows, tools, and growth goals rather than from a fixed template.",
+        "Most clients are live in 4–8 weeks, and some automations take days. You get a clear timeline on the first call, not a vague estimate.",
     },
     {
-      question: "Do we need an internal tech team?",
+      question: "Can you work across a whole portfolio?",
       answer:
-        "No. We handle the build, integration, and maintenance; your team only needs to use the systems we deliver.",
+        "Yes. We audit each portco, roll out what works across the portfolio, and give the fund a dashboard for every company showing exactly where the savings and revenue gains come from.",
     },
     {
-      question: "How long does setup usually take?",
+      question: "What if it doesn’t work?",
       answer:
-        "Most launches go live within two to four weeks, depending on the number of workflows and integrations involved.",
+        "We build in sprints and show you working software along the way, not a big reveal at the end. If something isn’t right, we fix it before you’ve paid for a finished product.",
     },
     {
-      question: "Can you integrate with our current tools?",
+      question: "What does it cost?",
       answer:
-        "Yes — we connect with the platforms you already use, from CRMs and support desks to internal databases.",
+        "It depends on what you need. You’ll get the number on the first call, not after three meetings — no generic proposals, no surprise invoices.",
     },
     {
-      question: "What happens after launch?",
+      question: "What is Unstack?",
       answer:
-        "We monitor performance, refine the automations, and keep optimizing so results improve over time.",
+        "Our own AI-powered operations platform. It speeds up every build we do, and teams that want to run things themselves can use it directly.",
     },
     {
-      question: "Is this only for large companies?",
+      question: "Do our teams need to be technical?",
       answer:
-        "Not at all — our plans are built to scale from early-stage teams up to enterprise operations.",
+        "No. We deploy the systems, train your people on them and on Claude, ChatGPT and Unstack, and stay on to keep improving them.",
     },
     {
-      question: "How do we get started?",
+      question: "Who is this not for?",
       answer:
-        "Book a strategy call and we will map your workflows, identify the highest-impact automations, and propose a plan.",
+        "Businesses without repeatable processes yet — figure out what works before you automate it. If your teams do the same manual work every day and you know there’s a better way, that’s exactly what we fix.",
     },
   ],
   cta: {
-    title: "Still need clarity?",
-    body: "Book a strategy call.",
+    title: "Still have questions?",
+    body: "Book a call.",
     href: ctaHref("/contact"),
   },
 } as const;

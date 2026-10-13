@@ -1,12 +1,21 @@
 import type { StaticImageData } from "next/image";
-import brandStandard from "@public/uploads/logos/logo-brand-standard.avif";
-import ipsumLogo from "@public/uploads/logos/logo-ipsum-logo.avif";
-import lojoIpsum from "@public/uploads/logos/logo-lojo-ipsum.avif";
-import logoipsum from "@public/uploads/logos/logo-logoipsum.avif";
-import loqo from "@public/uploads/logos/logo-loqo.avif";
+import adogy from "@public/uploads/logos/client-adogy.png";
+import californiaPsychologyCenter from "@public/uploads/logos/client-california-psychology-center.png";
+import etto from "@public/uploads/logos/client-etto.png";
+import flume from "@public/uploads/logos/client-flume.png";
+import happyEndings from "@public/uploads/logos/client-happy-endings.png";
+import hopliteCapital from "@public/uploads/logos/client-hoplite-capital.png";
+import mikesFences from "@public/uploads/logos/client-mikes-fences.png";
+import neighborsBank from "@public/uploads/logos/client-neighbors-bank.png";
+import nobleTelehealth from "@public/uploads/logos/client-noble-telehealth.png";
+import producifyx from "@public/uploads/logos/client-producifyx.png";
+import reubenOliver from "@public/uploads/logos/client-reuben-oliver.png";
+import sunmedGrowers from "@public/uploads/logos/client-sunmed-growers.png";
+import trbl from "@public/uploads/logos/client-trbl.png";
+import type { ClientMark } from "@/content/clients";
 
 /**
- * The client marks, in one place because two rows carry the same five: the
+ * The client marks, in one place because two rows carry the same set: the
  * trust strip on the home page and the strip under the quote on contact. They
  * are one set of clients, so a mark added here appears in both rather than
  * being wired into each separately.
@@ -16,21 +25,23 @@ import loqo from "@public/uploads/logos/logo-loqo.avif";
  *
  * They are ink on nothing, and both strips sit on white, so unlike the marks
  * in `SiteIcons` these never have to follow a surface and a file is the right
- * form for them.
+ * form for them. The client's originals are white (for their dark site); these
+ * are the same files recoloured to the site's ink and trimmed to the artwork.
  */
-type ClientMark =
-  | "ipsumLogo"
-  | "loqo"
-  | "lojoIpsum"
-  | "logoipsum"
-  | "brandStandard";
-
 export const clientMarks: Record<ClientMark, StaticImageData> = {
-  ipsumLogo,
-  loqo,
-  lojoIpsum,
-  logoipsum,
-  brandStandard,
+  producifyx,
+  hopliteCapital,
+  adogy,
+  trbl,
+  etto,
+  neighborsBank,
+  sunmedGrowers,
+  mikesFences,
+  flume,
+  happyEndings,
+  californiaPsychologyCenter,
+  nobleTelehealth,
+  reubenOliver,
 };
 
 /**

@@ -6,6 +6,8 @@
  * "Project Budget" should not be opening a component to do it.
  */
 
+import { clientLogos } from "./clients";
+
 export const contactContent = {
   headingLines: ["Start Your AI Journey"],
 
@@ -20,15 +22,8 @@ export const contactContent = {
     role: "Director of Operations, Stratify Labs",
   },
 
-  /** Under the quote. Names until the marks land, as the trust strip does. */
-  /** The same five the trust strip carries; `mark` names the file. */
-  logos: [
-    { name: "Logoipsum", mark: "logoipsum" },
-    { name: "Logoipsum Brand Standard", mark: "brandStandard" },
-    { name: "Lojo Ipsum", mark: "lojoIpsum" },
-    { name: "Loqo", mark: "loqo" },
-    { name: "Ipsum Logo", mark: "ipsumLogo" },
-  ],
+  /** Under the quote. The same set the trust strip carries; `mark` names the file. */
+  logos: clientLogos,
 
   form: {
     /** Named for assistive tech, which announces the form by it. */

@@ -24,7 +24,10 @@ export type CaseStudy = {
   /** Stable key, and the URL segment under /case-study. */
   slug: string;
   client: string;
-  /** Shown in the chip at the top right of the panel. */
+  /**
+   * Shown in the chip at the top right of the panel. Harmon's studies carry
+   * no dates, so their entries hold the kind of work ("AI Agent") instead.
+   */
   year: string;
   title: string;
   /**
@@ -82,12 +85,13 @@ export type CaseStudy = {
 /** The words the card's cursor carries while the pointer is over it. */
 export const caseCardCursorContent = { label: "Learn More" } as const;
 
+/** The brief's "Who we've worked with". */
 export const caseStudiesContent = {
   eyebrow: "Case Studies",
-  headingLines: ["Latest works"],
+  headingLines: ["Who We’ve Built For"],
   subheading:
-    "See how AI automation transformed performance and accelerated growth across industries.",
-  cta: { label: "More Case Studies", href: "/case-study" },
+    "Custom software, AI agents and automation for operators — from a family office’s golf cart dealerships to a national mortgage lender.",
+  cta: { label: "See All Work", href: "/case-study" },
 } as const;
 
 /**

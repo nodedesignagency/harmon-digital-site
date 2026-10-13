@@ -4,9 +4,9 @@ import type { CSSProperties } from "react";
 import airtable from "@public/uploads/logos/airtable.avif";
 import chatgpt from "@public/uploads/logos/chatgpt.avif";
 import claude from "@public/uploads/logos/claude.avif";
-import langchain from "@public/uploads/logos/langchain.avif";
-import python from "@public/uploads/logos/python.avif";
-import zapier from "@public/uploads/logos/zapier.avif";
+import make from "@public/uploads/logos/make.png";
+import n8n from "@public/uploads/logos/n8n.png";
+import unstack from "@public/uploads/logos/unstack.png";
 import { Container } from "@/components/layout/Container";
 import { TextReveal } from "@/components/motion/TextReveal";
 import { sectionTextRevealDynamic, toolHover } from "@/config/animation";
@@ -55,10 +55,10 @@ function cellStyle([row, column]: readonly [number, number]): CSSProperties {
 const marks: Record<ToolMark, StaticImageData> = {
   claude,
   chatgpt,
+  unstack,
   airtable,
-  zapier,
-  langchain,
-  python,
+  n8n,
+  make,
 };
 
 /** Fills come from theme.css; the section never names a colour itself. */

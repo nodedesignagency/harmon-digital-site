@@ -9,12 +9,12 @@ import { configuredUrl } from "@/lib/env";
  */
 
 export const siteConfig = {
-  name: "Mahadeva",
+  name: "Harmon Digital",
   /** Short label used in the header wordmark and OG images. */
-  shortName: "Mahadeva",
-  tagline: "AI & automation, built for teams that ship",
+  shortName: "Harmon Digital",
+  tagline: "Custom software & AI employees for PE portfolio companies",
   description:
-    "Mahadeva is an AI and automation agency template — strategy, custom agents and workflow automation for modern product teams.",
+    "Harmon Digital builds custom software and AI employees for private equity portfolio companies — cutting software and fulfillment costs, and growing revenue with automated follow-up, inbound and outbound.",
 
   /**
    * Absolute production URL. Drives canonical URLs, the sitemap and the share
@@ -27,16 +27,16 @@ export const siteConfig = {
    */
   url:
     configuredUrl(process.env.NEXT_PUBLIC_SITE_URL) ??
-    "https://mahadeva.example.com",
+    "https://www.harmon-digital.com",
 
   locale: "en_US",
   /** Used on <html lang>. */
   lang: "en",
 
   contact: {
-    email: "hello@example.com",
+    email: "info@harmon-digital.com",
     phone: "",
-    location: "",
+    location: "Austin, TX",
   },
 
 
@@ -50,7 +50,7 @@ export const siteConfig = {
    * Set `show` to false to take it off the site entirely.
    */
   template: {
-    show: true,
+    show: false,
     label: "Launch in hours",
     action: "Buy Template",
     href: "https://contra.com/payment-link/wHlBeqQJ-mahadeva-ai-agency-next-js-template-standard-license",

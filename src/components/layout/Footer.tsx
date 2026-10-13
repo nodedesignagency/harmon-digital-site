@@ -78,10 +78,16 @@ export function Footer() {
 
                     `self-start` matters: as a flex item this would otherwise
                     stretch to the column's width, and the hover rule is drawn
-                    across the link's box, not its text. */}
+                    across the link's box, not its text.
+
+                    24 rather than the template's 28: info@harmon-digital.com
+                    is 322px at 28 and the column is ~300 from desktop up (318
+                    on a 360 phone), so at 28 it broke at the hyphen and read
+                    as two words. At 24 it is 276 and fits every width.
+                    `break-words` only matters on a screen narrower than that. */}
                 <a
                   href={item.href}
-                  className="mh-nav-link self-start font-ui text-[1.75rem] font-normal"
+                  className="mh-nav-link self-start font-ui text-[1.5rem] font-normal break-words"
                 >
                   {item.value}
                 </a>

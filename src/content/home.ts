@@ -1,12 +1,15 @@
 /**
  * Home page content.
  *
- * All copy is verbatim from the original template. Components take this as
- * typed props and contain no literal strings — editing the site's words never
- * means opening a component.
+ * Harmon Digital's copy, written from the client's website brief
+ * (`client-brief/website-brief.md`) and the facts on their current site
+ * (`client-brief/current-site/`). Every figure here comes from one of their
+ * case studies. Components take this as typed props and contain no literal
+ * strings — editing the site's words never means opening a component.
  */
 
 import { ctaHref } from "@/config/site.config";
+import { clientLogos } from "./clients";
 type CtaLink = {
   label: string;
   href: string;
@@ -20,22 +23,27 @@ export const heroContent = {
    * separate reveal block with its own sweeping bars, so where the break falls
    * is a design decision, not a side effect of the container width.
    */
-  headingLines: ["Custom AI Solutions to", "Increase Revenue"],
+  /**
+   * ⚠️ Placeholder. The brief says the hero is "still thinking here", so this
+   * states the brief's positioning until the client sends their own line.
+   */
+  headingLines: ["Custom Software & AI to", "Grow Portco EBITDA"],
 
   /**
    * The break moves on mobile, where the wider first line no longer fits. Given
    * explicitly rather than left to wrapping, for the same reason as above: each
    * line is its own reveal block, so where it breaks is a design decision.
    */
-  headingLinesMobile: ["Custom AI Solutions", "to Increase Revenue"],
+  headingLinesMobile: ["Custom Software & AI", "to Grow Portco EBITDA"],
   subheading:
-    "We build intelligent systems that automate decisions, boost productivity, and drive scalable growth for modern teams.",
-  primaryCta: { label: "Get Free Consultation", href: ctaHref("/contact") } satisfies CtaLink,
-  secondaryCta: { label: "Explore Our Work", href: "/case-study" } satisfies CtaLink,
+    "We build custom software and AI employees for private equity portfolio companies — cutting software and fulfillment costs, and growing revenue.",
+  primaryCta: { label: "Book a Call", href: ctaHref("/contact") } satisfies CtaLink,
+  secondaryCta: { label: "See Our Work", href: "/case-study" } satisfies CtaLink,
 } as const;
 
+/** The brief's "Problem" section, as the statement that rides over the hero. */
 export const aboutContent = {
-  eyebrow: "AI First Agency",
+  eyebrow: "Sound Familiar?",
 
   /**
    * One entry per visual line, as in the hero and for the same reason: each
@@ -47,11 +55,11 @@ export const aboutContent = {
    * reaches assistive tech.
    */
   bodyLines: [
-    "Mahadeva helps ambitious brands",
-    "transform AI into practical systems",
-    "that automate work, boost efficiency,",
-    "and drive measurable growth",
-    "across teams.",
+    "Your portcos are doing work",
+    "that should be automated —",
+    "paying for software they work",
+    "around, losing leads, and gluing",
+    "legacy tools together by hand.",
   ],
 
   /**
@@ -60,14 +68,14 @@ export const aboutContent = {
    * across two visual lines and lose the line-by-line reveal entirely.
    */
   bodyLinesMobile: [
-    "Mahadeva helps",
-    "ambitious brands",
-    "transform AI into",
-    "practical systems",
-    "that automate work,",
-    "boost efficiency, and",
-    "drive measurable",
-    "growth across teams.",
+    "Your portcos are",
+    "doing work that",
+    "should be automated —",
+    "paying for software",
+    "they work around,",
+    "losing leads, and",
+    "gluing legacy tools",
+    "together by hand.",
   ],
 } as const;
 
@@ -78,8 +86,11 @@ export const aboutContent = {
  * somewhere to hand off to, which is a rendering concern rather than content.
  */
 export const featuresContent = {
-  /** Broken after "to", matching the owner's desktop layout. */
-  headingLines: ["Everything You Need to", "Scale With AI"],
+  /**
+   * The brief's "Solution": EBITDA grows from both sides — costs down, revenue
+   * up — and each card is one lever from it.
+   */
+  headingLines: ["We Grow EBITDA From", "Both Sides of the P&L"],
 
   /**
    * Six cards, each with its own pastel. Order is the reading order and the
@@ -92,39 +103,39 @@ export const featuresContent = {
    */
   cards: [
     {
-      title: "Custom AI Agents",
-      body: "Create tailored AI agents built around your workflows and team productivity goals.",
-      image: "agents",
+      title: "Cut Software Spend",
+      body: "Replace the stack of SaaS tools your teams work around with one system you own.",
+      image: "revenue",
       tone: "blue",
     },
     {
-      title: "Data Intelligence",
-      body: "Turn operational data into insights that improve decisions and business automation.",
+      title: "Lower Fulfillment Costs",
+      body: "Automate the data entry and back-office work your people do by hand every day.",
       image: "data",
       tone: "magenta",
     },
     {
-      title: "Workflow Automation",
-      body: "Automate repetitive workflows to save time and improve daily team productivity.",
-      image: "workflow",
+      title: "Automated Follow-Up",
+      body: "Every lead and missed call gets an instant, consistent follow-up, around the clock.",
+      image: "improvement",
       tone: "green",
     },
     {
-      title: "Smart Integrations",
-      body: "Connect AI seamlessly with your tools to streamline team workflows and productivity.",
-      image: "integrations",
+      title: "Inbound That Converts",
+      body: "AI responders answer, qualify and book inbound leads the moment they arrive.",
+      image: "workflow",
       tone: "rose",
     },
     {
-      title: "Continuous Improvement",
-      body: "Deploy AI that learns over time to improve operational efficiency and productivity.",
-      image: "improvement",
+      title: "Outbound That Scales",
+      body: "AI SDRs prospect and follow up, so pipeline grows without adding headcount.",
+      image: "agents",
       tone: "lavender",
     },
     {
-      title: "Revenue Optimization",
-      body: "Use AI systems designed to increase conversions and overall business productivity.",
-      image: "revenue",
+      title: "Custom Software Moats",
+      body: "Own your data and workflows, and ship new features without waiting on vendors.",
+      image: "integrations",
       tone: "peach",
     },
   ],
@@ -148,42 +159,44 @@ export type FeatureTone = (typeof featuresContent.cards)[number]["tone"];
  * component needs to be able to do arithmetic on it.
  */
 export const trustContent = {
-  headingLines: ["Why Top Companies Trust Us"],
+  /** The brief's "Why us". */
+  headingLines: ["Why Operators Trust Us"],
   /** The owner tightens the heading on a phone rather than wrapping it. */
   headingLinesMobile: ["Why We\u2019re Trusted"],
   subheading:
-    "We design AI solutions that automate work, improve performance, and drive business impact.",
+    "Our in-house platform, Unstack, gets systems live in weeks \u2014 and when a portco needs something fully custom, we build that too.",
+  /** Each figure is from the named client's case study on the current site. */
   stats: [
     {
-      label: "Launch Success",
+      label: "Cost Reduction",
       prefix: "",
-      value: 98,
+      value: 30,
       unit: "%",
-      body: "Solutions successfully adopted by teams to deliver consistent performance and measurable outcomes at scale.",
+      body: "Happy Endings replaced its external software with one system it owns \u2014 and can sell with the business.",
       tone: "peach",
     },
     {
-      label: "Average ROI",
+      label: "More Estimates",
       prefix: "",
-      value: 17,
-      unit: "x",
-      body: "Systems designed to increase revenue efficiency, optimize operations, and create scalable business growth.",
+      value: 40,
+      unit: "%",
+      body: "Mike\u2019s Fences booked more estimates once an AI agent answered and qualified every lead instantly.",
       tone: "green",
     },
     {
-      label: "Faster Operations",
-      prefix: "",
-      value: 49,
-      unit: "h",
-      body: "Hours saved every month through automation, helping teams reduce manual work and focus on high-impact tasks.",
+      label: "Raise Managed",
+      prefix: "$",
+      value: 20,
+      unit: "m",
+      body: "Investor tracking and automated document sends for SunMed Growers\u2019 $20M debt round.",
       tone: "blue",
     },
     {
-      label: "Revenue Impact",
-      prefix: "$",
-      value: 25,
-      unit: "m",
-      body: "Automation built to increase revenue, reduce friction, and drive measurable business growth across teams.",
+      label: "Daily Users",
+      prefix: "",
+      value: 200,
+      unit: "+",
+      body: "Neighbors Bank\u2019s underwriters get answers in seconds from a RAG-powered Slack bot.",
       tone: "magenta",
     },
   ],
@@ -194,56 +207,46 @@ export const trustContent = {
    * laptop pushed the row out of true.
    */
   logosCaptionLines: [
-    "Trusted by leading companies in",
-    "tech, finance and e-commerce.",
+    "Trusted by operators in finance,",
+    "healthcare, retail and services.",
   ],
   /**
    * Client marks. `mark` names the file and the strip imports it, from the one
    * set both this row and the contact page's row draw on.
    *
-   * Five, where the row once listed eight names: five is what the owner
-   * supplied, and the strip renders the list twice to close the loop, so ten
-   * marks go past and the row is no thinner for it. `name` is what a screen
-   * reader gets, since a mark in a marquee says nothing on its own.
+   * The thirteen on the client's current site, in its order. `name` is what a
+   * screen reader gets, since a mark in a marquee says nothing on its own.
    */
-  logos: [
-    { name: "Logoipsum", mark: "logoipsum" },
-    { name: "Logoipsum Brand Standard", mark: "brandStandard" },
-    { name: "Lojo Ipsum", mark: "lojoIpsum" },
-    { name: "Loqo", mark: "loqo" },
-    { name: "Ipsum Logo", mark: "ipsumLogo" },
-  ],
+  logos: clientLogos,
 } as const;
 
 /** Which pastel a statistic panel is filled with. */
 export type TrustTone = (typeof trustContent.stats)[number]["tone"];
 
 /**
- * Tech stack — "Our Automation Tools & Technology Stack".
+ * Tech stack — the brief's "Training" section.
  *
  * Six tools laid out as a checkerboard. Order is the layout: the section fills
  * alternating cells in sequence, so moving an entry here moves its tile.
  *
- * Names confirmed against the owner's mobile strip: the starburst is the
- * Claude Code mark and the cube is Airtable's.
+ * The first three are what the brief says Harmon trains teams on; the other
+ * three are what their case studies are built with.
  */
 export const techStackContent = {
-  headingLines: ["Our Automation Tools &", "Technology Stack"],
+  /** No phone variant here, so each line has to fit a 360 phone (318px). */
+  headingLines: ["Tools We Build With", "and Train Teams On"],
   /**
    * `mark` keys the artwork, which the section imports — the same split the
    * feature cards use, so this file stays free of imports and the build can
    * hash and serve the files it can see.
-   *
-   * LangChain takes the slot the mobile strip labelled Make — that is the mark
-   * the owner supplied, and the name follows the artwork.
    */
   tools: [
-    { name: "Claude Code", tone: "rose", mark: "claude" },
-    { name: "OpenAI", tone: "green", mark: "chatgpt" },
-    { name: "Airtable", tone: "magenta", mark: "airtable" },
-    { name: "Zapier", tone: "peach", mark: "zapier" },
-    { name: "LangChain", tone: "blue", mark: "langchain" },
-    { name: "Python", tone: "lavender", mark: "python" },
+    { name: "Claude", tone: "rose", mark: "claude" },
+    { name: "ChatGPT", tone: "green", mark: "chatgpt" },
+    { name: "Unstack", tone: "magenta", mark: "unstack" },
+    { name: "Airtable", tone: "peach", mark: "airtable" },
+    { name: "n8n", tone: "blue", mark: "n8n" },
+    { name: "Make", tone: "lavender", mark: "make" },
   ],
 } as const;
 
@@ -259,57 +262,64 @@ export type ToolMark = (typeof techStackContent.tools)[number]["mark"];
  * One card at a time with the next peeking past the right gutter, advanced by
  * the pair of arrows beside the heading.
  *
- * `portrait` names a file in `public/uploads/images`; the cut-out sits on the
- * card's own fill. Until the photographs land the column is left empty rather
- * than filled with a stand-in — a grey box beside a testimonial reads as a
- * broken image, where empty space reads as a wide quote.
+ * `photo` is optional and names a cut-out in `public/uploads/images` that the
+ * section imports; the cut-out sits on the card's own fill. A quote without one
+ * takes the card's full width rather than standing beside an empty column.
  *
- * ⚠️ The third quote is written to the same brief as the two the owner
- * supplied, and is a placeholder until the real one arrives.
- *
- * `photo` names the cut-out beside the quote; the section imports it. The
- * three the owner supplied are unlabelled, so they are paired with the names
- * in the order they arrived — swap two values here to re-pair them.
+ * The four quotes are verbatim from the client's current site. Where the site
+ * credits a role rather than a person, `name` carries the role.
  */
+type TestimonialItem = {
+  quote: string;
+  name: string;
+  role: string;
+  tone: "blue" | "green" | "yellow";
+  photo?: string;
+};
+
 export const testimonialsContent = {
   headingLines: ["Testimonials"],
   subheading:
-    "Results from teams using intelligent automation to improve performance and unlock measurable growth across daily operations.",
+    "What operators say once the systems are live and the manual work is gone.",
   /** Labels for the two arrows. Never shown — they are the buttons' names. */
   controls: { previous: "Previous testimonial", next: "Next testimonial" },
   items: [
     {
       quote:
-        "This system saved our team hours every week and made our workflows faster, clearer, and much easier to manage.",
-      name: "Ryan Mitchell",
-      photo: "ryan",
-      role: "CEO @ Growth SaaS",
+        "Isaac came in, mapped out our workflows, and built us a custom platform that handles what used to take hours. Our team can actually focus on growing the business instead of putting out fires.",
+      name: "George Zimny",
+      role: "Co-Founder @ ProducifyX",
       tone: "blue",
     },
     {
       quote:
-        "This tool saved me hours every week — and made me sound like I actually know what I’m doing.",
-      name: "James Cooper",
-      photo: "james",
-      role: "CEO @ Ragnarok AI",
+        "Our underwriters used to spend an hour a day just looking things up. Now they ask the bot and get answers in seconds. It’s like having a senior analyst available 24/7.",
+      name: "Operations Lead",
+      role: "Neighbors Bank",
       tone: "green",
     },
     {
       quote:
-        "We replaced three manual handoffs with one system, and the work simply arrives finished now.",
-      name: "Priya Raman",
-      photo: "priya",
-      role: "COO @ Northwind Labs",
+        "We went from losing orders every week to never missing one. The system just works. And it costs us less than our old software.",
+      name: "Owner",
+      role: "Happy Endings",
       tone: "yellow",
     },
-  ],
+    {
+      quote:
+        "I used to spend half my day on the phone playing phone tag. Now I show up, give the estimate, and close the deal. The AI handles everything else.",
+      name: "Mike",
+      role: "Owner @ Mike’s Fences",
+      tone: "blue",
+    },
+  ] as TestimonialItem[],
 } as const;
 
 /** Which pastel a testimonial card is filled with. */
-export type TestimonialTone = (typeof testimonialsContent.items)[number]["tone"];
+export type TestimonialTone = TestimonialItem["tone"];
 
 /** Which cut-out stands beside a quote. */
-export type TestimonialPhoto = (typeof testimonialsContent.items)[number]["photo"];
+export type TestimonialPhoto = NonNullable<TestimonialItem["photo"]>;
 
 /**
  * Before vs After.
@@ -322,42 +332,47 @@ export const beforeAfterContent = {
   headingBefore: "Before",
   headingJoin: "vs",
   headingAfter: "After",
+  /**
+   * The brief's "Before and after" — how EBITDA changes. Written as the cost
+   * and revenue story for now; the brief allows a static example and says it
+   * may become a calculator later, which would be a design change, not copy.
+   */
   columns: [
     {
       title: "Before working with us",
-      body: "Growth slows when teams rely on manual processes and disconnected systems.",
+      body: "Margin leaks through software sprawl, manual work and revenue nobody follows up on.",
       tone: "dark",
       items: [
         {
-          title: "Slow Execution Cycles",
-          body: "Projects move slowly due to manual approvals and unclear workflows.",
+          title: "Software Sprawl",
+          body: "Six tools glued together, and teams still filling the gaps by hand.",
         },
         {
-          title: "Operational Overload",
-          body: "Teams spend too much time on repetitive tasks instead of strategy.",
+          title: "Manual Fulfillment",
+          body: "Skilled people stuck on data entry and repetitive back-office work.",
         },
         {
-          title: "Unclear Performance",
-          body: "Lack of automation leads to inconsistent output and missed opportunities.",
+          title: "Leaking Revenue",
+          body: "Leads go cold and calls go unanswered when the team is busy.",
         },
       ],
     },
     {
       title: "After working with us",
-      body: "Automation brings clarity, speed, and scalable systems across every workflow.",
+      body: "One owned system that cuts costs, captures revenue and shows the fund where the gains come from.",
       tone: "light",
       items: [
         {
-          title: "Accelerated Delivery",
-          body: "Workflows move faster with automation supporting execution.",
+          title: "Leaner Cost Base",
+          body: "Redundant subscriptions retired and manual work automated away.",
         },
         {
-          title: "Operational Clarity",
-          body: "Teams focus on meaningful work instead of repetitive tasks.",
+          title: "Revenue Captured",
+          body: "Every lead answered and followed up, inbound and outbound.",
         },
         {
-          title: "Scalable Systems",
-          body: "Processes become reliable and built for long-term growth.",
+          title: "Clear Visibility",
+          body: "Live dashboards show where each portco stands and why.",
         },
       ],
     },

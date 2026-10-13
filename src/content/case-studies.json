@@ -1,207 +1,301 @@
 [
   {
-    "slug": "ragnarok-ai",
-    "client": "Ragnarok AI",
-    "year": "2023",
-    "title": "AI Agent Website Built for Automation Startups",
-    "summary": "AI-driven automation systems improved engagement and conversion clarity for a SaaS company, reducing friction.",
+    "slug": "hoplite-capital",
+    "client": "Hoplite Capital / Etto Leisure Carts",
+    "year": "Automation",
+    "title": "Custom Operations Software for a Multi-Location Golf Cart Dealership",
+    "summary": "A family office's newly acquired dealership went from manual, disconnected tracking to one connected system across every location.",
     "stats": [
-      {
-        "label": "Demo Click Growth",
-        "value": "13.2x"
-      },
-      {
-        "label": "Higher Engagement",
-        "value": "42%"
-      },
-      {
-        "label": "Pipeline Influence",
-        "value": "$80K+"
-      },
-      {
-        "label": "Qualified Leads",
-        "value": "77%"
-      }
+      { "label": "Locations", "value": "3+" },
+      { "label": "Automated Quotes", "value": "100%" },
+      { "label": "Inventory", "value": "Real-Time" },
+      { "label": "Manual Tracking", "value": "0" }
     ],
     "tone": "sky",
-    "timeline": "3 Months",
+    "logo": { "url": "/uploads/logos/client-hoplite-capital.png", "alt": "Hoplite Capital Management" },
+    "image": { "url": "/uploads/images/case-hoplite-etto.jpg", "alt": "An Etto Leisure Carts golf cart on a waterfront road" },
+    "timeline": "6 Weeks",
     "services": [
-      "NLP Solutions",
-      "AI Automation",
-      "AI Integration"
+      "Custom Airtable Database",
+      "Make.com Automations",
+      "Shopmonkey Integration",
+      "QuickBooks Integration",
+      "Quote & Invoice Automation",
+      "Multi-Location Inventory"
     ],
-    "liveUrl": "https://example.com/ragnarok",
     "challenge": [
-      "Ragnarok needed to position itself as the premium choice for automation startups while entering a crowded AI market filled with similar solutions and competing messaging.",
-      "The product had strong positioning potential but lacked clear structure and messaging that communicated its value to both technical users and business decision makers. Ragnarok needed a clear identity to stand out while competing against established automation platforms."
+      "Hoplite Capital is a single-family office that acquired Etto Leisure Carts, a high-end golf cart dealership operating across multiple locations.",
+      "The business had no centralized tracking — inventory, sales, repairs, quotes and invoices were all manual and disconnected."
     ],
     "solution": [
-      "We designed a premium conversion-focused experience that clarified positioning, strengthened messaging, and helped Ragnarok communicate value clearly with automation market.",
-      "We designed a high-conversion layout focused on clarity, authority, and structured storytelling to help users understand value quickly. The new experience aligned visual direction with product strategy, improving engagement and supporting stronger positioning in the AI space."
+      "We built comprehensive custom work software using Airtable, Make.com, a Shopmonkey integration and QuickBooks.",
+      "Now they have real-time visibility across all operations, with automated workflows for quotes, invoicing, inventory, sales, service tickets and team management."
+    ],
+    "gallery": [
+      { "url": "/uploads/images/case-hoplite-etto-quotes.jpg", "alt": "The quote workflow automation" },
+      { "url": "/uploads/images/case-hoplite-etto-shopmonkey.jpg", "alt": "The Shopmonkey integration workflow" }
     ]
   },
   {
-    "slug": "northwind-labs",
-    "client": "Northwind Labs",
-    "year": "2024",
-    "title": "Lead Qualification Rebuilt Around a Scoring Model",
-    "summary": "Automated scoring cut wasted sales time and doubled recurring revenue for a mid-market SaaS team.",
+    "slug": "happy-endings",
+    "client": "Happy Endings",
+    "year": "Operations",
+    "title": "One Platform That Runs an Entire Ice Cream Business",
+    "summary": "Expensive, disconnected tools replaced by one owned system — orders, kitchen, training, wholesale and inventory, plus an AI email agent.",
     "stats": [
-      {
-        "label": "Conversion Lift",
-        "value": "40%"
-      },
-      {
-        "label": "Time Saved",
-        "value": "18h/wk"
-      },
-      {
-        "label": "Recurring Revenue",
-        "value": "2.1x"
-      },
-      {
-        "label": "Response Time",
-        "value": "-64%"
-      }
+      { "label": "Cost Reduction", "value": "30%" },
+      { "label": "Order Capture", "value": "100%" },
+      { "label": "Lost Orders", "value": "0" },
+      { "label": "Month Build", "value": "3" }
     ],
     "tone": "lavender",
-    "timeline": "4 Months",
+    "logo": { "url": "/uploads/logos/client-happy-endings.png", "alt": "Happy Endings" },
+    "image": { "url": "/uploads/images/case-happy-endings.jpg", "alt": "A freezer stacked with Happy Endings ice cream" },
+    "timeline": "3 Months",
     "services": [
-      "Lead Scoring",
-      "AI Automation",
-      "CRM Integration"
+      "AI Email Agent",
+      "Order Management",
+      "Kitchen Operations",
+      "Employee Training Portal",
+      "Traceability & Tracking",
+      "Wholesale Ordering",
+      "Inventory Management"
     ],
-    "liveUrl": "https://example.com/northwind",
     "challenge": [
-      "Sales worked a single queue in the order leads arrived, so the strongest accounts waited behind the weakest and follow-up depended on whoever opened the list first.",
-      "Nobody could say which signals actually predicted a close. The team had years of outcomes recorded and no model reading them, which made every prioritisation call an argument rather than a decision."
+      "Happy Endings was juggling multiple expensive software tools that didn't talk to each other — and losing orders every week."
     ],
     "solution": [
-      "We built a scoring model on their own closed-won history and put it in front of the queue, so the list a rep opens is ordered by what the data says will close.",
-      "Routing, enrichment and the first touch run from the same score, and the model is retrained on outcomes each month — the ranking improves on its own rather than ageing into a rule nobody trusts."
+      "We built an AI email agent and an entire internal system: orders, kitchen management, employee training, traceability and tracking, wholesale ordering and inventory. One platform now runs the whole business.",
+      "We eliminated their external software costs, and they plan to use the system as an asset when they sell the business."
+    ],
+    "gallery": [
+      { "url": "/uploads/images/case-happy-endings-dashboard.jpg", "alt": "The Happy Endings admin dashboard" },
+      { "url": "/uploads/images/case-happy-endings-portal.jpg", "alt": "The Happy Endings wholesale customer portal" }
     ]
   },
   {
-    "slug": "atlas-logistics",
-    "client": "Atlas Logistics",
-    "year": "2024",
-    "title": "Forecasting Agents for a Freight Network",
-    "summary": "Demand forecasting and route planning agents trimmed empty miles and steadied delivery windows across the fleet.",
+    "slug": "sunmed-growers",
+    "client": "SunMed Growers",
+    "year": "Custom Software",
+    "title": "Investor Tracking and Document Management for a $20M Debt Round",
+    "summary": "Spreadsheets and manual document sends replaced with one platform tracking every investor through the raise.",
     "stats": [
-      {
-        "label": "Empty Miles",
-        "value": "-31%"
-      },
-      {
-        "label": "On-Time Rate",
-        "value": "96%"
-      },
-      {
-        "label": "Fuel Saved",
-        "value": "$210K"
-      },
-      {
-        "label": "Planning Effort",
-        "value": "-58%"
-      }
+      { "label": "Debt Round", "value": "$20M" },
+      { "label": "Manual Doc Sends", "value": "0" },
+      { "label": "Pipeline Tracking", "value": "Real-Time" },
+      { "label": "Built to Fit", "value": "Custom" }
     ],
     "tone": "peach",
-    "timeline": "6 Months",
+    "logo": { "url": "/uploads/logos/client-sunmed-growers.png", "alt": "SunMed Growers" },
+    "image": { "url": "/uploads/images/case-sunmed-growers.jpg", "alt": "SunMed Growers product packaging" },
+    "timeline": "6 Weeks",
     "services": [
-      "Demand Forecasting",
-      "Route Planning",
-      "AI Automation"
+      "Investor Tracking Platform",
+      "Automated Document Distribution",
+      "Pipeline Dashboard",
+      "Status Tracking",
+      "Investor Communications"
     ],
-    "liveUrl": "https://example.com/atlas",
     "challenge": [
-      "Planners built the next day's routes from a spreadsheet and a decade of instinct, and a single late booking could unpick an afternoon of work across three depots.",
-      "Empty miles were the cost nobody owned. Every depot optimised its own fleet, so a truck ran back light while another depot forty miles away turned freight away."
+      "SunMed Growers was raising a $20M debt round and needed a way to track investors, manage documents and streamline the entire capital raise.",
+      "They were juggling spreadsheets, email threads and manual document sends — a nightmare at that scale."
     ],
     "solution": [
-      "Forecasting agents read booking history, seasonality and live capacity, and propose the next day's plan across every depot at once rather than one at a time.",
-      "Planners approve or override, and each override is fed back as a signal — the system learns the local knowledge that was never written down instead of overruling it."
+      "We built a custom tracker and document sending platform that centralized investor communications and automated document distribution.",
+      "Their team got real-time visibility into the status of every investor in the pipeline."
     ]
   },
   {
-    "slug": "meridian-retail",
-    "client": "Meridian Retail",
-    "year": "2025",
-    "title": "Inventory Agents Across Forty Store Rooms",
-    "summary": "Stock agents watch every shelf and reorder before a line runs dry, ending the weekly count that four regions used to run by hand.",
+    "slug": "neighbors-bank",
+    "client": "Neighbors Bank",
+    "year": "AI Agent",
+    "title": "A RAG-Powered Slack Bot for 50+ Mortgage Underwriters",
+    "summary": "A national mortgage lender's underwriters now get answers from internal documents in seconds instead of hours.",
     "stats": [
-      {
-        "label": "Stockouts",
-        "value": "-72%"
-      },
-      {
-        "label": "Count Hours",
-        "value": "24h/wk"
-      },
-      {
-        "label": "Held Stock",
-        "value": "$1.4M"
-      },
-      {
-        "label": "Reorder Speed",
-        "value": "9x"
-      }
+      { "label": "Daily Users", "value": "200+" },
+      { "label": "Answer Time", "value": "Seconds" },
+      { "label": "Availability", "value": "24/7" },
+      { "label": "Manual Lookups", "value": "0" }
     ],
     "tone": "mint",
-    "timeline": "5 Months",
+    "logo": { "url": "/uploads/logos/client-neighbors-bank.png", "alt": "Neighbors Bank" },
+    "image": { "url": "/uploads/images/case-neighbors-bank.jpg", "alt": "The Neighbors Bank logo" },
+    "timeline": "2 Months",
     "services": [
-      "Inventory Agents",
-      "Forecasting",
-      "Systems Integration"
+      "Custom RAG Slack Bot",
+      "Pinecone Vector Store",
+      "OpenAI Embeddings",
+      "Automated Escalations",
+      "Custom Slack Commands",
+      "Knowledge Base Integration"
     ],
-    "liveUrl": "https://example.com/meridian",
     "challenge": [
-      "Forty store rooms counted stock by hand every week, and the count was already out of date by the time it reached the regional buyer who needed it.",
-      "Reordering ran on fixed thresholds that ignored the season, the store and the shelf, so the same line was short in one region and sitting in a back room in another."
+      "Neighbors Bank is a national mortgage lender with 50+ underwriters handling USDA, FHA, VA and conventional loans.",
+      "Their team was wasting hours searching shared drives and documents, with manual escalations by email and manager tags."
     ],
     "solution": [
-      "Stock agents watch sales, deliveries and returns per line per store, and raise the reorder themselves when the forecast says a shelf will run dry.",
-      "The weekly count became an exception report: staff check what the system flags rather than walking every aisle, and the buyer sees one position across all forty rooms."
+      "We built a custom Slack bot using RAG: underwriters ask questions in plain English and get instant answers from internal documents.",
+      "Automated escalations and custom commands handle the advanced workflows."
     ]
   },
   {
-    "slug": "halden-health",
-    "client": "Halden Health",
-    "year": "2025",
-    "title": "Patient Intake Rebuilt as One Clean Handover",
-    "summary": "Intake, triage notes and scheduling meet in a single flow, so a clinic books the right appointment on the first call rather than the third.",
+    "slug": "producifyx",
+    "client": "ProducifyX",
+    "year": "Custom Software",
+    "title": "A Custom Platform That Replaced Hours of Manual Work",
+    "summary": "Workflows mapped, automated and centralized in one platform, saving the team 5–8 hours every week.",
     "stats": [
-      {
-        "label": "Intake Time",
-        "value": "-68%"
-      },
-      {
-        "label": "First-Call Booking",
-        "value": "91%"
-      },
-      {
-        "label": "Admin Saved",
-        "value": "31h/wk"
-      },
-      {
-        "label": "No-Show Rate",
-        "value": "-44%"
-      }
+      { "label": "Hrs Saved / Week", "value": "5-8" },
+      { "label": "Workflows Automated", "value": "100%" },
+      { "label": "Platform", "value": "1" },
+      { "label": "Built to Fit", "value": "Custom" }
     ],
     "tone": "periwinkle",
-    "timeline": "4 Months",
+    "logo": { "url": "/uploads/logos/client-producifyx.png", "alt": "ProducifyX" },
+    "image": { "url": "/uploads/images/case-producifyx.jpg", "alt": "The ProducifyX team" },
+    "timeline": "6 Weeks",
     "services": [
-      "Intake Automation",
-      "Triage Support",
-      "Scheduling"
+      "Custom Platform",
+      "Workflow Automation",
+      "Centralized Dashboard",
+      "Process Mapping",
+      "Team Onboarding"
     ],
-    "liveUrl": "https://example.com/halden",
     "challenge": [
-      "Intake, triage and scheduling lived in three systems that did not speak, so a patient repeated the same details to three people and still reached the wrong appointment.",
-      "Reception carried the whole handover in its head. When the front desk was busy, bookings queued — and a booking made from an incomplete note became a wasted slot a week later."
+      "ProducifyX was buried in manual processes, spending far too much time on work that should have been automated."
     ],
     "solution": [
-      "One flow now carries intake through triage to the booking, so the clinician's note and the appointment are written from the same record rather than re-keyed between systems.",
-      "Reception sees the recommended slot with the reasoning beside it, and can override in a click. The right appointment is made on the first call instead of the third."
+      "We mapped out their workflows and built a custom platform that handles what used to take hours.",
+      "Everything runs more smoothly now, and the team can focus on growing the business instead of putting out fires."
+    ],
+    "gallery": [
+      { "url": "/uploads/images/case-producifyx-dashboard.jpg", "alt": "The ProducifyX admin dashboard" },
+      { "url": "/uploads/images/case-producifyx-overview.jpg", "alt": "The ProducifyX admin overview" }
+    ]
+  },
+  {
+    "slug": "mikes-fences",
+    "client": "Mike's Fences",
+    "year": "AI Agent",
+    "title": "An Appointment-Setting Agent for a Custom Fence Company",
+    "summary": "An AI agent answers every quote request instantly, qualifies it and books the estimate.",
+    "stats": [
+      { "label": "More Estimates", "value": "40%" },
+      { "label": "Missed Leads", "value": "0" },
+      { "label": "Response Time", "value": "24/7" },
+      { "label": "Week Build", "value": "6" }
+    ],
+    "tone": "sky",
+    "logo": { "url": "/uploads/logos/client-mikes-fences.png", "alt": "Mike's Fences" },
+    "image": { "url": "/uploads/images/case-mikes-fences.jpg", "alt": "The Mike's Fences logo" },
+    "timeline": "6 Weeks",
+    "services": [
+      "AI Lead Qualification",
+      "Automated Scheduling",
+      "CRM Integration",
+      "SMS/Email Responses",
+      "Quote Generation"
+    ],
+    "challenge": [
+      "Mike's Fences builds custom wood fences, but Mike was missing leads because he couldn't respond fast enough — customers would submit quote requests and wait days for a callback."
+    ],
+    "solution": [
+      "We built a custom appointment-setting agent that responds immediately, qualifies the lead, gathers project details and schedules estimates automatically.",
+      "Now Mike focuses on building fences, not playing phone tag."
+    ]
+  },
+  {
+    "slug": "noble-telehealth",
+    "client": "Noble TeleHealth",
+    "year": "Custom App",
+    "title": "A Healthcare App That Replaced Manual Booking and Scheduling",
+    "summary": "Patients book directly, providers manage their availability, and confirmations and reminders run on their own.",
+    "stats": [
+      { "label": "Double Bookings", "value": "0" },
+      { "label": "Automated Scheduling", "value": "100%" },
+      { "label": "Healthcare App", "value": "Custom" },
+      { "label": "Patient Booking", "value": "24/7" }
+    ],
+    "tone": "lavender",
+    "logo": { "url": "/uploads/logos/client-noble-telehealth.png", "alt": "Noble TeleHealth" },
+    "image": { "url": "/uploads/images/case-noble-telehealth.jpg", "alt": "The Noble TeleHealth logo" },
+    "timeline": "8 Weeks",
+    "services": [
+      "Custom Booking Application",
+      "Provider Scheduling",
+      "Patient Portal",
+      "Automated Reminders",
+      "Calendar Integration"
+    ],
+    "challenge": [
+      "Noble TeleHealth's patients and providers were stuck in a clunky manual booking process that led to missed appointments, double-bookings and hours of admin overhead."
+    ],
+    "solution": [
+      "We built a custom healthcare application that handles the entire scheduling flow: patients book directly, providers manage availability, and the system sends confirmations and reminders automatically."
+    ]
+  },
+  {
+    "slug": "flume-internet",
+    "client": "Flume Internet",
+    "year": "Custom CRM",
+    "title": "A Custom CRM for a Growing Internet Service Provider",
+    "summary": "Spreadsheets and email threads replaced with one CRM covering the full customer lifecycle.",
+    "stats": [
+      { "label": "Centralized CRM", "value": "1" },
+      { "label": "Manual Tracking", "value": "0" },
+      { "label": "Pipeline Visibility", "value": "100%" },
+      { "label": "Built to Fit", "value": "Custom" }
+    ],
+    "tone": "peach",
+    "logo": { "url": "/uploads/logos/client-flume.png", "alt": "Flume Internet" },
+    "image": { "url": "/uploads/images/case-flume-internet.jpg", "alt": "The Flume Internet logo" },
+    "timeline": "4 Weeks",
+    "services": [
+      "Custom Airtable CRM",
+      "n8n Automation",
+      "Pipeline Management",
+      "Customer Onboarding Workflows",
+      "Automated Follow-ups",
+      "Reporting Dashboard"
+    ],
+    "challenge": [
+      "Flume Internet was managing its entire customer pipeline and operations manually — spreadsheets, email threads and disconnected tools."
+    ],
+    "solution": [
+      "We built a custom CRM on Airtable and n8n that handles the full customer lifecycle: lead tracking, pipeline management, onboarding, support tickets and automated follow-ups.",
+      "Everything is connected, and nothing falls through the cracks."
+    ]
+  },
+  {
+    "slug": "unstack",
+    "client": "Unstack",
+    "year": "SaaS",
+    "title": "Unstack: Our AI-Powered Business Operations Platform",
+    "summary": "A productized version of the systems we build for clients, giving every organization its own AI-enabled workspace.",
+    "stats": [
+      { "label": "Organizations", "value": "10+" },
+      { "label": "Powered", "value": "AI" },
+      { "label": "Product", "value": "SaaS" },
+      { "label": "Platform", "value": "Live" }
+    ],
+    "tone": "mint",
+    "image": { "url": "/uploads/images/case-unstack.jpg", "alt": "The Unstack logo" },
+    "timeline": "Ongoing",
+    "services": [
+      "Full-Stack SaaS Development",
+      "AI Agent Infrastructure",
+      "Multi-Tenant Architecture",
+      "Organization Management",
+      "Marketplace",
+      "Custom Workspace Builder"
+    ],
+    "liveUrl": "https://unstack.us",
+    "challenge": [
+      "Unstack is a SaaS product built and operated by Harmon Digital: an AI-powered business operations platform that gives each organization its own workspace, complete with AI agents, workflow automation and custom tools."
+    ],
+    "solution": [
+      "We built it from the ground up as a productized version of the systems we build for clients.",
+      "Organizations get their own subdomain and a fully managed, AI-enabled environment to run their operations."
     ]
   }
 ]

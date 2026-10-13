@@ -1,5 +1,5 @@
 import Image from "next/image";
-import faqPortrait from "@public/uploads/images/faq-portrait.avif";
+import harmonIcon from "@public/uploads/images/harmon-icon.png";
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import { ButtonArrow } from "@/components/ui/SiteIcons";
@@ -81,23 +81,23 @@ export function Faq({ content }: FaqProps) {
               className="mh-cta-fill absolute rounded-(--radius-button) bg-bg-white"
             />
 
-            {/* The portrait. Square, and the height of the content box: 64
-                inside 8px of padding is the card's 80, and it is the portrait
+            {/* The mark. Square, and the height of the content box: 64
+                inside 8px of padding is the card's 80, and it is the mark
                 that sets that rather than the words beside it.
 
-                The file is a cut-out at 825x1024, so `cover` is what fills a
-                square with it; the head is at the top of the frame, so the
-                crop is anchored there rather than at the middle. */}
+                Harmon Digital's icon from their current site, in the slot the
+                template gave a portrait — a person's face here should be
+                someone the reader would actually talk to. */}
             <span
               aria-hidden="true"
               className="relative block size-16 shrink-0 overflow-clip bg-placeholder"
             >
               <Image
-                src={faqPortrait}
+                src={harmonIcon}
                 alt=""
                 fill
                 sizes="64px"
-                className="object-cover object-top"
+                className="object-cover"
               />
             </span>
             <span className="relative flex flex-col gap-2">

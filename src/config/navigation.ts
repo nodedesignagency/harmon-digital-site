@@ -28,7 +28,7 @@ export const mainNav: NavItem[] = [
 ];
 
 /** Header call-to-action. */
-export const navCta: NavItem = { label: "Contact Us", href: "/contact" };
+export const navCta: NavItem = { label: "Book a Call", href: "/contact" };
 
 /**
  * Footer link columns, in the original's three groups. Titles carry their
@@ -61,9 +61,7 @@ export const footerNav: NavGroup[] = [
   {
     title: "{Follow Us}",
     items: [
-      { label: "LinkedIn", href: "https://www.linkedin.com/in/breejeanadkat/", external: true },
-      { label: "Instagram", href: "https://www.instagram.com/breeje.work/", external: true },
-      { label: "X/Twitter", href: "https://x.com/BreejeAnadkat", external: true },
+      { label: "LinkedIn", href: "https://www.linkedin.com/company/harmon-digital/", external: true },
     ],
   },
 ];
