@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+  <!-- Rounded diamond -->
+  <rect
+    x="340" y="90" width="320" height="320"
+    rx="95" ry="95"
+    fill="#fff"
+    transform="rotate(45 500 250)"
+  />
+
+  <!-- Top bowl (slightly closer than original, but not cramped) -->
+  <path
+    d="M 240 470 L 760 470 A 260 260 0 0 1 240 470 Z"
+    fill="#fff"
+  />
+
+  <!-- Bottom bowl (keeps a clean gap under the top bowl) -->
+  <path
+    d="M 240 740 L 760 740 A 260 260 0 0 1 240 740 Z"
+    fill="#fff"
+  />
+</svg>
