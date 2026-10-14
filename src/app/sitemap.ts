@@ -16,10 +16,9 @@ import { getRoles, roleHref } from "@/lib/careers";
  *
  * ── What is deliberately left out ──────────────────────────────────────────
  *
- * `/studio` is the CMS, `/dev/tokens` is a palette sheet for whoever is
- * building, and `/404` is the error design shown from the footer as a demo —
- * a real 404 is served by `not-found`, and neither wants to be a search
- * result. `robots.ts` says the same thing in the other direction.
+ * `/studio` is the CMS and `/dev/tokens` is a palette sheet for whoever is
+ * building — neither wants to be a search result. `robots.ts` says the same
+ * thing in the other direction.
  *
  * ── Priority and frequency ─────────────────────────────────────────────────
  *

@@ -7,14 +7,11 @@ import { notFoundContent } from "@/content/not-found";
 /**
  * The 404, as a view rather than a route.
  *
- * Two routes render it and they wrap it differently, which is the only reason
- * it was lifted out of `app/not-found.tsx`. That file is what Next serves for a
- * URL the app does not have, and it sits at the root — outside the (site) group
- * — so it brings the chrome itself. `(site)/404` is the linkable one the footer
- * points at, and is already inside the chrome.
- *
- * One copy because two would drift, and the one that drifted would be the one
- * nobody looks at until they have mistyped a URL.
+ * Rendered by `app/not-found.tsx`, which is what Next serves for a URL the app
+ * does not have; it sits at the root — outside the (site) group — so it brings
+ * the chrome itself. The template also had a linkable `(site)/404` route for
+ * its footer's "404" demo link; this site removed both, so a real miss is the
+ * only way here.
  *
  * The figure is set to the width of the page rather than to a size, so it
  * shrinks with the viewport and reads the same on a phone as on a desktop.

@@ -9,8 +9,7 @@ import { NotFoundView } from "@/components/sections/NotFoundView";
  * group. It still wears the site's chrome: someone who mistyped a URL is a
  * visitor, and should get the header and a way back rather than a bare page.
  *
- * The page itself is NotFoundView, which `(site)/404` renders too — see the
- * note there.
+ * The page itself is NotFoundView — see the note there.
  */
 
 export const metadata = {
