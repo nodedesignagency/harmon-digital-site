@@ -173,8 +173,10 @@
       "Everything runs more smoothly now, and the team can focus on growing the business instead of putting out fires."
     ],
     "gallery": [
-      { "url": "/uploads/images/case-producifyx-dashboard.jpg", "alt": "The ProducifyX admin dashboard" },
-      { "url": "/uploads/images/case-producifyx-overview.jpg", "alt": "The ProducifyX admin overview" }
+      { "url": "/uploads/images/case-producifyx-workflow.jpg", "alt": "The ProducifyX workflow builder: a new applicant triggers an email, a video interview and an SMS" },
+      { "url": "/uploads/images/case-producifyx-pipeline-editor.jpg", "alt": "Editing a hiring pipeline's stages in ProducifyX" },
+      { "url": "/uploads/images/case-producifyx-esignature.jpg", "alt": "Placing e-signature fields on a contract template" },
+      { "url": "/uploads/images/case-producifyx-dashboard.jpg", "alt": "The ProducifyX applicant pipeline" }
     ]
   },
   {
