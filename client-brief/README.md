@@ -13,6 +13,7 @@ The client liked the Mahadeva template and is adapting the Harmon brand to fit i
 | [`current-site/`](current-site/) | Verbatim text of every page on the current harmon-digital.com (home, services, about, portfolio, 9 case studies, careers, privacy, terms) |
 | [`current-site/images/`](current-site/images/) | Every image on the current site: logo icon, 13 client logos, case-study screenshots, Isaac's photo |
 | [`uploads/`](uploads/) | Files the client sent: colour logos (Neighbors Bank, Flume, ProducifyX, Unstack), photos of Isaac on stage, the ProducifyX team, Terri (Happy Endings owner) and a video-testimonial poster. The 13 client logos they also sent were identical to `current-site/images/clients/` and were not kept twice. |
+| [`uploads/portfolio-screenshots/`](uploads/portfolio-screenshots/) | The client's `05-portfolio-screenshots` folder — only the files that were new (Hoplite/Etto dashboard, three Neighbors Bank screenshots); the rest matched `current-site/images/portfolio/`. `neighbors-bank/slack-bot.png` is **not used**: its visible thread is a joke test message. Still to come: the `producifyx` folder (19 files). |
 
 Current brand mark (from the current site): white "//" on blue **#3959FF**, `current-site/images/logo/icon.png`.
 

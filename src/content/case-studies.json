@@ -32,8 +32,8 @@
       "Now they have real-time visibility across all operations, with automated workflows for quotes, invoicing, inventory, sales, service tickets and team management."
     ],
     "gallery": [
-      { "url": "/uploads/images/case-hoplite-etto-quotes.jpg", "alt": "The quote workflow automation" },
-      { "url": "/uploads/images/case-hoplite-etto-shopmonkey.jpg", "alt": "The Shopmonkey integration workflow" }
+      { "url": "/uploads/images/case-hoplite-etto-dashboard.jpg", "alt": "The Etto Live location audit in the custom operations software" },
+      { "url": "/uploads/images/case-hoplite-etto-quotes.jpg", "alt": "The quote workflow automation" }
     ]
   },
   {
@@ -136,6 +136,10 @@
     "solution": [
       "We built a custom Slack bot using RAG: underwriters ask questions in plain English and get instant answers from internal documents.",
       "Automated escalations and custom commands handle the advanced workflows."
+    ],
+    "gallery": [
+      { "url": "/uploads/images/case-neighbors-bank-rag-pipeline.jpg", "alt": "The document pipeline that loads files into the Pinecone vector store" },
+      { "url": "/uploads/images/case-neighbors-bank-slack-workflow.jpg", "alt": "The workflow behind the Slack bot's answers and escalations" }
     ]
   },
   {
