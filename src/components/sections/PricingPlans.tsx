@@ -97,20 +97,22 @@ function IncludesTitle({ children }: { children: string }) {
   );
 }
 
-/** Shared body shell: 3px border in the plan's colour, fixed height on desktop. */
+/** Shared body shell: 3px border in the plan's colour, 368 tall at least on desktop. */
 function PlanBody({ tone, children }: { tone: PlanTone; children: React.ReactNode }) {
   return (
     <div
       className={cn(
-        // `flex-none` at desktop matters: `flex-1` sets flex-basis 0, which
-        // wins over `height` in a column flex, so the fixed 368 would be
-        // silently ignored. Below desktop `flex-1` is what equalises a row.
+        // 368 is a floor on desktop, not a fixed height. Fixed, a list whose
+        // entries wrapped to two lines ran out through the card's foot and
+        // the button hung across the border. `flex-1` stays on at every
+        // width: with a minimum rather than a height it no longer fights
+        // flex-basis, and it is what keeps the two cards in a row level when
+        // one grows.
         // Padding 20 and gap 40 on a phone, which is what the owner's mobile
         // variant carries on this box. Ours had 24 and 32 — tighter between
         // the halves than the file, and looser around them, so the card read
         // as one denser block rather than two parts with air between.
-        // The tablet and desktop values are untouched.
-        "grid flex-1 border-[3px] bg-bg-white p-5 max-tablet:gap-10 tablet:p-6 tablet:grid-cols-2 desktop:h-[368px] desktop:flex-none",
+        "grid flex-1 border-[3px] bg-bg-white p-5 max-tablet:gap-10 tablet:p-6 tablet:grid-cols-2 desktop:min-h-[368px]",
         tones[tone].border,
       )}
     >

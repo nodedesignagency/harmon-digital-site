@@ -33,16 +33,10 @@ export const footerContent = {
   ],
 
   copyright: "@2026 Harmon Digital. All Rights Reserved.",
-  /** The people who built it, each linking to their own profile. */
-  credits: {
-    label: "Made by:",
-    people: [
-      { name: "Breeje", href: "https://x.com/BreejeAnadkat" },
-      { name: "Shubham", href: "https://www.linkedin.com/in/sbiswas29/" },
-      { name: "Anas", href: "https://x.com/AnasKaratela7" },
-    ],
-  },
 
-  /** The oversized wordmark the page closes on. */
-  wordmark: "Harmon",
+  /**
+   * The oversized wordmark the page closes on — the name with the "//" from
+   * the brand's icon between the two words.
+   */
+  wordmark: "Harmon // Digital",
 } as const;

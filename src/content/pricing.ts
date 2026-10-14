@@ -51,12 +51,13 @@ export const pricingContent = {
       body: "Build your own tables, pages, automations and integrations on Unstack — the platform we use for our own client work.",
       cta: { label: "Get Started", href: ctaHref("/contact") },
       includesTitle: "Do It Yourself includes:",
+      /** One line each, like the template's: the column is narrow. */
       includes: [
-        "Your own Unstack workspace",
-        "AI-built tables and pages",
-        "Automations and integrations",
-        "One platform, not six tools",
-        "Self-serve, at your own pace",
+        "Unstack workspace",
+        "AI-built tables & pages",
+        "Automations & integrations",
+        "Replaces scattered tools",
+        "Go at your own pace",
       ],
     },
     {
@@ -68,10 +69,10 @@ export const pricingContent = {
       cta: { label: "Book Training", href: ctaHref("/contact") },
       includesTitle: "Done With You includes:",
       includes: [
-        "1:1 sessions with your team",
-        "Claude, ChatGPT and Unstack",
-        "Workflow and bottleneck mapping",
-        "Building alongside your people",
+        "1:1 team sessions",
+        "Claude, ChatGPT & Unstack",
+        "Bottleneck mapping",
+        "Hands-on build support",
         "SOPs your team keeps",
       ],
     },

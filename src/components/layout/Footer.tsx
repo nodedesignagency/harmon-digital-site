@@ -4,7 +4,7 @@ import { CtaPanel } from "@/components/layout/CtaPanel";
 import { PatternField } from "@/components/motion/PatternField";
 import { Scramble } from "@/components/motion/Scramble";
 import { Button } from "@/components/ui/Button";
-import { footerNav } from "@/config/navigation";
+import { footerNav, legalNav } from "@/config/navigation";
 import { footerContent } from "@/content/footer";
 
 /**
@@ -136,32 +136,22 @@ export function Footer() {
             {footerContent.copyright}
           </p>
 
-          <p className="flex flex-wrap items-center gap-3 font-body text-body-lg">
-            <span className="text-fg-muted">{footerContent.credits.label}</span>
-
-            {/* The names and the dots between them share one 8px rhythm, so
-                they are one row rather than a name-plus-dot per person. */}
-            <span className="flex flex-wrap items-center gap-2">
-              {footerContent.credits.people.map((person, i) => (
-                <span key={person.name} className="flex items-center gap-2">
+          {/* The legal pages, where the original's bottom bar puts them. The
+              links and the dot between them share one 8px rhythm, so they are
+              one row rather than a link-plus-dot each. `mh-nav-link` is the
+              footer's own hover, resting at the ink the bar already has. */}
+          <nav aria-label="Legal" className="font-body text-body-lg">
+            <ul className="flex flex-wrap items-center gap-2">
+              {legalNav.map((item, i) => (
+                <li key={item.href} className="flex items-center gap-2">
                   {i > 0 ? <span aria-hidden="true">•</span> : null}
-                  {/* Each name goes to that person's own profile, off the
-                      site, so both hop out in a new tab like the Follow Us
-                      column above. `mh-nav-link` is the footer's own hover —
-                      it rests at the same ink these names already had, so
-                      nothing about the bar changes until one is pointed at. */}
-                  <a
-                    href={person.href}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="mh-nav-link"
-                  >
-                    {person.name}
-                  </a>
-                </span>
+                  <Link href={item.href} className="mh-nav-link">
+                    {item.label}
+                  </Link>
+                </li>
               ))}
-            </span>
-          </p>
+            </ul>
+          </nav>
         </Container>
       </div>
 
@@ -196,7 +186,11 @@ export function Footer() {
             neither crosses it. */}
         <div style={{ paddingTop: BAR, paddingBottom: BAR }}>
           <Container className="@container">
-            <p className="w-full text-center font-body text-[22.6cqw] leading-[0.86] font-normal tracking-(--tracking-display) text-fg/[0.06]">
+            {/* 14.3cqw is what makes "Harmon // Digital" fill the measure:
+                the template's eight-letter word filled it at 22.6, and this
+                one is 1.576 times as wide at the same size. Measured, not
+                estimated — change the word and re-measure. */}
+            <p className="w-full text-center font-body text-[14.3cqw] leading-[0.86] font-normal tracking-(--tracking-display) text-fg/[0.06]">
               {footerContent.wordmark}
             </p>
           </Container>

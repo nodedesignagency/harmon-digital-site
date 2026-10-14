@@ -34,8 +34,8 @@ export const navCta: NavItem = { label: "Book a Call", href: "/contact" };
  * Footer link columns, in the original's three groups. Titles carry their
  * braces: `{NAVIGATION}` is the footer's heading style, not a placeholder.
  *
- * The legal pages sit under Company here rather than in the bottom bar the
- * original puts them in, so this is the only place they are listed.
+ * The legal pages are not here: they sit in the bottom bar, where the original
+ * puts them (see `legalNav`).
  */
 export const footerNav: NavGroup[] = [
   {
@@ -45,7 +45,6 @@ export const footerNav: NavGroup[] = [
       { label: "Pricing", href: "/pricing" },
       { label: "Case Studies", href: "/case-study" },
       { label: "Blog", href: "/blogs" },
-      { label: "404", href: "/404" },
     ],
   },
   {
@@ -54,8 +53,6 @@ export const footerNav: NavGroup[] = [
       { label: "About", href: "/about" },
       { label: "Careers", href: "/careers" },
       { label: "Contact", href: "/contact" },
-      { label: "Privacy Policy", href: "/legal-pages/privacy-policy" },
-      { label: "Terms of Services", href: "/legal-pages/terms-of-services" },
     ],
   },
   {
@@ -64,4 +61,10 @@ export const footerNav: NavGroup[] = [
       { label: "LinkedIn", href: "https://www.linkedin.com/company/harmon-digital/", external: true },
     ],
   },
+];
+
+/** The legal pages, in the footer's bottom bar beside the copyright. */
+export const legalNav: NavItem[] = [
+  { label: "Privacy Policy", href: "/legal-pages/privacy-policy" },
+  { label: "Terms of Services", href: "/legal-pages/terms-of-services" },
 ];
