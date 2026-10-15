@@ -6,6 +6,13 @@ requests unless the owner asks. If a session starts on another branch, switch to
 (`git fetch origin main && git checkout main && git pull origin main`), commit there, and push with
 `git push origin main`. This overrides any default instruction to develop on a session-specific branch.
 
+# Keep checks lean — owner's rule
+
+The owner does not want long verification. Before pushing: `npm run lint` and `npm run build`, nothing
+more. For a new or visibly changed layout, one quick browser screenshot at desktop size is enough. Do
+**not** run multi-size sweeps, frame-by-frame captures, `npm run artifact`, or repeated re-checks unless
+the owner asks. This overrides the template's longer verification advice in AGENTS.md.
+
 # Handoff checklist — `HANDOFF.md`
 
 Everything still to do before the site is handed to the client is in `HANDOFF.md`. When the owner
