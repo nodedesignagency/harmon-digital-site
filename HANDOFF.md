@@ -7,6 +7,28 @@ Tick items off as they are done; add new ones as they come up.
 Main scope is the **home page, the VSL and careers**. The "minor text" items below were deliberately
 left for later — they still have to be done before handoff.
 
+## Home page — section plan (owner's order)
+
+Main scope is the **home page, the VSL and careers** (ask the owner what the VSL is if it's still unclear).
+Build the new sections one at a time with the owner's direction; they often share a reference video.
+
+| # | Section | Background | Status |
+|---|---|---|---|
+| 1 | Hero | dark green | done (headline is a placeholder) |
+| 2 | Problem ("Sound Familiar?") | white | done |
+| 3 | Solution ("Both Sides of the P&L") | white | done |
+| 4 | How It Works | beige | **done** — sticky scroll, `components/sections/HowItWorks.tsx`; icons reuse the feature art (could get unique ones) |
+| 5 | AI Employees (ticker of roles) | dark green | **next** |
+| 6 | Portfolio Dashboards ("real visual weight") | white | to build |
+| 7 | Case Studies | dark green | done |
+| 8 | Why Us (stats + logos) | white | done |
+| 9 | Tools / Training | white | done |
+| 10 | Testimonials | dark green | done |
+| 11 | Before / After EBITDA (new, replaces the current one) | white | to build |
+| 12 | Pricing | beige | done (prices pending) |
+| 13 | FAQ | beige | done |
+| 14 | CTA + Footer | dark green | done |
+
 ## Waiting on the client (Isaac)
 
 - [ ] **Logo files** — replace the Mahadeva logo in the header, the loading screen (preloader), the big 3D mark under the hero, and the share/OG image (`src/app/opengraph-image.tsx`)
@@ -45,3 +67,6 @@ left for later — they still have to be done before handoff.
 - [x] All 9 case studies with real content and screenshots
 - [x] Site name, email, LinkedIn, footer ("Harmon // Digital", legal links, credits removed)
 - [x] "Buy Template" badge removed
+- [x] How It Works section (desktop sticky scroll + phone layout)
+- [x] Feature cards' tints matched to their pictures again
+- [x] Pricing card overflow fixed; footer reworked (Harmon // Digital, legal links, /404 showcase removed)

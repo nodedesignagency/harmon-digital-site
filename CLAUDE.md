@@ -13,6 +13,15 @@ more. For a new or visibly changed layout, one quick browser screenshot at deskt
 **not** run multi-size sweeps, frame-by-frame captures, `npm run artifact`, or repeated re-checks unless
 the owner asks. This overrides the template's longer verification advice in AGENTS.md.
 
+# Preview file — how the owner checks work
+
+The owner reviews the site as one HTML file, not a link (an artifact link can't host a real company's
+site). When they ask for "the preview": run `npm run build` (skip if the last build is current), then
+`node scripts/build-artifact.mjs`, then embed every `/uploads/(images|logos)/*.jpg|png` path in
+`site.standalone.html` as a base64 data URI (the bundler only packs imported images; case-study images
+are plain paths) and save it as `harmon-digital-site-preview.html` in the scratchpad. Send it with
+SendUserFile (display "attach"), then delete `site.html` and `site.standalone.html`. No checks on it.
+
 # Handoff checklist — `HANDOFF.md`
 
 Everything still to do before the site is handed to the client is in `HANDOFF.md`. When the owner
