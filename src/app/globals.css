@@ -890,6 +890,21 @@ body:has([data-page-surface="hero"])
   will-change: transform;
 }
 
+/* The same lap run backwards, for a row travelling right — the AI Employees
+ * ticker sets its two rows against each other. */
+.mh-marquee-reverse {
+  animation-direction: reverse;
+}
+
+/* A row whose items are meant to be read stops under the pointer. Gated on a
+ * real pointer, like every hover here: on a touch device `:hover` sticks after
+ * a tap and would leave the row parked. */
+@media (hover: hover) {
+  .mh-marquee-pause:hover {
+    animation-play-state: paused;
+  }
+}
+
 /* Both ends dissolve rather than being cut.
  *
  * A row that loops has no first or last item, and a hard edge says otherwise:

@@ -2,6 +2,7 @@ import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
 import { Features } from "@/components/sections/Features";
 import { HowItWorks } from "@/components/sections/HowItWorks";
+import { AiEmployees } from "@/components/sections/AiEmployees";
 import { CaseStudies } from "@/components/sections/CaseStudies";
 import { Trust } from "@/components/sections/Trust";
 import { TechStack } from "@/components/sections/TechStack";
@@ -13,6 +14,7 @@ import { PageSurface } from "@/components/layout/PageSurface";
 import { Preloader, PreloaderScript } from "@/components/motion/Preloader";
 import {
   aboutContent,
+  aiEmployeesContent,
   beforeAfterContent,
   featuresContent,
   heroContent,
@@ -36,6 +38,9 @@ import { getCaseStudies } from "@/lib/case-studies";
  * How It Works is Harmon Digital's addition, the brief's fourth section: a
  * beige band between the white features and the dark case studies, so the
  * background runs white -> beige -> green there.
+ *
+ * AI Employees, the brief's fifth, follows it on the dark green: a ticker of
+ * the roles Harmon sets up, ahead of the case studies.
  */
 export default async function HomePage() {
   const studies = await getCaseStudies();
@@ -62,6 +67,7 @@ export default async function HomePage() {
       </div>
       <Features content={featuresContent} />
       <HowItWorks content={howItWorksContent} />
+      <AiEmployees content={aiEmployeesContent} />
       <CaseStudies content={caseStudiesContent} studies={studies} />
       <Trust content={trustContent} />
       <TechStack content={techStackContent} />

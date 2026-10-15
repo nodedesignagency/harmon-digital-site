@@ -212,6 +212,100 @@ export const howItWorksContent = {
 };
 
 /**
+ * AI Employees — the brief's fifth section: "a ticker of the roles we set up
+ * (inbound responder, follow-up agent, outbound SDR, ops coordinator,
+ * back-office assistant, etc.)".
+ *
+ * The first five are the brief's; the rest are the agents in the client's own
+ * case studies and services page — the appointment setter (Mike's Fences), the
+ * email agent (Happy Endings), the Slack knowledge assistant (Neighbors Bank).
+ *
+ * The roles are listed once, in roster order. The section runs them as two
+ * rows travelling in opposite directions, the first half on top, so `tone`
+ * is picked to keep neighbours apart along each row — including across the
+ * loop, where a row's last badge meets its first. `tone` is one of the
+ * statistics' four tints, because the badges borrow those panels' hover.
+ */
+export const aiEmployeesContent = {
+  headingLines: ["AI Employees That", "Never Clock Out"],
+  subheading:
+    "Not chatbots. Trained AI employees working inside your portcos’ own systems, around the clock. We set up the roles each business needs, then keep them improving.",
+  cta: { label: "Book a Call", href: ctaHref("/contact") } satisfies CtaLink,
+  roles: [
+    {
+      title: "Inbound Responder",
+      department: "Sales",
+      body: "Answers every call, form and chat in seconds, qualifies the lead and books the meeting.",
+      tone: "green",
+    },
+    {
+      title: "Ops Coordinator",
+      department: "Operations",
+      body: "Keeps jobs, schedules and hand-offs moving between teams, and flags what’s stuck.",
+      tone: "peach",
+    },
+    {
+      title: "Outbound SDR",
+      department: "Sales",
+      body: "Researches accounts, writes personal outreach and fills the calendar with meetings.",
+      tone: "blue",
+    },
+    {
+      title: "Back-Office Assistant",
+      department: "Finance",
+      body: "Takes over the data entry, invoicing and reconciliation done by hand today.",
+      tone: "magenta",
+    },
+    {
+      title: "Follow-Up Agent",
+      department: "Sales",
+      body: "Chases quotes, missed calls and quiet threads until they close. Never forgets one.",
+      tone: "peach",
+    },
+    {
+      title: "Support Agent",
+      department: "Support",
+      body: "Answers customers around the clock and hands the hard questions to your team.",
+      tone: "blue",
+    },
+    {
+      title: "Appointment Setter",
+      department: "Sales",
+      body: "Qualifies prospects, gathers the project details and books estimates automatically.",
+      tone: "magenta",
+    },
+    {
+      title: "Reporting Analyst",
+      department: "Finance",
+      body: "Pulls the numbers from every system into one weekly report for the fund.",
+      tone: "green",
+    },
+    {
+      title: "Email Agent",
+      department: "Operations",
+      body: "Reads, drafts, routes and sends email, and follows up when things go quiet.",
+      tone: "peach",
+    },
+    {
+      title: "Knowledge Assistant",
+      department: "Operations",
+      body: "Answers your team’s questions from your own SOPs and documents, right in Slack.",
+      tone: "green",
+    },
+  ],
+} as const satisfies {
+  headingLines: readonly string[];
+  subheading: string;
+  cta: CtaLink;
+  roles: readonly {
+    title: string;
+    department: string;
+    body: string;
+    tone: TrustTone;
+  }[];
+};
+
+/**
  * Trust section — "Why Top Companies Trust Us".
  *
  * Four statistics, then a strip of client marks. Each statistic splits its
