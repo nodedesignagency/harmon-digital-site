@@ -18,7 +18,7 @@ Build the new sections one at a time with the owner's direction; they often shar
 | 2 | Problem ("Sound Familiar?") | white | done |
 | 3 | Solution ("Both Sides of the P&L") | white | done |
 | 4 | How It Works | beige | **done** — sticky scroll, `components/sections/HowItWorks.tsx`; icons reuse the feature art (could get unique ones) |
-| 5 | AI Employees (ticker of roles) | dark green | **done** — two-row badge ticker, `components/sections/AiEmployees.tsx`; 10 roles in `aiEmployeesContent`. Owner is sending an animation reference — rework the motion to match it |
+| 5 | AI Employees (bento of roles) | dark green | **done** — `components/sections/AiEmployees.tsx`: the brief's five roles + a sixth "Create Your Own AI Employee" CTA tile; pictures reuse the feature art |
 | 6 | Portfolio Dashboards ("real visual weight") | white | **next** |
 | 7 | Case Studies | dark green | done |
 | 8 | Why Us (stats + logos) | white | done |
@@ -41,7 +41,6 @@ Build the new sections one at a time with the owner's direction; they often shar
 - [ ] **ProducifyX dashboard screenshot** — OK to use? It shows "$0 MRR", "0 hires" and ProducifyX's customer names
 - [ ] **Clean Neighbors Bank Slack screenshot** — the one supplied shows a joke test message, so it isn't used
 - [ ] **Etto dashboard screenshot** — the one used shows sandbox/test data; a version with real-looking data would be better
-- [ ] Confirm the **AI Employees roles** — the brief names five; the other five (appointment setter, support agent, reporting analyst, email agent, knowledge assistant) come from the case studies and services page (`src/content/home.ts`, `aiEmployeesContent`)
 - [ ] Confirm case study order (home shows Hoplite/Etto, Happy Endings, SunMed first)
 
 ## Minor text pages (left for later on purpose)
@@ -69,6 +68,6 @@ Build the new sections one at a time with the owner's direction; they often shar
 - [x] Site name, email, LinkedIn, footer ("Harmon // Digital", legal links, credits removed)
 - [x] "Buy Template" badge removed
 - [x] How It Works section (desktop sticky scroll + phone layout)
-- [x] AI Employees ticker (10 roles, two rows, pauses on hover)
+- [x] AI Employees bento (five roles from the brief + CTA tile)
 - [x] Feature cards' tints matched to their pictures again
 - [x] Pricing card overflow fixed; footer reworked (Harmon // Digital, legal links, /404 showcase removed)
