@@ -540,8 +540,12 @@ export const beforeAfterEbitdaContent = {
   headingBefore: "Before",
   headingJoin: "vs",
   headingAfter: "After",
-  titleLines: ["The EBITDA Bridge"],
-  body: "One illustrative portco: what its EBITDA is before we start, and where the extra comes from once the costs are cut and the missed revenue is captured.",
+  /** The panel's statement. Its second line is set a step back. */
+  titleLines: ["Same portco,", "more EBITDA."],
+  /** The line over the chart, its second half a step back. */
+  lead: "Cut the costs, capture the revenue that slipped away,",
+  tail: "and see what it does to EBITDA.",
+  legend: { added: "What we add", carried: "What was already there" },
   example: "Illustrative portco · $20M revenue",
   ebitda: { label: "EBITDA", before: 2_400_000, after: 3_750_000 },
   /** Only for the margin under the EBITDA figure. */
@@ -567,7 +571,9 @@ export const beforeAfterEbitdaContent = {
   headingJoin: string;
   headingAfter: string;
   titleLines: readonly string[];
-  body: string;
+  lead: string;
+  tail: string;
+  legend: { added: string; carried: string };
   example: string;
   ebitda: { label: string; before: number; after: number };
   revenue: { before: number; after: number };

@@ -14,9 +14,11 @@ import { cn } from "@/lib/cn";
  *
  * The opening is the original Before vs After's (BeforeAfter.tsx): the three
  * words pinned in the middle of the screen, parting to either side and fading
- * as the panel below rides up over them. The panel carries an EBITDA bridge
- * after the owner's reference — columns with a heavy cap line at their value
- * and the figure hung under it, one column picked out in a solid fill.
+ * as the panel below rides up over them. The panel is the page's width in
+ * white, split in two by a hairline: a statement and the EBITDA figure on the
+ * left, and on the right an EBITDA bridge after the owner's reference —
+ * columns with a heavy cap line at their value and the figure hung under it,
+ * one column picked out in a solid fill.
  *
  * Once the panel has arrived it pins too, and the bridge builds as the reader
  * scrolls on: at first only "EBITDA before" stands; halfway through the pin
@@ -39,7 +41,7 @@ import { cn } from "@/lib/cn";
  * phone the bridge turns on its side: one row per column, bars running right.
  *
  * The section is the dark green, as the original is (`data-bg="green"`); the
- * panel paints its own light fill, so everything in it keeps fixed ink.
+ * panel paints its own white, so everything in it keeps fixed ink.
  */
 
 type Content = typeof beforeAfterEbitdaContent;
@@ -128,9 +130,13 @@ function bridge(content: Content): Bar[] {
   ];
 }
 
-/** Fill above the carried total: the gain in green, the result in the site's dark. */
+/**
+ * Fill above the carried total: what was there hatched, the gain in green, the
+ * result in the site's dark. The carried total under a step is hatched too —
+ * the reference's way of drawing "already there" on a white page.
+ */
 const fills: Record<Bar["kind"], string> = {
-  start: "bg-bg-white",
+  start: "hatch",
   step: "bg-tool-shape-green",
   end: "bg-bg",
 };
@@ -232,48 +238,65 @@ export function BeforeAfterEbitda({ content }: BeforeAfterEbitdaProps) {
         </p>
       </div>
 
+      {/* The panel: the full width of the page in white, split down the
+          middle by a hairline after the owner's reference — the statement and
+          the figure it comes to on the left, the chart on the right. */}
       <div
         ref={panel}
-        className="relative z-10 pin:sticky pin:top-0 pin:flex pin:h-svh pin:items-center pin:pt-header"
+        className="relative z-10 bg-bg-white text-fg-on-light pin:sticky pin:top-0 pin:h-svh pin:pt-header"
       >
-        <Container>
-          <div className="grid gap-10 bg-bg-light p-6 text-fg-on-light tablet:grid-cols-[0.8fr_1.6fr] tablet:p-10 desktop:gap-16">
-            <div className="flex flex-col">
-              <p className="font-ui text-label tracking-(--tracking-label) text-fg-on-light-muted uppercase">
-                {content.example}
-              </p>
-              <TextReveal
-                as="h2"
-                lines={content.titleLines}
-                settings={sectionTextReveal}
-                className="mt-4 flex flex-col items-start gap-(--space-heading-line) text-display-md leading-(--leading-display) tracking-(--tracking-display) font-normal"
-              />
-              <p className="mt-4 max-w-[40ch] font-body text-body-sm text-fg-on-light-muted">
-                {content.body}
-              </p>
+        {/* Two to three: the statement needs little width, the chart's seven
+            columns all of it. */}
+        <Container className="grid tablet:grid-cols-[2fr_3fr] pin:h-full">
+          <div className="flex flex-col py-12 tablet:py-10 tablet:pr-10 desktop:pr-16">
+            {/* The second line steps back, as the reference's does. */}
+            <TextReveal
+              as="h2"
+              lines={content.titleLines}
+              settings={sectionTextReveal}
+              className="flex flex-col items-start gap-(--space-heading-line) text-display-xl leading-(--leading-display) tracking-(--tracking-display) font-normal [&>:last-child]:opacity-40"
+            />
 
-              <div className="mt-8 tablet:mt-auto">
-                <p className="font-body text-body-md">{ebitda.label}</p>
-                <NumberFlow
-                  value={after ? ebitda.after : ebitda.before}
-                  format={money}
-                  className="mt-1 font-ui text-stat-sm leading-none font-light"
-                />
-                <p className="mt-2 font-ui text-body-sm text-fg-on-light-muted">
-                  <NumberFlow value={margin} format={{ style: "percent", maximumFractionDigits: 1 }} />{" "}
-                  {content.marginLabel}
-                </p>
-                <div
-                  className={cn("mt-4 font-ui text-body-md transition-opacity", ease, after ? "opacity-100" : "opacity-0")}
-                  style={{ transitionDelay: after ? finale : "0s" }}
-                >
-                  <p>{`${formatGain(gained)} ${content.gainLabel}`}</p>
-                  <p className="mt-1">{`≈ ${formatGain(gained * content.multiple)} ${content.valueLabel} ${content.multiple}×`}</p>
-                </div>
+            <div className="mt-12 tablet:mt-auto">
+              <p className="font-body text-body-md">{ebitda.label}</p>
+              <NumberFlow
+                value={after ? ebitda.after : ebitda.before}
+                format={money}
+                className="mt-2 font-ui text-stat leading-none font-light"
+              />
+              <p className="mt-3 font-ui text-body-sm text-fg-on-light-muted">
+                <NumberFlow value={margin} format={{ style: "percent", maximumFractionDigits: 1 }} />{" "}
+                {content.marginLabel}
+              </p>
+              <div
+                className={cn("mt-5 font-ui text-body-md transition-opacity", ease, after ? "opacity-100" : "opacity-0")}
+                style={{ transitionDelay: after ? finale : "0s" }}
+              >
+                <p>{`${formatGain(gained)} ${content.gainLabel}`}</p>
+                <p className="mt-1">{`≈ ${formatGain(gained * content.multiple)} ${content.valueLabel} ${content.multiple}×`}</p>
               </div>
             </div>
+          </div>
 
-            <div ref={chart}>
+          <div className="flex flex-col border-t border-border-on-light py-12 tablet:border-t-0 tablet:border-l tablet:py-10 tablet:pl-10 desktop:pl-16">
+            <p className="font-ui text-label tracking-(--tracking-label) text-fg-on-light-muted uppercase">
+              {content.example}
+            </p>
+            <p className="mt-3 max-w-[40ch] font-display text-heading-lg leading-(--leading-heading)">
+              {content.lead} <span className="opacity-40">{content.tail}</span>
+            </p>
+            <ul aria-hidden="true" className="mt-5 flex flex-wrap gap-x-5 gap-y-2 font-ui text-label">
+              <li className="flex items-center gap-2">
+                <span className="size-2.5 bg-tool-shape-green" />
+                {content.legend.added}
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="hatch size-2.5 border border-fg-on-light/25" />
+                {content.legend.carried}
+              </li>
+            </ul>
+
+            <div ref={chart} className="mt-8 tablet:mt-auto">
               {/* What a screen reader gets instead of the chart. */}
               <ul className="sr-only">
                 {bars.map((bar) => (
@@ -283,9 +306,9 @@ export function BeforeAfterEbitda({ content }: BeforeAfterEbitdaProps) {
 
               <VerticalBridge bars={bars} after={after} />
               <HorizontalBridge bars={bars} after={after} />
-
-              <p className="mt-6 font-ui text-label text-fg-on-light-muted">{content.footnote}</p>
             </div>
+
+            <p className="mt-6 font-ui text-label text-fg-on-light-muted">{content.footnote}</p>
           </div>
         </Container>
       </div>
@@ -325,7 +348,7 @@ function VerticalBridge({ bars, after }: { bars: Bar[]; after: boolean }) {
   return (
     <div aria-hidden="true" className="hidden tablet:block">
       <div className="flex">
-        <div className="relative h-[320px] flex-1 border-b-[3px] border-fg-on-light">
+        <div className="relative h-[clamp(200px,32svh,320px)] flex-1 border-b-[3px] border-fg-on-light">
           <div className="absolute inset-0 grid grid-cols-7 gap-1.5">
             {bars.map((bar) => {
               const { shown, delay } = rise(bar, after);
@@ -342,7 +365,7 @@ function VerticalBridge({ bars, after }: { bars: Bar[]; after: boolean }) {
                   >
                     {bar.kind === "step" ? (
                       <div
-                        className="absolute inset-x-0 bottom-0 border-t border-fg-on-light/25 bg-bg-white"
+                        className="hatch absolute inset-x-0 bottom-0 border-t border-fg-on-light/25"
                         style={{ height: `${carried * 100}%` }}
                       />
                     ) : null}
@@ -376,7 +399,7 @@ function VerticalBridge({ bars, after }: { bars: Bar[]; after: boolean }) {
           </div>
         </div>
 
-        <div className="relative h-[320px] w-14 shrink-0">
+        <div className="relative h-[clamp(200px,32svh,320px)] w-14 shrink-0">
           {TICKS.map((tick) => (
             <span
               key={tick}
@@ -432,7 +455,7 @@ function HorizontalBridge({ bars, after }: { bars: Bar[]; after: boolean }) {
               >
                 {bar.kind === "step" ? (
                   <div
-                    className="absolute inset-y-0 left-0 border-r border-fg-on-light/25 bg-bg-white"
+                    className="hatch absolute inset-y-0 left-0 border-r border-fg-on-light/25"
                     style={{ width: `${carried * 100}%` }}
                   />
                 ) : null}
