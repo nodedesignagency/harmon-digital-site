@@ -118,7 +118,10 @@ export function AiEmployees({ content }: AiEmployeesProps) {
             settings={sectionTextRevealDynamic}
             className="flex flex-col items-start gap-(--space-heading-line) text-display-lg leading-(--leading-display) tracking-(--tracking-display) font-normal"
           />
-          <p className="text-ink-dynamic max-w-[42ch] font-body text-body-md tablet:pt-2">
+          {/* The small size, and level with the heading's foot from tablet up,
+              so the line reads as a caption to the heading rather than a block
+              running on below it. */}
+          <p className="text-ink-dynamic max-w-[48ch] font-body text-body-sm tablet:self-end">
             {content.subheading}
           </p>
         </div>
@@ -153,12 +156,14 @@ export function AiEmployees({ content }: AiEmployeesProps) {
                 {content.custom.title}
               </h3>
               {/* `plan`: the dark body with the white arrow box, drawn for a
-                  light card. The primary's white body would vanish here. */}
+                  light card. The primary's white body would vanish here.
+                  240 rather than the site's 267, per the owner: at full width
+                  it crowded the heading on the one line they share. */}
               <Button
                 href={content.custom.cta.href}
                 variant="plan"
                 withArrow
-                className="w-full shrink-0 tablet:w-[267px]"
+                className="w-full shrink-0 tablet:w-[240px]"
               >
                 {content.custom.cta.label}
               </Button>
