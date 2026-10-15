@@ -100,13 +100,17 @@ export const featuresContent = {
    * data with no bundler imports, and a card whose art has not landed yet is
    * simply a key the artwork map does not answer, which the card renders as a
    * placeholder instead of failing.
+   *
+   * `tone` follows `image`, not the card's position: each picture was drawn
+   * for one tint (coin/peach, database/magenta, arrows/lavender, bolt/green,
+   * robot/blue, puzzle/rose). Move a picture and its tone moves with it.
    */
   cards: [
     {
       title: "Cut Software Spend",
       body: "Replace the stack of SaaS tools your teams work around with one system you own.",
       image: "revenue",
-      tone: "blue",
+      tone: "peach",
     },
     {
       title: "Lower Fulfillment Costs",
@@ -118,25 +122,25 @@ export const featuresContent = {
       title: "Automated Follow-Up",
       body: "Every lead and missed call gets an instant, consistent follow-up, around the clock.",
       image: "improvement",
-      tone: "green",
+      tone: "lavender",
     },
     {
       title: "Inbound That Converts",
       body: "AI responders answer, qualify and book inbound leads the moment they arrive.",
       image: "workflow",
-      tone: "rose",
+      tone: "green",
     },
     {
       title: "Outbound That Scales",
       body: "AI SDRs prospect and follow up, so pipeline grows without adding headcount.",
       image: "agents",
-      tone: "lavender",
+      tone: "blue",
     },
     {
       title: "Custom Software Moats",
       body: "Own your data and workflows, and ship new features without waiting on vendors.",
       image: "integrations",
-      tone: "peach",
+      tone: "rose",
     },
   ],
 } as const;
@@ -146,6 +150,66 @@ export type FeatureImage = (typeof featuresContent.cards)[number]["image"];
 
 /** Which pastel a card is filled with. */
 export type FeatureTone = (typeof featuresContent.cards)[number]["tone"];
+
+/**
+ * How It Works — the brief's process, as a pinned scroll: the step number and
+ * its picture hold still while each step's words scroll past.
+ *
+ * The five steps are the brief's own: "a full Audit (visual maps and SOPs),
+ * Identify bottlenecks and opportunities, build, deploy and train, then keep
+ * improving." The sentences under them borrow from the client's current
+ * site's "How it works" where it says the same thing.
+ *
+ * `image` names one of the six 3D pictures the feature strip also uses, and
+ * `tone` is the tint that picture was drawn for — the same pairing as the
+ * feature cards, so the two sections read as one set.
+ */
+export const howItWorksContent = {
+  headingLines: ["How It Works"],
+  subheading:
+    "We don’t guess. We map how your portcos actually run, build what moves the numbers, and stay on to keep improving it. Most clients are live in 4–8 weeks.",
+  steps: [
+    {
+      title: "Audit",
+      body: "A full audit of how the business runs — visual process maps and SOPs for every workflow, so you see exactly where time and money go.",
+      image: "data",
+      tone: "magenta",
+    },
+    {
+      title: "Identify",
+      body: "We pinpoint the bottlenecks and the biggest opportunities: the software and fulfillment costs to cut, and the revenue being left on the table.",
+      image: "integrations",
+      tone: "rose",
+    },
+    {
+      title: "Build",
+      body: "Custom software, AI employees and automations, scoped to the business and built in sprints. Working software along the way, no surprises.",
+      image: "workflow",
+      tone: "green",
+    },
+    {
+      title: "Deploy & Train",
+      body: "We launch it, train your people on the systems and on Claude, ChatGPT and Unstack, and make sure it works in the real world — not just in a demo.",
+      image: "agents",
+      tone: "blue",
+    },
+    {
+      title: "Keep Improving",
+      body: "As the business changes, the systems should too. We stay on, track the gains, and keep making it better.",
+      image: "improvement",
+      tone: "lavender",
+    },
+  ],
+} as const satisfies {
+  headingLines: readonly string[];
+  subheading: string;
+  steps: readonly {
+    title: string;
+    body: string;
+    image: FeatureImage;
+    tone: FeatureTone;
+  }[];
+};
 
 /**
  * Trust section — "Why Top Companies Trust Us".

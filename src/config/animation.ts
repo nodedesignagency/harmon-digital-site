@@ -1511,3 +1511,34 @@ export const anchorScroll = {
   /** Seconds for the travel. */
   duration: 1.1,
 } as const;
+
+/**
+ * How It Works — the block sweep over the step tile.
+ *
+ * When the next step takes the centre, blocks in a deeper step of its tint
+ * slide in from the tile's edges, hold, and slide back out, and the picture
+ * and tint change underneath at the midpoint. It is the same gesture as the
+ * case, trust and testimonial rectangles — blocks arriving from outside and
+ * sitting flush — played once per step change instead of on hover, which is
+ * this site's version of the pixel swap in the owner's reference.
+ *
+ * Rectangles are given in percent of the tile, which is square and changes
+ * size across breakpoints, at their covering position with `dx`/`dy` back to
+ * where they wait; see `lib/hoverRect`. Together they cover a little over
+ * half the tile: enough to carry the swap, not so much that it reads as a
+ * curtain.
+ */
+export const stepSweep = {
+  /** Milliseconds for the whole in-hold-out; the swap happens at half. */
+  duration: 900,
+
+  rects: [
+    { w: "38%", h: "14%", left: 0, top: "6%", dx: "-100%", dy: 0 },
+    { w: "22%", h: "34%", right: 0, top: 0, dx: "100%", dy: 0 },
+    { w: "18%", h: "30%", left: "40%", top: 0, dx: 0, dy: "-100%" },
+    { w: "30%", h: "26%", left: 0, top: "40%", dx: "-100%", dy: 0 },
+    { w: "48%", h: "12%", right: 0, top: "52%", dx: "100%", dy: 0 },
+    { w: "42%", h: "16%", left: 0, bottom: "6%", dx: "-100%", dy: 0 },
+    { w: "26%", h: "24%", right: 0, bottom: 0, dx: "100%", dy: 0 },
+  ],
+} as const;

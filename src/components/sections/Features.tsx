@@ -1,22 +1,10 @@
 import type { CSSProperties } from "react";
-import type { StaticImageData } from "next/image";
-
-// Every file is named for the card it belongs to, which for four of the six is
-// not what the picture shows: card-custom-ai-agents is the lightning bolt,
-// card-data-intelligence is the robot, card-workflow-automation is the
-// database. Imported under what each picture actually is, so the map below
-// reads true.
-import arrows from "@public/uploads/images/card-continuous-improvement.png";
-import lightning from "@public/uploads/images/card-custom-ai-agents.png";
-import robot from "@public/uploads/images/card-data-intelligence.png";
-import coin from "@public/uploads/images/card-revenue-optimization.png";
-import puzzle from "@public/uploads/images/card-smart-integrations.png";
-import database from "@public/uploads/images/card-workflow-automation.png";
 import { Container } from "@/components/layout/Container";
 import { TextReveal } from "@/components/motion/TextReveal";
 import { FeatureCard } from "@/components/ui/FeatureCard";
+import { featureArtwork } from "@/components/ui/featureArtwork";
 import { featureMarquee, sectionTextRevealDynamic } from "@/config/animation";
-import type { FeatureImage, featuresContent } from "@/content/home";
+import type { featuresContent } from "@/content/home";
 
 /**
  * Feature strip — the cards travelling left on a continuous marquee.
@@ -38,22 +26,6 @@ import type { FeatureImage, featuresContent } from "@/content/home";
 const CARD_WIDTH = 265;
 const CARD_GAP = 20;
 
-/**
- * Card key to picture, and every card has one — the record is total rather
- * than partial, so a seventh card added without artwork is a build error and
- * not a dashed box someone notices on the live site. `FeatureCard` still draws
- * that box; making the set complete here is what stops it being reached by
- * accident.
- */
-const artwork: Record<FeatureImage, StaticImageData> = {
-  agents: robot,
-  data: database,
-  workflow: lightning,
-  integrations: puzzle,
-  improvement: arrows,
-  revenue: coin,
-};
-
 type FeaturesProps = {
   content: typeof featuresContent;
 };
@@ -70,7 +42,7 @@ export function Features({ content }: FeaturesProps) {
         title={card.title}
         body={card.body}
         tone={card.tone}
-        image={artwork[card.image]}
+        image={featureArtwork[card.image]}
       />
     </li>
   ));

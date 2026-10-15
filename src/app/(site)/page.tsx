@@ -1,6 +1,7 @@
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
 import { Features } from "@/components/sections/Features";
+import { HowItWorks } from "@/components/sections/HowItWorks";
 import { CaseStudies } from "@/components/sections/CaseStudies";
 import { Trust } from "@/components/sections/Trust";
 import { TechStack } from "@/components/sections/TechStack";
@@ -15,6 +16,7 @@ import {
   beforeAfterContent,
   featuresContent,
   heroContent,
+  howItWorksContent,
   techStackContent,
   testimonialsContent,
   trustContent,
@@ -28,8 +30,12 @@ import { getCaseStudies } from "@/lib/case-studies";
  * Home page.
  *
  * Sections are added one at a time, in the order of the original template:
- * Hero -> About -> Features -> Case Studies -> Stats -> Tech Stack ->
- * Testimonials -> Before/After -> Pricing -> FAQ -> CTA.
+ * Hero -> About -> Features -> How It Works -> Case Studies -> Stats ->
+ * Tech Stack -> Testimonials -> Before/After -> Pricing -> FAQ -> CTA.
+ *
+ * How It Works is Harmon Digital's addition, the brief's fourth section: a
+ * beige band between the white features and the dark case studies, so the
+ * background runs white -> beige -> green there.
  */
 export default async function HomePage() {
   const studies = await getCaseStudies();
@@ -55,6 +61,7 @@ export default async function HomePage() {
         <About content={aboutContent} />
       </div>
       <Features content={featuresContent} />
+      <HowItWorks content={howItWorksContent} />
       <CaseStudies content={caseStudiesContent} studies={studies} />
       <Trust content={trustContent} />
       <TechStack content={techStackContent} />
