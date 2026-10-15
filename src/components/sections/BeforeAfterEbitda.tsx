@@ -2,57 +2,57 @@
 
 import { useEffect, useRef, useState } from "react";
 import NumberFlow from "@number-flow/react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { Container } from "@/components/layout/Container";
 import { TextReveal } from "@/components/motion/TextReveal";
-import { BillingToggle } from "@/components/ui/BillingToggle";
-import { sectionTextRevealDynamic } from "@/config/animation";
-import type { FeatureTone, beforeAfterEbitdaContent } from "@/content/home";
+import { beforeAfter, sectionTextReveal } from "@/config/animation";
+import type { beforeAfterEbitdaContent } from "@/content/home";
 import { cn } from "@/lib/cn";
 
 /**
- * Before / After EBITDA — one illustrative portco's numbers, before and after.
+ * Before vs After, as an EBITDA bridge.
  *
- * Where there is room the section pins: a stage holds still under the header
- * while the reader scrolls, and halfway through the pin it flips from Before
- * to After. Every figure rolls to its new value, the cost bars shrink and the
- * revenue bars grow, the margin climbs past a mark left where it started, and
- * the dark card counts up the EBITDA gained and what it is worth at a
- * multiple, with a bar showing where it came from.
+ * The opening is the original Before vs After's (BeforeAfter.tsx): the three
+ * words pinned in the middle of the screen, parting to either side and fading
+ * as the panel below rides up over them. The panel carries an EBITDA bridge
+ * after the owner's reference — columns with a heavy cap line at their value
+ * and the figure hung under it, one column picked out in a solid fill.
+ *
+ * Once the panel has arrived it pins too, and the bridge builds as the reader
+ * scrolls on: at first only "EBITDA before" stands; halfway through the pin
+ * each source of the gain rises in turn, starting where the last one ended,
+ * and "EBITDA after" rises last in the dark fill. The figure beside the chart
+ * rolls from the old EBITDA to the new, and the enterprise value it is worth
+ * appears under it.
  *
  * THE FLIP is decided the way How It Works decides its step: two invisible
- * markers, each a screen tall, run under the pinned stage, and whichever
- * shows more pixels wins — IntersectionObserver with plain thresholds. Nothing
- * reads scroll events, `scrollY` or `rootMargin`, which the preview bundle's
- * host can withhold (see BackgroundTransition). The track is two screens tall,
- * so the stage is held for one screen of scrolling: Before for the first
- * half, After for the second.
+ * markers, a screen each, run under the pinned panel, and whichever shows
+ * more pixels wins — IntersectionObserver with plain thresholds, so it does
+ * not depend on scroll events, which the preview bundle's host can withhold
+ * (see BackgroundTransition). The words keep the original's scroll-linked
+ * motion; if that is withheld they simply stay put, and the panel still
+ * covers them.
  *
- * "Room" is the `pin` variant in globals.css: tablet width and a screen at
- * least 780 tall, which is what the whole stage needs under the header — a
- * sticky block taller than the screen freezes the page. Anywhere else the
- * stage is laid out plainly and flips by itself once the P&L card is in view,
- * a moment after the reader arrives at it. The toggle switches it back and
- * forth at every size; it is the Pricing page's billing switch, borrowed.
+ * Pinning needs the `pin` variant (globals.css): tablet width and a screen
+ * tall enough for the panel under the header. Anywhere else the section is
+ * laid out plainly and the bridge builds by itself once it is in view. On a
+ * phone the bridge turns on its side: one row per column, bars running right.
  *
- * The section crossfades with the page (`data-bg="white"`), so the heading
- * and the lines beside it follow the dynamic ink; the cards paint their own
- * fills and keep fixed ink.
+ * The section is the dark green, as the original is (`data-bg="green"`); the
+ * panel paints its own light fill, so everything in it keeps fixed ink.
  */
 
 type Content = typeof beforeAfterEbitdaContent;
 
 /** The `pin` variant's media query, for the JS half of the same decision. */
-const pinQuery = "(min-width: 810px) and (min-height: 780px)";
+const pinQuery = "(min-width: 810px) and (min-height: 680px)";
 
-/** Bar fills — the deeper tints the tech stack's hover uses. */
-const fills: Record<FeatureTone, string> = {
-  blue: "bg-tool-shape-blue",
-  magenta: "bg-tool-shape-magenta",
-  green: "bg-tool-shape-green",
-  rose: "bg-tool-shape-rose",
-  lavender: "bg-tool-shape-lavender",
-  peach: "bg-tool-shape-peach",
-};
+/** The value axis runs from nothing to this, and is labelled every million. */
+const AXIS_MAX = 4_000_000;
+const TICKS = [0, 1_000_000, 2_000_000, 3_000_000, 4_000_000];
+
+/** Milliseconds between one column rising and the next. */
+const STAGGER = 140;
 
 /** "$20M", "$1.2M", "$800K", "$3.75M" — Intl options NumberFlow also takes. */
 const money = {
@@ -64,13 +64,10 @@ const money = {
 
 const formatMoney = new Intl.NumberFormat("en-US", money);
 
-/** "+$1.2M" / "−$350K" for the change beside each figure. */
-function formatChange(value: number) {
-  return `${value > 0 ? "+" : "−"}${formatMoney.format(Math.abs(value))}`;
+/** "+$350K" for a step of the bridge. */
+function formatGain(value: number) {
+  return `+${formatMoney.format(value)}`;
 }
-
-/** The margin bar's full width: a 20% margin fills it. */
-const MARGIN_SCALE = 0.2;
 
 /** Visible-share thresholds, 5% apart — the background handover's grain. */
 const thresholds = Array.from({ length: 21 }, (_, i) => i / 20);
@@ -78,7 +75,7 @@ const thresholds = Array.from({ length: 21 }, (_, i) => i / 20);
 /** One curve and pace for every bar and fade, the one How It Works uses. */
 const ease = "duration-700 ease-(--ease-case-hover) motion-reduce:transition-none";
 
-/** Whether the stage pins. Assumed so before the first paint, when it is at rest anyway. */
+/** Whether the section pins. Assumed so before the first paint, when it is at rest anyway. */
 function usePinned() {
   const [pinned, setPinned] = useState(true);
 
@@ -93,16 +90,74 @@ function usePinned() {
   return pinned;
 }
 
+/**
+ * One column of the bridge. `base` is where it starts and `top` where it ends;
+ * the totals start from nothing, each step from the total before it.
+ */
+type Bar = {
+  label: string;
+  base: number;
+  top: number;
+  text: string;
+  kind: "start" | "step" | "end";
+  /** Stagger position: when, after the flip, this one rises. */
+  order: number;
+};
+
+function bridge(content: Content): Bar[] {
+  const { ebitda, steps, bars } = content;
+  let running = ebitda.before;
+
+  const middle = steps.map((step, i): Bar => {
+    const bar: Bar = {
+      label: step.label,
+      base: running,
+      top: running + step.value,
+      text: formatGain(step.value),
+      kind: "step",
+      order: i,
+    };
+    running += step.value;
+    return bar;
+  });
+
+  return [
+    { label: bars.before, base: 0, top: ebitda.before, text: formatMoney.format(ebitda.before), kind: "start", order: -1 },
+    ...middle,
+    { label: bars.after, base: 0, top: ebitda.after, text: formatMoney.format(ebitda.after), kind: "end", order: steps.length },
+  ];
+}
+
+/** Fill above the carried total: the gain in green, the result in the site's dark. */
+const fills: Record<Bar["kind"], string> = {
+  start: "bg-bg-white",
+  step: "bg-tool-shape-green",
+  end: "bg-bg",
+};
+
 type BeforeAfterEbitdaProps = {
   content: Content;
 };
 
 export function BeforeAfterEbitda({ content }: BeforeAfterEbitdaProps) {
   const pinned = usePinned();
+  const reduced = useReducedMotion() ?? false;
   const [after, setAfter] = useState(false);
 
+  const panel = useRef<HTMLDivElement>(null);
+  const chart = useRef<HTMLDivElement>(null);
   const markers = useRef<(HTMLDivElement | null)[]>([]);
-  const card = useRef<HTMLDivElement>(null);
+
+  // The original's words: zero when the panel is a screen away, one when it
+  // has arrived.
+  const { scrollYProgress } = useScroll({
+    target: panel,
+    offset: ["start end", "start start"],
+  });
+  const spread = reduced ? 0 : beforeAfter.spread;
+  const before = useTransform(scrollYProgress, [0, 1], [0, -spread]);
+  const afterX = useTransform(scrollYProgress, [0, 1], [0, spread]);
+  const fade = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
   // Pinned: whichever of the two markers shows more pixels decides the state;
   // ties go to the later one, as they do for the background.
@@ -129,10 +184,10 @@ export function BeforeAfterEbitda({ content }: BeforeAfterEbitdaProps) {
     return () => observer.disconnect();
   }, [pinned]);
 
-  // Not pinned: flip once, shortly after the P&L card is mostly in view.
+  // Not pinned: build once, shortly after the chart is mostly in view.
   useEffect(() => {
     if (pinned) return;
-    const node = card.current;
+    const node = chart.current;
     if (!node) return;
 
     let timer: number | undefined;
@@ -140,9 +195,9 @@ export function BeforeAfterEbitda({ content }: BeforeAfterEbitdaProps) {
       ([entry]) => {
         if (!entry?.isIntersecting) return;
         observer.disconnect();
-        timer = window.setTimeout(() => setAfter(true), 900);
+        timer = window.setTimeout(() => setAfter(true), 600);
       },
-      { threshold: 0.75 },
+      { threshold: 0.6 },
     );
 
     observer.observe(node);
@@ -152,220 +207,250 @@ export function BeforeAfterEbitda({ content }: BeforeAfterEbitdaProps) {
     };
   }, [pinned]);
 
-  const { lines, ebitda, gain } = content;
-  const revenue = lines[0];
-  const added = ebitda.after - ebitda.before;
-  const marginBefore = ebitda.before / revenue.before;
-  const margin = after ? ebitda.after / revenue.after : marginBefore;
+  const { ebitda, revenue } = content;
+  const bars = bridge(content);
+  const gained = ebitda.after - ebitda.before;
+  const margin = after ? ebitda.after / revenue.after : ebitda.before / revenue.before;
+  // The words under the figure arrive with the last column.
+  const finale = `${(content.steps.length * STAGGER) / 1000 + 0.2}s`;
 
   return (
-    <section data-bg="white" className="relative bg-bg-white text-fg-on-light">
-      <div className="relative">
-        <div className="py-20 pin:sticky pin:top-0 pin:flex pin:h-svh pin:items-center pin:py-0 pin:pt-header">
-          <Container>
-            {/* The heading left; the line about it and the switch right, as the
-                AI Employees section sets its opening. */}
-            <div className="flex flex-col gap-6 tablet:flex-row tablet:items-end tablet:justify-between">
+    <section data-bg="green" className="relative bg-bg py-20 pin:py-0">
+      <div className="flex items-center justify-center overflow-hidden pb-14 pin:sticky pin:top-0 pin:h-svh pin:pb-0">
+        {/* Explicitly white, as in the original: these words are only ever on
+            the dark ground. */}
+        <p className="flex w-full items-center justify-center gap-2.5 text-display-lg leading-(--leading-display) tracking-(--tracking-display) font-normal text-fg">
+          <motion.span style={pinned ? { x: before, opacity: fade } : undefined}>
+            {content.headingBefore}
+          </motion.span>
+          <motion.span style={pinned ? { opacity: fade } : undefined}>
+            {content.headingJoin}
+          </motion.span>
+          <motion.span style={pinned ? { x: afterX, opacity: fade } : undefined}>
+            {content.headingAfter}
+          </motion.span>
+        </p>
+      </div>
+
+      <div
+        ref={panel}
+        className="relative z-10 pin:sticky pin:top-0 pin:flex pin:h-svh pin:items-center pin:pt-header"
+      >
+        <Container>
+          <div className="grid gap-10 bg-bg-light p-6 text-fg-on-light tablet:grid-cols-[0.8fr_1.6fr] tablet:p-10 desktop:gap-16">
+            <div className="flex flex-col">
+              <p className="font-ui text-label tracking-(--tracking-label) text-fg-on-light-muted uppercase">
+                {content.example}
+              </p>
               <TextReveal
                 as="h2"
-                lines={content.headingLines}
-                settings={sectionTextRevealDynamic}
-                className="flex flex-col items-start gap-(--space-heading-line) text-display-lg leading-(--leading-display) tracking-(--tracking-display) font-normal"
+                lines={content.titleLines}
+                settings={sectionTextReveal}
+                className="mt-4 flex flex-col items-start gap-(--space-heading-line) text-display-md leading-(--leading-display) tracking-(--tracking-display) font-normal"
               />
-              <div className="flex flex-col items-start gap-4">
-                <p className="text-ink-dynamic max-w-[54ch] font-body text-body-sm">
-                  {content.subheading}
-                </p>
-                <BillingToggle
-                  yearly={after}
-                  onChange={setAfter}
-                  name={content.toggle.name}
-                  labels={{ monthly: content.toggle.before, yearly: content.toggle.after }}
+              <p className="mt-4 max-w-[40ch] font-body text-body-sm text-fg-on-light-muted">
+                {content.body}
+              </p>
+
+              <div className="mt-8 tablet:mt-auto">
+                <p className="font-body text-body-md">{ebitda.label}</p>
+                <NumberFlow
+                  value={after ? ebitda.after : ebitda.before}
+                  format={money}
+                  className="mt-1 font-ui text-stat-sm leading-none font-light"
                 />
-              </div>
-            </div>
-
-            {/* What a screen reader gets instead of the moving figures. */}
-            <ul className="sr-only">
-              {[...lines, ebitda].map((line) => (
-                <li key={line.label}>
-                  {`${line.label}: ${formatMoney.format(line.before)} before, ${formatMoney.format(line.after)} after.`}
-                </li>
-              ))}
-              <li>{`${gain.label}: ${formatChange(added)}, about ${formatChange(added * gain.multiple)} in enterprise value at ${gain.multiple}×.`}</li>
-            </ul>
-
-            {/* 6 between the cards, as the AI Employees bento has it. */}
-            <div aria-hidden="true" className="mt-6 grid gap-1.5 tablet:grid-cols-2">
-              {/* The P&L: four lines, then the EBITDA they come to. */}
-              <div ref={card} className="flex flex-col bg-bg-light p-6">
-                <p className="font-ui text-label tracking-(--tracking-label) text-fg-on-light-muted uppercase">
-                  {content.example}
+                <p className="mt-2 font-ui text-body-sm text-fg-on-light-muted">
+                  <NumberFlow value={margin} format={{ style: "percent", maximumFractionDigits: 1 }} />{" "}
+                  {content.marginLabel}
                 </p>
-
-                <ul className="mt-5 flex flex-col gap-4">
-                  {lines.map((line) => (
-                    <li key={line.label}>
-                      <Line line={line} after={after} />
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="mt-6 border-t border-border-on-light pt-5 tablet:mt-auto">
-                  <Line line={{ ...ebitda, tone: "green" }} after={after} total />
-                </div>
-              </div>
-
-              <div className="grid gap-1.5">
-                {/* The margin, climbing past a mark left where it started. */}
-                <div className="flex flex-col bg-bg-light p-6 pb-10">
-                  <p className="font-body text-body-md">{content.margin.label}</p>
-                  <NumberFlow
-                    value={margin}
-                    format={{ style: "percent", maximumFractionDigits: 1 }}
-                    className="mt-2 font-ui text-stat-sm leading-none font-light"
-                  />
-                  <div className="relative mt-5 h-2 bg-track">
-                    <div
-                      className={cn("h-full bg-tool-shape-green transition-[width]", ease)}
-                      style={{ width: `${(margin / MARGIN_SCALE) * 100}%` }}
-                    />
-                    <div
-                      className={cn(
-                        "absolute top-0 transition-opacity",
-                        ease,
-                        after ? "opacity-100" : "opacity-0",
-                      )}
-                      style={{ left: `${(marginBefore / MARGIN_SCALE) * 100}%` }}
-                    >
-                      <span className="block h-4 w-px -translate-y-1 bg-fg-on-light" />
-                      <span className="block -translate-x-1/2 font-ui text-label tracking-(--tracking-label) whitespace-nowrap text-fg-on-light-muted uppercase">
-                        {content.margin.beforeMark}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* The gain, and what it is worth at the multiple. */}
-                <div className="flex flex-col bg-bg p-6 text-fg">
-                  <p className="font-body text-body-md">{gain.label}</p>
-                  <NumberFlow
-                    value={after ? added : 0}
-                    prefix="+"
-                    format={money}
-                    className={cn(
-                      "mt-2 font-ui text-stat-sm leading-none font-light transition-opacity",
-                      ease,
-                      after ? "opacity-100" : "opacity-40",
-                    )}
-                  />
-                  <p
-                    className={cn(
-                      "mt-2 font-ui text-body-md transition-opacity",
-                      ease,
-                      after ? "opacity-100" : "opacity-40",
-                    )}
-                  >
-                    {"≈ "}
-                    <NumberFlow value={after ? added * gain.multiple : 0} prefix="+" format={money} />
-                    {` in enterprise value at ${gain.multiple}×`}
-                  </p>
-
-                  {/* Where the gain comes from, each block its share of it,
-                      arriving one after another. */}
-                  <div className="mt-5 flex h-6 w-full bg-fg/10">
-                    {gain.breakdown.map((part, i) => (
-                      <div
-                        key={part.label}
-                        className={cn("h-full transition-[width]", ease, fills[part.tone])}
-                        style={{
-                          width: after ? `${(part.value / added) * 100}%` : "0%",
-                          transitionDelay: after ? `${200 + i * 80}ms` : "0ms",
-                        }}
-                      />
-                    ))}
-                  </div>
-                  <ul className="mt-4 grid grid-cols-2 gap-x-5 gap-y-2 desktop:grid-cols-3">
-                    {gain.breakdown.map((part) => (
-                      <li key={part.label} className="flex items-center gap-2 font-body text-body-sm">
-                        <span className={cn("size-2.5 shrink-0", fills[part.tone])} />
-                        <span>{part.label}</span>
-                        <span className="ml-auto font-ui">{formatMoney.format(part.value)}</span>
-                      </li>
-                    ))}
-                  </ul>
+                <div
+                  className={cn("mt-4 font-ui text-body-md transition-opacity", ease, after ? "opacity-100" : "opacity-0")}
+                  style={{ transitionDelay: after ? finale : "0s" }}
+                >
+                  <p>{`${formatGain(gained)} ${content.gainLabel}`}</p>
+                  <p className="mt-1">{`≈ ${formatGain(gained * content.multiple)} ${content.valueLabel} ${content.multiple}×`}</p>
                 </div>
               </div>
             </div>
 
-            <p className="text-ink-dynamic mt-3 font-ui text-label">{content.footnote}</p>
-          </Container>
-        </div>
+            <div ref={chart}>
+              {/* What a screen reader gets instead of the chart. */}
+              <ul className="sr-only">
+                {bars.map((bar) => (
+                  <li key={bar.label}>{`${bar.label}: ${bar.text}`}</li>
+                ))}
+              </ul>
 
-        {/* The two markers that decide the flip, laid under the pinned stage —
-            from its top, a screen each. They are what makes the track two
-            screens tall. Empty and click-through: the toggle sits above them. */}
-        <div aria-hidden="true" className="pointer-events-none hidden pin:-mt-[100svh] pin:block">
-          {[0, 1].map((i) => (
-            <div
-              key={i}
-              ref={(node) => {
-                markers.current[i] = node;
-              }}
-              className="h-svh"
-            />
-          ))}
-        </div>
+              <VerticalBridge bars={bars} after={after} />
+              <HorizontalBridge bars={bars} after={after} />
+
+              <p className="mt-6 font-ui text-label text-fg-on-light-muted">{content.footnote}</p>
+            </div>
+          </div>
+        </Container>
+      </div>
+
+      {/* The two markers that decide the flip, laid under the pinned panel —
+          from its top, a screen each, which is what holds it for one screen
+          of scrolling. Empty and click-through. */}
+      <div aria-hidden="true" className="pointer-events-none hidden pin:-mt-[100svh] pin:block">
+        {[0, 1].map((i) => (
+          <div
+            key={i}
+            ref={(node) => {
+              markers.current[i] = node;
+            }}
+            className="h-svh"
+          />
+        ))}
       </div>
     </section>
   );
 }
 
-type LineProps = {
-  line: { label: string; before: number; after: number; tone: FeatureTone };
-  after: boolean;
-  /** The EBITDA line: set larger, under the rule, in ink. */
-  total?: boolean;
-};
+/** Whether a column is up, and when it rose. */
+function rise(bar: Bar, after: boolean) {
+  const shown = bar.kind === "start" || after;
+  const delay = after && bar.order >= 0 ? `${bar.order * STAGGER}ms` : "0ms";
+  return { shown, delay };
+}
 
 /**
- * One P&L line: its label, its figure rolling between the two states with the
- * change beside it once it has happened, and a bar against the larger of the
- * two values — so a cost visibly shrinks and revenue visibly grows.
+ * The bridge upright, from tablet up: columns on a heavy baseline with the
+ * scale on the right. Each column is one box from nothing to its value, so it
+ * can rise as a whole: the total it carries in white, the part it adds above
+ * that, the cap line, and the figure hung under the cap.
  */
-function Line({ line, after, total = false }: LineProps) {
-  const value = after ? line.after : line.before;
-  const scale = Math.max(line.before, line.after);
-
+function VerticalBridge({ bars, after }: { bars: Bar[]; after: boolean }) {
   return (
-    <div>
-      <div className="flex items-baseline justify-between gap-4">
-        <span className={cn("font-body", total ? "text-heading-md" : "text-body-md")}>
-          {line.label}
-        </span>
-        <span className="flex items-baseline gap-3">
-          <span
-            className={cn(
-              "font-ui text-body-sm text-fg-on-light-muted transition-opacity",
-              ease,
-              after ? "opacity-100" : "opacity-0",
-            )}
-          >
-            {formatChange(line.after - line.before)}
-          </span>
-          <NumberFlow
-            value={value}
-            format={money}
-            className={cn("font-ui leading-none", total ? "text-heading-lg" : "text-heading-md")}
-          />
-        </span>
+    <div aria-hidden="true" className="hidden tablet:block">
+      <div className="flex">
+        <div className="relative h-[320px] flex-1 border-b-[3px] border-fg-on-light">
+          <div className="absolute inset-0 grid grid-cols-7 gap-1.5">
+            {bars.map((bar) => {
+              const { shown, delay } = rise(bar, after);
+              const carried = bar.base / bar.top;
+
+              return (
+                <div key={bar.label} className="relative h-full">
+                  <div
+                    className={cn("absolute inset-x-0 bottom-0 overflow-clip transition-[height]", ease)}
+                    style={{
+                      height: shown ? `${(bar.top / AXIS_MAX) * 100}%` : "0%",
+                      transitionDelay: delay,
+                    }}
+                  >
+                    {bar.kind === "step" ? (
+                      <div
+                        className="absolute inset-x-0 bottom-0 border-t border-fg-on-light/25 bg-bg-white"
+                        style={{ height: `${carried * 100}%` }}
+                      />
+                    ) : null}
+                    <div
+                      className={cn("absolute inset-x-0 top-0", fills[bar.kind])}
+                      style={{ height: `${(1 - carried) * 100}%` }}
+                    />
+                    <div
+                      className={cn(
+                        "absolute inset-x-0 top-0 h-[3px]",
+                        bar.kind === "end" ? "bg-accent" : "bg-fg-on-light",
+                      )}
+                    />
+                    {/* Under the cap on the totals; under the green band on a
+                        step, whose band can be thinner than the figure. */}
+                    <span
+                      className={cn(
+                        "absolute left-2 font-ui text-body-sm whitespace-nowrap",
+                        bar.kind === "end" ? "text-fg" : "text-fg-on-light",
+                      )}
+                      style={{
+                        top: bar.kind === "step" ? `calc(${(1 - carried) * 100}% + 8px)` : "10px",
+                      }}
+                    >
+                      {bar.text}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="relative h-[320px] w-14 shrink-0">
+          {TICKS.map((tick) => (
+            <span
+              key={tick}
+              className="absolute left-3 translate-y-1/2 font-ui text-label text-fg-on-light-muted"
+              style={{ bottom: `${(tick / AXIS_MAX) * 100}%` }}
+            >
+              {formatMoney.format(tick)}
+            </span>
+          ))}
+        </div>
       </div>
-      <div className="mt-2 h-2 bg-track">
-        <div
-          className={cn("h-full transition-[width]", ease, total ? "bg-fg-on-light" : fills[line.tone])}
-          style={{ width: `${(value / scale) * 100}%` }}
-        />
+
+      <div className="mr-14 mt-3 grid grid-cols-7 gap-1.5">
+        {bars.map((bar) => (
+          <span key={bar.label} className="text-center font-body text-body-sm leading-tight">
+            {bar.label}
+          </span>
+        ))}
       </div>
     </div>
+  );
+}
+
+/**
+ * The bridge on its side, for a phone: a row per column, each bar running
+ * right from nothing to its value against the same scale.
+ */
+function HorizontalBridge({ bars, after }: { bars: Bar[]; after: boolean }) {
+  return (
+    <ul aria-hidden="true" className="flex flex-col gap-3 tablet:hidden">
+      {bars.map((bar) => {
+        const { shown, delay } = rise(bar, after);
+        const carried = bar.base / bar.top;
+
+        return (
+          <li key={bar.label}>
+            <div className="flex items-baseline justify-between gap-3 font-body text-body-sm">
+              <span>{bar.label}</span>
+              <span
+                className={cn("font-ui transition-opacity", ease, shown ? "opacity-100" : "opacity-0")}
+                style={{ transitionDelay: delay }}
+              >
+                {bar.text}
+              </span>
+            </div>
+            <div className="relative mt-1.5 h-5 border-l-[3px] border-fg-on-light">
+              <div
+                className={cn("absolute inset-y-0 left-0 overflow-clip transition-[width]", ease)}
+                style={{
+                  width: shown ? `${(bar.top / AXIS_MAX) * 100}%` : "0%",
+                  transitionDelay: delay,
+                }}
+              >
+                {bar.kind === "step" ? (
+                  <div
+                    className="absolute inset-y-0 left-0 border-r border-fg-on-light/25 bg-bg-white"
+                    style={{ width: `${carried * 100}%` }}
+                  />
+                ) : null}
+                <div
+                  className={cn("absolute inset-y-0 right-0", fills[bar.kind])}
+                  style={{ width: `${(1 - carried) * 100}%` }}
+                />
+                <div
+                  className={cn(
+                    "absolute inset-y-0 right-0 w-[3px]",
+                    bar.kind === "end" ? "bg-accent" : "bg-fg-on-light",
+                  )}
+                />
+              </div>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
   );
 }

@@ -19,19 +19,9 @@ type BillingToggleProps = {
   yearly: boolean;
   onChange: (yearly: boolean) => void;
   labels: { monthly: string; yearly: string };
-  /**
-   * What the switch is announced as. The Before/After EBITDA section borrows
-   * the control for its two states, and is not choosing a billing period.
-   */
-  name?: string;
 };
 
-export function BillingToggle({
-  yearly,
-  onChange,
-  labels,
-  name = "Billing period",
-}: BillingToggleProps) {
+export function BillingToggle({ yearly, onChange, labels }: BillingToggleProps) {
   return (
     <div className="flex items-center justify-center gap-4">
       <span
@@ -46,7 +36,7 @@ export function BillingToggle({
         type="button"
         role="switch"
         aria-checked={yearly}
-        aria-label={`${name}: ${yearly ? labels.yearly : labels.monthly}`}
+        aria-label={`Billing period: ${yearly ? labels.yearly : labels.monthly}`}
         onClick={() => onChange(!yearly)}
         className="mh-toggle-track relative h-9 w-[4.25rem] shrink-0 rounded-[5px] transition-colors duration-(--duration-base) ease-(--ease-in-out)"
         style={{

@@ -518,64 +518,64 @@ export type CompareTone = (typeof beforeAfterContent.columns)[number]["tone"];
  * calculator later." It replaces `beforeAfterContent` on the home page; that
  * one stays above, with its component, as the fallback.
  *
+ * The section opens with the same three parting words as the original, and
+ * the panel that rides up over them carries an EBITDA bridge: the portco's
+ * EBITDA before, each source of the gain stacked on it, and the EBITDA after.
+ *
  * ⚠️ Illustrative figures, approved by the owner as a placeholder: one made-up
  * portco, labelled as an example on the page. Confirm with the client before
  * launch (see HANDOFF.md).
  *
- * Amounts are plain numbers in dollars — the component formats them, rolls
- * them between the two states and draws the bars from them. Keep them
- * consistent with each other:
+ * Amounts are plain numbers in dollars; the component formats and draws them.
+ * Keep them consistent: the steps must add up to the EBITDA difference
  *
- *   EBITDA after = before + cost cuts + new revenue × contribution margin
- *   3.75M        = 2.4M   + (0.35M + 0.4M) + 1.2M × 50%
+ *   2.4M + 0.35M + 0.4M + 0.25M + 0.2M + 0.15M = 3.75M
  *
- * and revenue less the four cost lines is EBITDA in both states — "Other
- * operating costs" carries the rest of the cost base, rising by the half of
- * the new revenue it takes to deliver. The gain's breakdown must add up to
- * the EBITDA difference (1.35M). The margin and the enterprise value are
- * worked out from these, never typed in.
+ * where the three revenue steps are the new revenue (1.2M) at a 50%
+ * contribution margin. The margin and the enterprise value are worked out
+ * from these, never typed in.
  */
 export const beforeAfterEbitdaContent = {
-  headingLines: ["The EBITDA Math,", "Before and After"],
-  subheading:
-    "One illustrative portco: before we start, and after the software sprawl, manual work and missed follow-up are fixed.",
-  toggle: { name: "Showing", before: "Before", after: "After" },
-  /** Above the P&L lines. */
+  /** Each word moves on its own, so they are stored apart. */
+  headingBefore: "Before",
+  headingJoin: "vs",
+  headingAfter: "After",
+  titleLines: ["The EBITDA Bridge"],
+  body: "One illustrative portco: what its EBITDA is before we start, and where the extra comes from once the costs are cut and the missed revenue is captured.",
   example: "Illustrative portco · $20M revenue",
-  lines: [
-    { label: "Revenue", before: 20_000_000, after: 21_200_000, tone: "green" },
-    { label: "Software & tools", before: 600_000, after: 250_000, tone: "peach" },
-    { label: "Manual back-office work", before: 1_200_000, after: 800_000, tone: "magenta" },
-    { label: "Other operating costs", before: 15_800_000, after: 16_400_000, tone: "blue" },
-  ],
   ebitda: { label: "EBITDA", before: 2_400_000, after: 3_750_000 },
-  margin: { label: "EBITDA margin", beforeMark: "Before" },
-  gain: {
-    label: "EBITDA added, every year",
-    /** The EBITDA multiple the enterprise value is worked out at. */
-    multiple: 8,
-    breakdown: [
-      { label: "Software", value: 350_000, tone: "peach" },
-      { label: "Manual work", value: 400_000, tone: "magenta" },
-      { label: "Inbound", value: 250_000, tone: "green" },
-      { label: "Follow-up", value: 200_000, tone: "blue" },
-      { label: "Outbound", value: 150_000, tone: "lavender" },
-    ],
-  },
+  /** Only for the margin under the EBITDA figure. */
+  revenue: { before: 20_000_000, after: 21_200_000 },
+  marginLabel: "margin",
+  /** The two lines that arrive with the last column: "+$1.35M EBITDA a year", "≈ +$10.8M in enterprise value at 8×". */
+  gainLabel: "EBITDA a year",
+  valueLabel: "in enterprise value at",
+  bars: { before: "EBITDA before", after: "EBITDA after" },
+  steps: [
+    { label: "Software", value: 350_000 },
+    { label: "Manual work", value: 400_000 },
+    { label: "Inbound", value: 250_000 },
+    { label: "Follow-up", value: 200_000 },
+    { label: "Outbound", value: 150_000 },
+  ],
+  /** The EBITDA multiple the enterprise value is worked out at. */
+  multiple: 8,
   footnote:
-    "Illustrative example, not a client result. New revenue counted at a 50% contribution margin, so other costs rise with it; enterprise value at an 8× EBITDA multiple.",
+    "Illustrative example, not a client result. New revenue counted at a 50% contribution margin; enterprise value at an 8× EBITDA multiple.",
 } as const satisfies {
-  headingLines: readonly string[];
-  subheading: string;
-  toggle: { name: string; before: string; after: string };
+  headingBefore: string;
+  headingJoin: string;
+  headingAfter: string;
+  titleLines: readonly string[];
+  body: string;
   example: string;
-  lines: readonly { label: string; before: number; after: number; tone: FeatureTone }[];
   ebitda: { label: string; before: number; after: number };
-  margin: { label: string; beforeMark: string };
-  gain: {
-    label: string;
-    multiple: number;
-    breakdown: readonly { label: string; value: number; tone: FeatureTone }[];
-  };
+  revenue: { before: number; after: number };
+  marginLabel: string;
+  gainLabel: string;
+  valueLabel: string;
+  bars: { before: string; after: string };
+  steps: readonly { label: string; value: number }[];
+  multiple: number;
   footnote: string;
 };

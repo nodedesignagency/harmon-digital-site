@@ -24,7 +24,7 @@ Build the new sections one at a time with the owner's direction; they often shar
 | 8 | Why Us (stats + logos) | white | done |
 | 9 | Tools / Training | white | done |
 | 10 | Testimonials | dark green | done |
-| 11 | Before / After EBITDA (new, replaces the current one) | white | **done** — `components/sections/BeforeAfterEbitda.tsx`: pinned scroll flips one illustrative portco's P&L from Before to After (rolling figures, bars, margin, EBITDA gain + EV at 8×); the old Before vs After is kept as a fallback (`BeforeAfter.tsx`, one-line swap in `page.tsx`) |
+| 11 | Before / After EBITDA (new, replaces the current one) | dark green | **done** — `components/sections/BeforeAfterEbitda.tsx`: the original "Before vs After" words part as you scroll, then a pinned panel builds an EBITDA bridge ($2.4M → five sources → $3.75M, + EV at 8×); the old card version is kept as a fallback (`BeforeAfter.tsx`, one-line swap in `page.tsx`) |
 | 12 | Pricing | beige | done (prices pending) |
 | 13 | FAQ | beige | done |
 | 14 | CTA + Footer | dark green | done |
