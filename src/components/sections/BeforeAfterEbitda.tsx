@@ -210,12 +210,20 @@ export function BeforeAfterEbitda({ content }: BeforeAfterEbitdaProps) {
   const finale = `${(content.steps.length * STAGGER) / 1000 + 0.2}s`;
 
   return (
-    <section data-bg="white" className="relative bg-bg-white">
-      <div className="pin:sticky pin:top-0 pin:h-svh pin:pt-header">
+    // Ruled across the full width top and bottom, in the same ink as the
+    // divider, so the section has an edge to arrive at and leave by. The
+    // divider runs the stage's whole height to meet both: the stage starts
+    // at the top rule and, pinned, finishes on the bottom one, so the header's
+    // clearance is the columns' own padding rather than the stage's.
+    <section
+      data-bg="white"
+      className="relative border-y border-(--color-fg-dynamic)/10 bg-bg-white"
+    >
+      <div className="pin:sticky pin:top-0 pin:h-svh">
         {/* Two to three: the statement needs little width, the chart's seven
             columns all of it. */}
         <Container className="text-ink-dynamic grid tablet:grid-cols-[2fr_3fr] pin:h-full">
-          <div className="flex flex-col pt-20 pb-12 tablet:py-10 tablet:pr-10 desktop:pr-16">
+          <div className="flex flex-col pt-20 pb-12 tablet:py-10 tablet:pr-10 desktop:pr-16 pin:pt-[calc(var(--header-height)+2.5rem)]">
             <p className="font-ui text-label tracking-(--tracking-label) uppercase opacity-60">
               {content.example}
             </p>
@@ -260,7 +268,7 @@ export function BeforeAfterEbitda({ content }: BeforeAfterEbitdaProps) {
             </div>
           </div>
 
-          <div className="flex flex-col border-t border-(--color-fg-dynamic)/10 pt-12 pb-20 tablet:border-t-0 tablet:border-l tablet:py-10 tablet:pl-10 desktop:pl-16">
+          <div className="flex flex-col border-t border-(--color-fg-dynamic)/10 pt-12 pb-20 tablet:border-t-0 tablet:border-l tablet:py-10 tablet:pl-10 desktop:pl-16 pin:pt-[calc(var(--header-height)+2.5rem)]">
             <p className="max-w-[40ch] font-display text-heading-lg leading-(--leading-heading)">
               {content.lead} <span className="opacity-40">{content.tail}</span>
             </p>
