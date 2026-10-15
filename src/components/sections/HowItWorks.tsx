@@ -165,7 +165,7 @@ export function HowItWorks({ content }: HowItWorksProps) {
             </div>
           </div>
 
-          <ol className="flex flex-col gap-14 tablet:gap-0">
+          <ol className="flex flex-col gap-12 tablet:gap-0">
             {steps.map((step, i) => (
               <li
                 key={step.title}
@@ -174,16 +174,18 @@ export function HowItWorks({ content }: HowItWorksProps) {
                 }}
                 className="flex flex-col justify-center gap-6 tablet:min-h-[50svh]"
               >
-                {/* A phone has no stage, so each step carries its own. */}
-                <div aria-hidden="true" className="flex items-center gap-6 tablet:hidden">
-                  <span className="text-ink-dynamic font-ui text-stat-sm font-light leading-none opacity-25">
+                {/* A phone has no stage, so each step carries its own: the
+                    number at the top left and the tile opposite it, the words
+                    underneath — the owner's mobile reference. */}
+                <div aria-hidden="true" className="flex items-start justify-between tablet:hidden">
+                  <span className="text-ink-dynamic font-ui text-stat-unit font-light leading-none opacity-25">
                     {stepNumber(i)}
                   </span>
-                  <div className={cn("relative size-28 shrink-0", tiles[step.tone])}>
+                  <div className={cn("relative size-44 shrink-0", tiles[step.tone])}>
                     <Image
                       src={featureArtwork[step.image]}
                       alt=""
-                      sizes="112px"
+                      sizes="176px"
                       className="absolute top-[15%] left-[15%] size-[70%] object-contain"
                     />
                   </div>
