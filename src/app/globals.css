@@ -775,57 +775,6 @@ body:has([data-page-surface="hero"])
 }
 
 /* ---------------------------------------------------------------------------
- * How It Works step sweep
- *
- * The same rectangles, played once whenever the next step takes the centre:
- * in from the tile's edges, a beat flush, back out — with the picture and
- * tint changing underneath at the midpoint (see `stepSweep`). A keyframe
- * rather than a transition because it runs there and back on one trigger; the
- * component remounts the wrapper to replay it.
- *
- * Without the wrapper class the blocks simply wait outside the tile, so the
- * first paint — before any step has changed — shows a clean tile.
- * ------------------------------------------------------------------------- */
-/* Hidden at rest as well as outside: a block parked at -100% of a percentage
- * width can round to a hairline still inside the tile, and one was visible
- * at the left edge between sweeps. Opacity is 1 only while the sweep runs. */
-.mh-step-block {
-  position: absolute;
-  background-color: var(--mh-step-shape);
-  translate: var(--mh-step-from);
-  opacity: 0;
-}
-
-.mh-step-sweep .mh-step-block {
-  animation: mh-step-sweep var(--mh-step-duration) var(--ease-case-hover) both;
-}
-
-@keyframes mh-step-sweep {
-  0%,
-  99% {
-    opacity: 1;
-  }
-  0%,
-  99%,
-  100% {
-    translate: var(--mh-step-from);
-  }
-  45%,
-  55% {
-    translate: 0 0;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mh-step-sweep .mh-step-block {
-    animation: none;
-  }
-}
-
-/* ---------------------------------------------------------------------------
  * Tech stack tile hover
  *
  * The whole effect is inverted relative to the other two: what the tile shows
