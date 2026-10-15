@@ -23,10 +23,12 @@ import { cn } from "@/lib/cn";
  * two columns, the first tile and the strip running the full width; a phone
  * stacks them.
  *
- * Every role tile is the same: roster number top left, the words at the foot,
- * and its 3D picture loose in the top-right corner — no tint behind it, set
- * large and pushed past the tile's edges so the tile crops it, which is what
- * gives the picture its depth. The strip is a heading and a button.
+ * Every role tile is the same: the words at the foot and its 3D picture loose
+ * in the top-right corner — no tint behind it, set large and pushed past the
+ * tile's edges so the tile crops it, which is what gives the picture its
+ * depth. The picture is sized to fill the space above the words rather than
+ * leave a band of empty tile. The strip is a heading and a button, on one line
+ * from tablet up.
  *
  * The tiles paint their own light fill, so their ink is fixed. Only the
  * heading and the line beside it sit on the page, and those follow the
@@ -39,12 +41,12 @@ import { cn } from "@/lib/cn";
  */
 const placements = [
   // The wide tile: full width on tablet too.
-  "tablet:col-span-2 desktop:min-h-[420px]",
-  "desktop:min-h-[420px]",
+  "tablet:col-span-2",
+  "",
   // The tall tile, down the left of the lower two rows.
   "desktop:row-span-2",
-  "desktop:min-h-[390px]",
-  "desktop:min-h-[390px]",
+  "",
+  "",
 ];
 
 /**
@@ -54,16 +56,11 @@ const placements = [
  * largest; the tall one only from desktop, where it is tall.
  */
 const pictures = {
-  wide: "size-48 -top-10 -right-10 tablet:size-72 tablet:-top-16 tablet:-right-16 desktop:size-80 desktop:-top-18 desktop:-right-18",
-  tall: "size-48 -top-10 -right-10 tablet:size-56 tablet:-top-13 tablet:-right-13 desktop:size-80 desktop:-top-18 desktop:-right-18",
+  wide: "size-52 -top-11 -right-11 tablet:size-80 tablet:-top-16 tablet:-right-16 desktop:size-90 desktop:-top-18 desktop:-right-18",
+  tall: "size-52 -top-11 -right-11 tablet:size-64 tablet:-top-14 tablet:-right-14 desktop:size-96 desktop:-top-20 desktop:-right-20",
   narrow:
-    "size-48 -top-10 -right-10 tablet:size-56 tablet:-top-13 tablet:-right-13",
+    "size-52 -top-11 -right-11 tablet:size-64 tablet:-top-14 tablet:-right-14",
 } as const;
-
-/** "/01" — the roster number, as How It Works numbers its steps. */
-function rosterNumber(index: number) {
-  return `/${String(index + 1).padStart(2, "0")}`;
-}
 
 /** The light tile every role and the strip share. */
 const tile = "relative overflow-clip bg-bg-light p-6 text-fg-on-light tablet:p-8";
@@ -75,24 +72,22 @@ function RoleTile({ role, index }: { role: Role; index: number }) {
 
   return (
     <article
-      className={cn(tile, "flex min-h-[340px] w-full flex-col tablet:min-h-[380px]")}
+      className={cn(tile, "flex min-h-[340px] w-full flex-col tablet:min-h-[360px]")}
     >
       <Image
         src={featureArtwork[role.image]}
         alt=""
         aria-hidden="true"
-        sizes={shape === "narrow" ? "224px" : "320px"}
+        sizes={shape === "narrow" ? "256px" : "384px"}
         className={cn(
           "pointer-events-none absolute object-contain",
           pictures[shape],
         )}
       />
 
-      {/* Above the picture, should a long title ever reach under it. */}
-      <span className="relative font-ui text-body-sm">{rosterNumber(index)}</span>
-
+      {/* `relative`: above the picture, should a long title reach under it. */}
       <div className={cn("relative mt-auto pt-10", shape === "wide" && "tablet:max-w-[44ch]")}>
-        <h3 className="text-display-md leading-(--leading-heading) font-normal">
+        <h3 className="text-heading-lg leading-(--leading-heading) font-normal">
           {role.title}
         </h3>
         <p className="mt-3 font-body text-body-md text-fg-on-light-muted">
@@ -123,11 +118,11 @@ export function AiEmployees({ content }: AiEmployeesProps) {
           </p>
         </div>
 
-        {/* 10 between tiles on a phone, 20 from tablet up — the case studies'
-            spacing. */}
+        {/* 6 between tiles at every size, per the owner: tight enough that
+            the tiles read as one block rather than six cards. */}
         <StaggerGroup
           as="ul"
-          className="mt-15 grid grid-cols-1 gap-2.5 tablet:grid-cols-2 tablet:gap-5 desktop:grid-cols-3"
+          className="mt-15 grid grid-cols-1 gap-1.5 tablet:grid-cols-2 desktop:grid-cols-3"
         >
           {content.roles.map((role, i) => (
             <StaggerItem key={role.title} as="li" className={cn("flex", placements[i])}>
@@ -140,10 +135,13 @@ export function AiEmployees({ content }: AiEmployeesProps) {
             <div
               className={cn(
                 tile,
-                "flex w-full flex-col gap-6 tablet:flex-row tablet:items-center tablet:justify-between",
+                "flex w-full flex-col gap-6 tablet:flex-row tablet:items-center tablet:justify-between tablet:py-6",
               )}
             >
-              <h3 className="text-display-md leading-(--leading-heading) font-normal">
+              {/* One line from tablet up, which is what keeps the strip slim:
+                  at the tiles' heading size it fits beside the 267px button
+                  with room to spare. */}
+              <h3 className="text-heading-lg leading-(--leading-heading) font-normal tablet:whitespace-nowrap">
                 {content.custom.title}
               </h3>
               {/* `plan`: the dark body with the white arrow box, drawn for a
