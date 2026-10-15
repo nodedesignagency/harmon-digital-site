@@ -12,23 +12,23 @@ import { cn } from "@/lib/cn";
  * AI Employees — a bento of the roles Harmon sets up, after the owner's
  * reference (a five-tile bento, taken as the base and extended to six).
  *
- * On desktop, three columns:
+ * On desktop, six columns:
  *
- *   | 01 · · · · · · | 02 · · |
- *   | 03 · | 04 · · | 05 · · |
- *   | 03 · | call to action · |
+ *   | 01 · · · · · | 02 · · · · · |
+ *   | 03 · | 04 · · | 05 · · · · |
+ *   | 03 · | call to action · · · |
  *
- * a wide tile and a narrow one on top; below, a tall tile down the left with
- * two tiles beside it and a slim call-to-action strip under those. Tablet is
- * two columns, the first tile and the strip running the full width; a phone
+ * two tiles of equal width on top; below, a tall tile down the left with two
+ * tiles beside it and a slim call-to-action strip under those. Tablet is two
+ * columns, the fifth tile and the strip running the full width; a phone
  * stacks them.
  *
- * Every role tile is the same: the words at the foot and its 3D picture loose
- * in the top-right corner — no tint behind it, set large and pushed past the
- * tile's edges so the tile crops it, which is what gives the picture its
- * depth. The picture is sized to fill the space above the words rather than
- * leave a band of empty tile. The strip is a heading and a button, on one line
- * from tablet up.
+ * The two rows carry their pictures differently, as the owner's reference
+ * does. On top, the 3D picture sits loose in the top-right corner — no tint
+ * behind it, set large and pushed past the tile's edges so the tile crops it,
+ * which is what gives it depth. Below, the picture stands whole in the
+ * top-left corner, above the words. The words are at the foot of every tile.
+ * The strip is a heading and a button, on one line from tablet up.
  *
  * The tiles paint their own light fill, so their ink is fixed. Only the
  * heading and the line beside it sit on the page, and those follow the
@@ -40,27 +40,32 @@ import { cn } from "@/lib/cn";
  * out because Tailwind only generates classes it can read in the source.
  */
 const placements = [
-  // The wide tile: full width on tablet too.
-  "tablet:col-span-2",
-  "",
+  "desktop:col-span-3",
+  "desktop:col-span-3",
   // The tall tile, down the left of the lower two rows.
-  "desktop:row-span-2",
-  "",
-  "",
+  "desktop:col-span-2 desktop:row-span-2",
+  "desktop:col-span-2",
+  // Alone on its row on tablet, so it takes the row.
+  "tablet:col-span-2 desktop:col-span-2",
 ];
 
+/** How many of the roles take the top row. */
+const TOP = 2;
+
 /**
- * Picture size and how far it is pushed past the corner — about a quarter of
- * its size, enough to clear the transparent margin the artwork carries and
- * crop into the shape itself. The wide tile's and the tall one's are the
- * largest; the tall one only from desktop, where it is tall.
+ * The top row's picture: its size, and how far it is pushed past the corner —
+ * about a fifth of its size, enough to clear the transparent margin the
+ * artwork carries and crop into the drawing itself.
  */
-const pictures = {
-  wide: "size-52 -top-11 -right-11 tablet:size-80 tablet:-top-16 tablet:-right-16 desktop:size-90 desktop:-top-18 desktop:-right-18",
-  tall: "size-52 -top-11 -right-11 tablet:size-64 tablet:-top-14 tablet:-right-14 desktop:size-96 desktop:-top-20 desktop:-right-20",
-  narrow:
-    "size-52 -top-11 -right-11 tablet:size-64 tablet:-top-14 tablet:-right-14",
-} as const;
+const cornerPicture =
+  "absolute size-52 -top-11 -right-11 tablet:size-64 tablet:-top-14 tablet:-right-14 desktop:size-72 desktop:-top-14 desktop:-right-14";
+
+/**
+ * The lower row's: whole, in the top-left corner. Nudged up and left by about
+ * the artwork's transparent margin, so the drawing lines up with the words
+ * rather than sitting inset from them.
+ */
+const standingPicture = "relative -mt-2 -ml-2 size-32 tablet:size-36 desktop:size-40";
 
 /** The light tile every role and the strip share. */
 const tile = "relative overflow-clip bg-bg-light p-6 text-fg-on-light tablet:p-8";
@@ -68,7 +73,7 @@ const tile = "relative overflow-clip bg-bg-light p-6 text-fg-on-light tablet:p-8
 type Role = (typeof aiEmployeesContent.roles)[number];
 
 function RoleTile({ role, index }: { role: Role; index: number }) {
-  const shape = index === 0 ? "wide" : index === 2 ? "tall" : "narrow";
+  const top = index < TOP;
 
   return (
     <article
@@ -78,15 +83,15 @@ function RoleTile({ role, index }: { role: Role; index: number }) {
         src={featureArtwork[role.image]}
         alt=""
         aria-hidden="true"
-        sizes={shape === "narrow" ? "256px" : "384px"}
+        sizes={top ? "288px" : "160px"}
         className={cn(
-          "pointer-events-none absolute object-contain",
-          pictures[shape],
+          "pointer-events-none object-contain",
+          top ? cornerPicture : standingPicture,
         )}
       />
 
       {/* `relative`: above the picture, should a long title reach under it. */}
-      <div className={cn("relative mt-auto pt-10", shape === "wide" && "tablet:max-w-[44ch]")}>
+      <div className={cn("relative mt-auto pt-10", top && "tablet:max-w-[44ch]")}>
         <h3 className="text-heading-lg leading-(--leading-heading) font-normal">
           {role.title}
         </h3>
@@ -122,7 +127,7 @@ export function AiEmployees({ content }: AiEmployeesProps) {
             the tiles read as one block rather than six cards. */}
         <StaggerGroup
           as="ul"
-          className="mt-15 grid grid-cols-1 gap-1.5 tablet:grid-cols-2 desktop:grid-cols-3"
+          className="mt-15 grid grid-cols-1 gap-1.5 tablet:grid-cols-2 desktop:grid-cols-6"
         >
           {content.roles.map((role, i) => (
             <StaggerItem key={role.title} as="li" className={cn("flex", placements[i])}>
@@ -131,7 +136,10 @@ export function AiEmployees({ content }: AiEmployeesProps) {
           ))}
 
           {/* The strip: under the two tiles beside the tall one. */}
-          <StaggerItem as="li" className="flex tablet:col-span-2 desktop:col-start-2">
+          <StaggerItem
+            as="li"
+            className="flex tablet:col-span-2 desktop:col-span-4 desktop:col-start-3"
+          >
             <div
               className={cn(
                 tile,
