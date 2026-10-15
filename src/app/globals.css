@@ -942,22 +942,12 @@ body:has([data-page-surface="hero"])
   }
 }
 
-/* Where a pinned scroll panel has room to pin: tablet width and up, and a
- * screen tall enough to hold the whole panel under the fixed header. A sticky
+/* Where a pinned scroll stage has room to pin: tablet width and up, and a
+ * screen tall enough to hold the whole stage under the fixed header. A sticky
  * block taller than the screen freezes the page, so a short laptop window gets
  * the plain layout instead. The Before/After EBITDA section reads the same
  * query in JS (`pinQuery` there) — change both together. */
 @custom-variant pin (@media (min-width: 810px) and (min-height: 680px));
-
-/* Fine vertical hatching: how the EBITDA bridge draws a total that was
- * already there, on a white page where a white fill would not show. */
-@utility hatch {
-  background-image: repeating-linear-gradient(
-    90deg,
-    var(--color-border-on-light) 0 1px,
-    transparent 1px 6px
-  );
-}
 
 /* A horizontal scroll strip whose bar is not part of the design. Scrolling
  * stays available to pointer, touch and keyboard — only the bar is hidden. */

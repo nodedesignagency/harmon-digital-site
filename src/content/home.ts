@@ -518,9 +518,10 @@ export type CompareTone = (typeof beforeAfterContent.columns)[number]["tone"];
  * calculator later." It replaces `beforeAfterContent` on the home page; that
  * one stays above, with its component, as the fallback.
  *
- * The section opens with the same three parting words as the original, and
- * the panel that rides up over them carries an EBITDA bridge: the portco's
- * EBITDA before, each source of the gain stacked on it, and the EBITDA after.
+ * A white section split in two: a big "Before" on the left that rolls to
+ * "After" as the reader scrolls, over the EBITDA it comes to; on the right an
+ * EBITDA bridge — the portco's EBITDA before, each source of the gain stacked
+ * on it, and the EBITDA after.
  *
  * ⚠️ Illustrative figures, approved by the owner as a placeholder: one made-up
  * portco, labelled as an example on the page. Confirm with the client before
@@ -536,16 +537,13 @@ export type CompareTone = (typeof beforeAfterContent.columns)[number]["tone"];
  * from these, never typed in.
  */
 export const beforeAfterEbitdaContent = {
-  /** Each word moves on its own, so they are stored apart. */
-  headingBefore: "Before",
-  headingJoin: "vs",
-  headingAfter: "After",
-  /** The panel's statement. Its second line is set a step back. */
-  titleLines: ["Same portco,", "more EBITDA."],
+  /** What the section is called for assistive tech; the eye gets the roll. */
+  heading: "Before and after working with us",
+  /** The word that rolls from one to the other, and the line under it. */
+  state: { before: "Before", after: "After", tail: "working with us." },
   /** The line over the chart, its second half a step back. */
   lead: "Cut the costs, capture the revenue that slipped away,",
   tail: "and see what it does to EBITDA.",
-  legend: { added: "What we add", carried: "What was already there" },
   example: "Illustrative portco · $20M revenue",
   ebitda: { label: "EBITDA", before: 2_400_000, after: 3_750_000 },
   /** Only for the margin under the EBITDA figure. */
@@ -567,13 +565,10 @@ export const beforeAfterEbitdaContent = {
   footnote:
     "Illustrative example, not a client result. New revenue counted at a 50% contribution margin; enterprise value at an 8× EBITDA multiple.",
 } as const satisfies {
-  headingBefore: string;
-  headingJoin: string;
-  headingAfter: string;
-  titleLines: readonly string[];
+  heading: string;
+  state: { before: string; after: string; tail: string };
   lead: string;
   tail: string;
-  legend: { added: string; carried: string };
   example: string;
   ebitda: { label: string; before: number; after: number };
   revenue: { before: number; after: number };
