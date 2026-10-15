@@ -27,10 +27,12 @@ import { cn } from "@/lib/cn";
  * The rows are equal and half a screen tall, so the most visible one is
  * always the one holding the middle of the screen.
  *
- * THE STAGE sits at the top of its column — straight under the heading, no
- * gap — and sticks once its tile reaches the middle of the screen, releasing
- * as the last row ends. Hence a tile of fixed size: the sticky offset is half
- * a screen less half the tile.
+ * THE STAGE is exactly one row tall (half a screen) with the tile centred in
+ * it, and sticks a quarter-screen from the top — so pinned, the tile's centre
+ * is the screen's centre. Being one row tall is what lines the words up: the
+ * stage starts level with the first row and lets go level with the last, so
+ * each step's words pass through the tile's centre, and the pin ends exactly
+ * as the last step's words are centred on the tile.
  *
  * Below the tablet there is no stage — pinned scrolling to read five short
  * steps is a lot on a phone — and each step shows its own number and tile
@@ -121,15 +123,21 @@ export function HowItWorks({ content }: HowItWorksProps) {
               long as there are steps to scroll past. Decorative: the list
               says everything it shows. */}
           <div aria-hidden="true" className="max-tablet:hidden">
-            <div className="sticky flex items-center gap-8 tablet:top-[calc(50svh-7.5rem)] desktop:top-[calc(50svh-10rem)] desktop:gap-12">
+            <div className="sticky top-[25svh] flex h-[50svh] items-center gap-8 desktop:gap-12">
               {/* Geist, as every figure on the site is. Rolls up digit by
-                  digit, the same direction the tiles travel. */}
-              <NumberFlow
-                value={active + 1}
-                prefix="/"
-                format={{ minimumIntegerDigits: 2 }}
-                className="text-ink-dynamic shrink-0 font-ui text-stat-sm font-light leading-none opacity-25"
-              />
+                  digit, the same direction the tiles travel.
+
+                  In a fixed-width slot: Geist's figures are proportional, so
+                  "/01" is narrower than "/02", and while the number sized
+                  itself the roll shoved the tile sideways at every step. */}
+              <div className="w-28 shrink-0">
+                <NumberFlow
+                  value={active + 1}
+                  prefix="/"
+                  format={{ minimumIntegerDigits: 2 }}
+                  className="text-ink-dynamic font-ui text-stat-sm font-light leading-none opacity-25"
+                />
+              </div>
 
               {/* The tiles stand in a column inside a one-tile frame. The
                   column moves up by a tile per step, so the next tile pushes
