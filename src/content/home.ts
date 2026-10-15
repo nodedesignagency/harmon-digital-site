@@ -217,12 +217,12 @@ export const howItWorksContent = {
  * assistant, etc.)".
  *
  * A bento of six tiles: the brief's five roles, then a sixth that stands for
- * the "etc." — any other role, built to order — and carries the call to
- * action. Order is the grid's reading order: the first two take the wide top
- * row on desktop, the other three and the call to action share the row below.
+ * the "etc." and carries the call to action. Order is the grid's reading
+ * order — the component places each role by its position, so moving a role
+ * here moves it in the grid.
  *
- * `image` and `tone` pair one of the six 3D pictures with the tint it was
- * drawn for, as the feature cards and How It Works do.
+ * `image` names one of the 3D pictures. It is set loose in the tile's corner
+ * rather than on a tint, so no `tone` is needed.
  */
 export const aiEmployeesContent = {
   headingLines: ["AI Employees That", "Never Clock Out"],
@@ -233,40 +233,34 @@ export const aiEmployeesContent = {
       title: "Inbound Responder",
       body: "Answers every call, form and chat in seconds, qualifies the lead and books the meeting — nights and weekends included.",
       image: "workflow",
-      tone: "green",
     },
     {
       title: "Follow-Up Agent",
       body: "Chases every quote, missed call and quiet thread until it closes. No lead goes cold because someone forgot.",
       image: "improvement",
-      tone: "lavender",
     },
     {
       title: "Outbound SDR",
       body: "Researches accounts, writes personal outreach and books meetings, so pipeline grows without adding headcount.",
       image: "revenue",
-      tone: "peach",
     },
     {
       title: "Ops Coordinator",
       body: "Keeps jobs, schedules and hand-offs moving between teams, and flags what’s stuck before it costs you.",
       image: "integrations",
-      tone: "rose",
     },
     {
       title: "Back-Office Assistant",
       body: "Takes over the data entry, invoicing and reconciliation your people do by hand every day.",
       image: "data",
-      tone: "magenta",
     },
   ],
-  /** The sixth tile: every role the five above don't cover. */
+  /**
+   * The sixth tile, standing for the "etc.": every role the five above don't
+   * name. A heading and a button, nothing else.
+   */
   custom: {
-    eyebrow: "And more",
     title: "Create Your Own AI Employee",
-    body: "Any repetitive role in the business, built to order.",
-    image: "agents",
-    tone: "blue",
     cta: { label: "Book a Call", href: ctaHref("/contact") } satisfies CtaLink,
   },
 } as const satisfies {
@@ -276,14 +270,9 @@ export const aiEmployeesContent = {
     title: string;
     body: string;
     image: FeatureImage;
-    tone: FeatureTone;
   }[];
   custom: {
-    eyebrow: string;
     title: string;
-    body: string;
-    image: FeatureImage;
-    tone: FeatureTone;
     cta: CtaLink;
   };
 };

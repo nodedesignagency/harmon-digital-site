@@ -5,134 +5,99 @@ import { TextReveal } from "@/components/motion/TextReveal";
 import { Button } from "@/components/ui/Button";
 import { featureArtwork } from "@/components/ui/featureArtwork";
 import { sectionTextRevealDynamic } from "@/config/animation";
-import type { FeatureImage, FeatureTone, aiEmployeesContent } from "@/content/home";
+import type { aiEmployeesContent } from "@/content/home";
 import { cn } from "@/lib/cn";
 
 /**
  * AI Employees — a bento of the roles Harmon sets up, after the owner's
- * references.
+ * reference (a five-tile bento, taken as the base and extended to six).
  *
- * Six tiles on a four-column grid. The first two roles take the top row at two
- * columns each, with their picture large on the right; the other three take a
- * column each below, picture small in the corner; and the sixth tile, in the
- * accent, is every role the five don't name — the section's call to action.
- * Tablet is two columns and a phone one, every tile in the small layout.
+ * On desktop, three columns:
  *
- * Each tile is the same grid: roster number top left, picture top right, the
- * words across the foot. A wide tile only sets its picture and title larger,
- * so one set of markup covers both.
+ *   | 01 · · · · · · | 02 · · |
+ *   | 03 · | 04 · · | 05 · · |
+ *   | 03 · | call to action · |
  *
- * The tiles paint their own fills — the dark one the Before/After panel uses,
- * and the accent — so their ink is fixed. Only the heading and the line beside
- * it sit on the page, and those follow the crossfade (`data-bg="green"`).
+ * a wide tile and a narrow one on top; below, a tall tile down the left with
+ * two tiles beside it and a slim call-to-action strip under those. Tablet is
+ * two columns, the first tile and the strip running the full width; a phone
+ * stacks them.
+ *
+ * Every role tile is the same: roster number top left, the words at the foot,
+ * and its 3D picture loose in the top-right corner — no tint behind it, set
+ * large and pushed past the tile's edges so the tile crops it, which is what
+ * gives the picture its depth. The strip is a heading and a button.
+ *
+ * The tiles paint their own light fill, so their ink is fixed. Only the
+ * heading and the line beside it sit on the page, and those follow the
+ * crossfade (`data-bg="green"`).
  */
-
-/** Picture squares — the tech stack's tints, as How It Works uses them. */
-const tints: Record<FeatureTone, string> = {
-  blue: "bg-tool-blue",
-  magenta: "bg-tool-magenta",
-  green: "bg-tool-green",
-  rose: "bg-tool-rose",
-  lavender: "bg-tool-lavender",
-  peach: "bg-tool-peach",
-};
 
 /**
- * The grid every tile shares; see the note above. A quarter of the desktop row
- * is about 260px, so the small tiles there go back to the phone's padding.
+ * Where each role sits on the desktop grid, by its position in content. Written
+ * out because Tailwind only generates classes it can read in the source.
  */
-function tile(wide: boolean) {
-  return cn(
-    "grid h-full w-full grid-cols-[1fr_auto] grid-rows-[auto_1fr] gap-x-6 p-6 tablet:min-h-[380px] tablet:p-8",
-    !wide && "desktop:p-6",
-  );
-}
+const placements = [
+  // The wide tile: full width on tablet too.
+  "tablet:col-span-2 desktop:min-h-[420px]",
+  "desktop:min-h-[420px]",
+  // The tall tile, down the left of the lower two rows.
+  "desktop:row-span-2",
+  "desktop:min-h-[390px]",
+  "desktop:min-h-[390px]",
+];
+
+/**
+ * Picture size and how far it is pushed past the corner — about a quarter of
+ * its size, enough to clear the transparent margin the artwork carries and
+ * crop into the shape itself. The wide tile's and the tall one's are the
+ * largest; the tall one only from desktop, where it is tall.
+ */
+const pictures = {
+  wide: "size-48 -top-10 -right-10 tablet:size-72 tablet:-top-16 tablet:-right-16 desktop:size-80 desktop:-top-18 desktop:-right-18",
+  tall: "size-48 -top-10 -right-10 tablet:size-56 tablet:-top-13 tablet:-right-13 desktop:size-80 desktop:-top-18 desktop:-right-18",
+  narrow:
+    "size-48 -top-10 -right-10 tablet:size-56 tablet:-top-13 tablet:-right-13",
+} as const;
 
 /** "/01" — the roster number, as How It Works numbers its steps. */
 function rosterNumber(index: number) {
   return `/${String(index + 1).padStart(2, "0")}`;
 }
 
-function Picture({
-  image,
-  tone,
-  wide = false,
-}: {
-  image: FeatureImage;
-  tone: FeatureTone;
-  wide?: boolean;
-}) {
-  return (
-    <div
-      aria-hidden="true"
-      className={cn(
-        "relative col-start-2 row-start-1 size-24 overflow-clip tablet:size-28",
-        wide ? "desktop:size-44" : "desktop:size-24",
-        tints[tone],
-      )}
-    >
-      <Image
-        src={featureArtwork[image]}
-        alt=""
-        sizes={wide ? "176px" : "112px"}
-        className="absolute inset-0 size-full object-cover"
-      />
-    </div>
-  );
-}
+/** The light tile every role and the strip share. */
+const tile = "relative overflow-clip bg-bg-light p-6 text-fg-on-light tablet:p-8";
 
 type Role = (typeof aiEmployeesContent.roles)[number];
 
-function RoleTile({ role, index, wide }: { role: Role; index: number; wide: boolean }) {
+function RoleTile({ role, index }: { role: Role; index: number }) {
+  const shape = index === 0 ? "wide" : index === 2 ? "tall" : "narrow";
+
   return (
-    <article className={cn(tile(wide), "border border-fg/10 bg-bg-raised text-fg")}>
-      <span className="col-start-1 row-start-1 font-ui text-body-sm">
-        {rosterNumber(index)}
-      </span>
+    <article
+      className={cn(tile, "flex min-h-[340px] w-full flex-col tablet:min-h-[380px]")}
+    >
+      <Image
+        src={featureArtwork[role.image]}
+        alt=""
+        aria-hidden="true"
+        sizes={shape === "narrow" ? "224px" : "320px"}
+        className={cn(
+          "pointer-events-none absolute object-contain",
+          pictures[shape],
+        )}
+      />
 
-      <Picture image={role.image} tone={role.tone} wide={wide} />
+      {/* Above the picture, should a long title ever reach under it. */}
+      <span className="relative font-ui text-body-sm">{rosterNumber(index)}</span>
 
-      <div className={cn("col-span-2 row-start-2 self-end pt-10", wide && "desktop:max-w-[44ch]")}>
-        <h3
-          className={cn(
-            "text-heading-lg leading-(--leading-heading) font-normal",
-            wide && "desktop:text-display-md",
-          )}
-        >
+      <div className={cn("relative mt-auto pt-10", shape === "wide" && "tablet:max-w-[44ch]")}>
+        <h3 className="text-display-md leading-(--leading-heading) font-normal">
           {role.title}
         </h3>
-        <p className="mt-3 font-body text-body-md">{role.body}</p>
-      </div>
-    </article>
-  );
-}
-
-function CustomTile({ custom }: { custom: typeof aiEmployeesContent.custom }) {
-  return (
-    <article className={cn(tile(false), "bg-accent text-fg-on-light")}>
-      <span className="col-start-1 row-start-1 font-ui text-label tracking-(--tracking-label) whitespace-nowrap uppercase">
-        {custom.eyebrow}
-      </span>
-
-      <Picture image={custom.image} tone={custom.tone} />
-
-      <div className="col-span-2 row-start-2 self-end pt-10">
-        <h3 className="text-heading-lg leading-(--leading-heading) font-normal">
-          {custom.title}
-        </h3>
-        <p className="mt-3 font-body text-body-md">{custom.body}</p>
-        {/* Full width of the tile: at a quarter of the desktop row it is
-            narrower than the site's 267px button. Secondary, because the
-            primary's white body would sit on the accent with nothing to hold
-            it apart. */}
-        <Button
-          href={custom.cta.href}
-          variant="secondary"
-          withArrow
-          className="mt-6 w-full"
-        >
-          {custom.cta.label}
-        </Button>
+        <p className="mt-3 font-body text-body-md text-fg-on-light-muted">
+          {role.body}
+        </p>
       </div>
     </article>
   );
@@ -162,19 +127,36 @@ export function AiEmployees({ content }: AiEmployeesProps) {
             spacing. */}
         <StaggerGroup
           as="ul"
-          className="mt-15 grid grid-cols-1 gap-2.5 tablet:grid-cols-2 tablet:gap-5 desktop:grid-cols-4"
+          className="mt-15 grid grid-cols-1 gap-2.5 tablet:grid-cols-2 tablet:gap-5 desktop:grid-cols-3"
         >
           {content.roles.map((role, i) => (
-            <StaggerItem
-              key={role.title}
-              as="li"
-              className={cn("flex", i < 2 && "desktop:col-span-2")}
-            >
-              <RoleTile role={role} index={i} wide={i < 2} />
+            <StaggerItem key={role.title} as="li" className={cn("flex", placements[i])}>
+              <RoleTile role={role} index={i} />
             </StaggerItem>
           ))}
-          <StaggerItem as="li" className="flex">
-            <CustomTile custom={content.custom} />
+
+          {/* The strip: under the two tiles beside the tall one. */}
+          <StaggerItem as="li" className="flex tablet:col-span-2 desktop:col-start-2">
+            <div
+              className={cn(
+                tile,
+                "flex w-full flex-col gap-6 tablet:flex-row tablet:items-center tablet:justify-between",
+              )}
+            >
+              <h3 className="text-display-md leading-(--leading-heading) font-normal">
+                {content.custom.title}
+              </h3>
+              {/* `plan`: the dark body with the white arrow box, drawn for a
+                  light card. The primary's white body would vanish here. */}
+              <Button
+                href={content.custom.cta.href}
+                variant="plan"
+                withArrow
+                className="w-full shrink-0 tablet:w-[267px]"
+              >
+                {content.custom.cta.label}
+              </Button>
+            </div>
           </StaggerItem>
         </StaggerGroup>
       </Container>

@@ -18,7 +18,7 @@ Build the new sections one at a time with the owner's direction; they often shar
 | 2 | Problem ("Sound Familiar?") | white | done |
 | 3 | Solution ("Both Sides of the P&L") | white | done |
 | 4 | How It Works | beige | **done** — sticky scroll, `components/sections/HowItWorks.tsx`; icons reuse the feature art (could get unique ones) |
-| 5 | AI Employees (bento of roles) | dark green | **done** — `components/sections/AiEmployees.tsx`: the brief's five roles + a sixth "Create Your Own AI Employee" CTA tile; pictures reuse the feature art |
+| 5 | AI Employees (bento of roles) | dark green | **done** — `components/sections/AiEmployees.tsx`, after the owner's Bolt bento: wide + narrow on top, a tall tile left with two beside it and a "Create Your Own AI Employee" CTA strip under them; the 3D art sits loose in each top-right corner, cropped by the tile |
 | 6 | Portfolio Dashboards ("real visual weight") | white | **next** |
 | 7 | Case Studies | dark green | done |
 | 8 | Why Us (stats + logos) | white | done |
