@@ -7,7 +7,7 @@ import { CaseStudies } from "@/components/sections/CaseStudies";
 import { Trust } from "@/components/sections/Trust";
 import { TechStack } from "@/components/sections/TechStack";
 import { Testimonials } from "@/components/sections/Testimonials";
-import { BeforeAfter } from "@/components/sections/BeforeAfter";
+import { BeforeAfterEbitda } from "@/components/sections/BeforeAfterEbitda";
 import { Pricing } from "@/components/sections/Pricing";
 import { Faq } from "@/components/sections/Faq";
 import { PageSurface } from "@/components/layout/PageSurface";
@@ -15,7 +15,7 @@ import { Preloader, PreloaderScript } from "@/components/motion/Preloader";
 import {
   aboutContent,
   aiEmployeesContent,
-  beforeAfterContent,
+  beforeAfterEbitdaContent,
   featuresContent,
   heroContent,
   howItWorksContent,
@@ -72,7 +72,10 @@ export default async function HomePage() {
       <Trust content={trustContent} />
       <TechStack content={techStackContent} />
       <Testimonials content={testimonialsContent} />
-      <BeforeAfter content={beforeAfterContent} />
+      {/* The brief's EBITDA before and after. The earlier Before vs After
+          (components/sections/BeforeAfter.tsx, `beforeAfterContent`) is kept
+          as the fallback: swap these two lines back to restore it. */}
+      <BeforeAfterEbitda content={beforeAfterEbitdaContent} />
       <Pricing content={pricingContent} />
       <Faq content={faqContent} />
     </>

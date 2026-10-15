@@ -24,7 +24,7 @@ Build the new sections one at a time with the owner's direction; they often shar
 | 8 | Why Us (stats + logos) | white | done |
 | 9 | Tools / Training | white | done |
 | 10 | Testimonials | dark green | done |
-| 11 | Before / After EBITDA (new, replaces the current one) | white | to build |
+| 11 | Before / After EBITDA (new, replaces the current one) | white | **done** — `components/sections/BeforeAfterEbitda.tsx`: pinned scroll flips one illustrative portco's P&L from Before to After (rolling figures, bars, margin, EBITDA gain + EV at 8×); the old Before vs After is kept as a fallback (`BeforeAfter.tsx`, one-line swap in `page.tsx`) |
 | 12 | Pricing | beige | done (prices pending) |
 | 13 | FAQ | beige | done |
 | 14 | CTA + Footer | dark green | done |
@@ -41,6 +41,7 @@ Build the new sections one at a time with the owner's direction; they often shar
 - [ ] **ProducifyX dashboard screenshot** — OK to use? It shows "$0 MRR", "0 hires" and ProducifyX's customer names
 - [ ] **Clean Neighbors Bank Slack screenshot** — the one supplied shows a joke test message, so it isn't used
 - [ ] **Etto dashboard screenshot** — the one used shows sandbox/test data; a version with real-looking data would be better
+- [ ] **Before/After EBITDA figures** — the $20M-revenue portco is illustrative (owner-approved placeholder): $2.4M → $3.75M EBITDA, +$10.8M EV at 8×, 50% contribution margin on new revenue. Confirm with Isaac or swap in real numbers (`src/content/home.ts`, `beforeAfterEbitdaContent`)
 - [ ] Confirm case study order (home shows Hoplite/Etto, Happy Endings, SunMed first)
 
 ## Minor text pages (left for later on purpose)
@@ -69,5 +70,6 @@ Build the new sections one at a time with the owner's direction; they often shar
 - [x] "Buy Template" badge removed
 - [x] How It Works section (desktop sticky scroll + phone layout)
 - [x] AI Employees bento (five roles from the brief + CTA tile)
+- [x] Before/After EBITDA scroll section (illustrative figures)
 - [x] Feature cards' tints matched to their pictures again
 - [x] Pricing card overflow fixed; footer reworked (Harmon // Digital, legal links, /404 showcase removed)
