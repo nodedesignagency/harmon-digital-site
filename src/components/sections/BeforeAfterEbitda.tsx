@@ -50,11 +50,17 @@ const TICKS = [0, 1_000_000, 2_000_000, 3_000_000, 4_000_000];
 /** Milliseconds between one column rising and the next. */
 const STAGGER = 140;
 
-/** "$20M", "$1.2M", "$800K", "$3.75M" — Intl options NumberFlow also takes. */
+/**
+ * "$20M", "$1.2M", "$800K", "$3.75M" — Intl options NumberFlow also takes.
+ * The minimum is stated because currency defaults it to two, and Node's ICU
+ * honours that under compact notation where the browser's does not: the
+ * server rendered "$2.40M" and the browser corrected it.
+ */
 const money = {
   style: "currency",
   currency: "USD",
   notation: "compact",
+  minimumFractionDigits: 0,
   maximumFractionDigits: 2,
 } as const;
 

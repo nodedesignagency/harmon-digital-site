@@ -278,6 +278,117 @@ export const aiEmployeesContent = {
 };
 
 /**
+ * Portfolio dashboards — the brief's sixth section: "a dashboard for every
+ * portco so the fund can see exactly where each company stands and exactly
+ * where the savings and revenue gains are coming from. This is a big selling
+ * point, so give it real visual weight."
+ *
+ * Four files that stack as the reader scrolls, each a dashboard under its own
+ * tab, after the owner's folder idea.
+ *
+ * ⚠️ Illustrative data, labelled on the page. The figures are built to agree
+ * with each other and with the Before/After bridge — Portco 01 is that
+ * bridge's company (+$1.35M, 12% → 17.7%):
+ *
+ *   fund EBITDA lift 4.2M = Portco 01 1.35M + 02 1.6M + 03 1.25M
+ *                         = cost savings 1.6M + new revenue 5.2M × 50%
+ *
+ * and the savings' four lines add up to 1.6M. Confirm with the client before
+ * launch (see HANDOFF.md).
+ */
+export const portfolioDashboardsContent = {
+  eyebrow: "Portfolio dashboards",
+  headingLines: ["Every Portco.", "One File Each."],
+  subheading:
+    "A live dashboard for every company in the fund: where each one stands, and exactly where the savings and the revenue gains are coming from.",
+  note: "Illustrative data.",
+  overview: {
+    tab: "Fund overview",
+    label: "EBITDA lift across the fund",
+    total: 4_200_000,
+    rows: [
+      { name: "Portco 01", status: "live", lift: 1_350_000 },
+      { name: "Portco 02", status: "live", lift: 1_600_000 },
+      { name: "Portco 03", status: "live", lift: 1_250_000 },
+      { name: "Portco 04", status: "building", lift: null },
+      { name: "Portco 05", status: "audit", lift: null },
+    ],
+    statuses: { live: "Live", building: "Building", audit: "Audit" },
+    caption: "See where every company stands, live.",
+  },
+  drilldown: {
+    tab: "Portco drilldown",
+    label: "Portco 01 · EBITDA margin",
+    before: 0.12,
+    after: 0.177,
+    /** Twelve months of margin; the first `liveFrom` are before go-live. */
+    months: [0.118, 0.121, 0.119, 0.12, 0.131, 0.142, 0.151, 0.158, 0.164, 0.169, 0.173, 0.177],
+    liveFrom: 4,
+    legend: { before: "Before go-live", after: "After" },
+    caption: "Every number for one company, before and after go-live.",
+  },
+  savings: {
+    tab: "Cost savings",
+    label: "Saved per year, across the fund",
+    parts: [
+      { label: "Software", value: 600_000 },
+      { label: "Fulfillment", value: 500_000 },
+      { label: "Calls", value: 300_000 },
+      { label: "Data entry", value: 200_000 },
+    ],
+    caption: "Every dollar saved, traced to the line it came off.",
+  },
+  revenue: {
+    tab: "Revenue gains",
+    label: "Revenue added by AI employees",
+    total: 5_200_000,
+    funnel: [
+      { label: "Leads answered", value: 3_400 },
+      { label: "Followed up", value: 2_900 },
+      { label: "Booked", value: 1_100 },
+      { label: "Won", value: 420 },
+    ],
+    caption: "From first answer to closed deal, $2.6M of it to EBITDA.",
+  },
+} as const satisfies {
+  eyebrow: string;
+  headingLines: readonly string[];
+  subheading: string;
+  note: string;
+  overview: {
+    tab: string;
+    label: string;
+    total: number;
+    rows: readonly { name: string; status: "live" | "building" | "audit"; lift: number | null }[];
+    statuses: Record<"live" | "building" | "audit", string>;
+    caption: string;
+  };
+  drilldown: {
+    tab: string;
+    label: string;
+    before: number;
+    after: number;
+    months: readonly number[];
+    liveFrom: number;
+    legend: { before: string; after: string };
+    caption: string;
+  };
+  savings: {
+    tab: string;
+    label: string;
+    parts: readonly { label: string; value: number }[];
+    caption: string;
+  };
+  revenue: {
+    tab: string;
+    label: string;
+    total: number;
+    funnel: readonly { label: string; value: number }[];
+    caption: string;
+  };
+};
+
+/**
  * Trust section — "Why Top Companies Trust Us".
  *
  * Four statistics, then a strip of client marks. Each statistic splits its

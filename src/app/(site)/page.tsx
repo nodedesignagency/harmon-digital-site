@@ -3,6 +3,7 @@ import { About } from "@/components/sections/About";
 import { Features } from "@/components/sections/Features";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { AiEmployees } from "@/components/sections/AiEmployees";
+import { PortfolioDashboards } from "@/components/sections/PortfolioDashboards";
 import { CaseStudies } from "@/components/sections/CaseStudies";
 import { Trust } from "@/components/sections/Trust";
 import { TechStack } from "@/components/sections/TechStack";
@@ -19,6 +20,7 @@ import {
   featuresContent,
   heroContent,
   howItWorksContent,
+  portfolioDashboardsContent,
   techStackContent,
   testimonialsContent,
   trustContent,
@@ -68,6 +70,7 @@ export default async function HomePage() {
       <Features content={featuresContent} />
       <HowItWorks content={howItWorksContent} />
       <AiEmployees content={aiEmployeesContent} />
+      <PortfolioDashboards content={portfolioDashboardsContent} />
       <CaseStudies content={caseStudiesContent} studies={studies} />
       <Trust content={trustContent} />
       <TechStack content={techStackContent} />

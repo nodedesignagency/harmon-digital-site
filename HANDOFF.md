@@ -19,7 +19,7 @@ Build the new sections one at a time with the owner's direction; they often shar
 | 3 | Solution ("Both Sides of the P&L") | white | done |
 | 4 | How It Works | beige | **done** — sticky scroll, `components/sections/HowItWorks.tsx`; icons reuse the feature art (could get unique ones) |
 | 5 | AI Employees (bento of roles) | dark green | **done** — `components/sections/AiEmployees.tsx`: two equal tiles on top (3D art cropped in the top-right corner); below, a tall tile left with two beside it (art whole, top-left) and a "Create Your Own AI Employee" CTA strip under them; 6px gaps |
-| 6 | Portfolio Dashboards ("real visual weight") | white | **next** |
+| 6 | Portfolio Dashboards ("real visual weight") | white | **done** — `components/sections/PortfolioDashboards.tsx`: four dashboard "files" (fund overview, portco drilldown, cost savings, revenue gains) stack on scroll with their tabs piling up, after the owner's folder idea; heading pinned beside them; pure CSS sticky |
 | 7 | Case Studies | dark green | done |
 | 8 | Why Us (stats + logos) | white | done |
 | 9 | Tools / Training | white | done |
@@ -42,6 +42,7 @@ Build the new sections one at a time with the owner's direction; they often shar
 - [ ] **Clean Neighbors Bank Slack screenshot** — the one supplied shows a joke test message, so it isn't used
 - [ ] **Etto dashboard screenshot** — the one used shows sandbox/test data; a version with real-looking data would be better
 - [ ] **Before/After EBITDA figures** — the $20M-revenue portco is illustrative (owner-approved placeholder): $2.4M → $3.75M EBITDA, +$10.8M EV at 8×, 50% contribution margin on new revenue. Confirm with Isaac or swap in real numbers (`src/content/home.ts`, `beforeAfterEbitdaContent`)
+- [ ] **Portfolio dashboard figures** — illustrative (+$4.2M fund EBITDA lift, five portcos, $1.6M saved, $5.2M revenue added), built to agree with the Before/After example. Confirm with Isaac, or swap in a real (anonymised) dashboard (`src/content/home.ts`, `portfolioDashboardsContent`)
 - [ ] Confirm case study order (home shows Hoplite/Etto, Happy Endings, SunMed first)
 
 ## Minor text pages (left for later on purpose)
@@ -71,5 +72,6 @@ Build the new sections one at a time with the owner's direction; they often shar
 - [x] How It Works section (desktop sticky scroll + phone layout)
 - [x] AI Employees bento (five roles from the brief + CTA tile)
 - [x] Before/After EBITDA scroll section (illustrative figures)
+- [x] Portfolio Dashboards stacking-files section (illustrative figures)
 - [x] Feature cards' tints matched to their pictures again
 - [x] Pricing card overflow fixed; footer reworked (Harmon // Digital, legal links, /404 showcase removed)
