@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import { Container } from "@/components/layout/Container";
 import { TextReveal } from "@/components/motion/TextReveal";
+import { CtaCard } from "@/components/ui/CtaCard";
 import { sectionTextRevealDynamic } from "@/config/animation";
 import type { portfolioDashboardsContent } from "@/content/home";
 import { cn } from "@/lib/cn";
@@ -130,6 +131,16 @@ export function PortfolioDashboards({ content }: PortfolioDashboardsProps) {
             <p className="mt-6 max-w-[40ch] font-body text-body-md">
               {content.subheading}
             </p>
+            {/* The FAQ's strategy-call card, at the foot of the column — so,
+                from tablet up, level with the foot of the settled stack. Beige,
+                where the FAQ's is white: this section is white. */}
+            <CtaCard
+              href={content.cta.href}
+              title={content.cta.title}
+              body={content.cta.body}
+              fill="bg-bg-light"
+              className="mt-10 tablet:mt-auto"
+            />
           </div>
 
           <div>
@@ -250,8 +261,8 @@ function Status({
 
 /**
  * The drilldown file: the margin before and after as two bars side by side,
- * against the after — the old one hatched, the new one solid, each figure
- * inside its bar and its name under it.
+ * against the after — the old one a light fill under a heavy cap, the new one
+ * solid, each figure above its bar and its name under it.
  */
 function DrilldownFile({ drilldown }: { drilldown: Content["drilldown"] }) {
   const bars = [
@@ -278,22 +289,21 @@ function DrilldownFile({ drilldown }: { drilldown: Content["drilldown"] }) {
       >
         {bars.map((bar) => (
           <div key={bar.name} className="flex flex-1 flex-col">
-            <div className="flex flex-1 items-end">
+            {/* Each figure stands just above its bar, as the bridge sets its
+                own: the old margin a light fill under a heavy cap, the new one
+                solid. The top padding is the figure's room over the taller
+                bar, so the bars keep their true proportion to each other. */}
+            <div className="flex flex-1 items-end pt-10">
               <div
                 className={cn(
                   "relative w-full",
                   bar.before
-                    ? "hatch-diagonal border border-fg-on-light/30 text-fg-on-light/25"
+                    ? "border-t-[3px] border-fg-on-light bg-fg-on-light/10"
                     : "bg-fg-on-light",
                 )}
                 style={{ height: `${(bar.value / drilldown.after) * 100}%` }}
               >
-                <span
-                  className={cn(
-                    "absolute top-3 left-3 font-ui text-heading-md",
-                    bar.before ? "text-fg-on-light" : "text-fg",
-                  )}
-                >
+                <span className="absolute bottom-full mb-3 font-ui text-heading-md">
                   {formatPercent.format(bar.value)}
                 </span>
               </div>
@@ -399,9 +409,10 @@ const sourceInks = [
 ];
 
 /**
- * The revenue file, after the owner's reference: a ring of ticks, each source
- * taking its share of them in its own ink, the total in the middle, and a
- * table of the sources under it — or beside it, where there is the width.
+ * The revenue file, after the owner's reference: the total over a ring of
+ * ticks, each source taking its share of them in its own ink with what
+ * reaches EBITDA in the middle, and a table of the sources under it — or
+ * beside it, where there is the width.
  */
 function RevenueFile({ revenue }: { revenue: Content["revenue"] }) {
   const total = revenue.sources.reduce((sum, source) => sum + source.value, 0);
@@ -422,6 +433,9 @@ function RevenueFile({ revenue }: { revenue: Content["revenue"] }) {
   return (
     <>
       <p className={label}>{revenue.label}</p>
+      <p className="mt-2 font-ui text-stat-sm leading-none font-light">
+        {`+${formatMoney.format(revenue.total)}`}
+      </p>
 
       <div className="mt-6 flex flex-1 flex-col items-center gap-6 tablet:flex-row tablet:gap-10">
         <div className="relative size-44 shrink-0 tablet:size-52">
@@ -449,9 +463,11 @@ function RevenueFile({ revenue }: { revenue: Content["revenue"] }) {
             })}
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-            <span className="font-ui text-heading-lg">{`+${formatMoney.format(total)}`}</span>
+            <span className="font-ui text-heading-lg">
+              {formatMoney.format(revenue.toEbitda)}
+            </span>
             <span className="mt-1 font-ui text-label opacity-60">
-              {revenue.totalLabel}
+              {revenue.toEbitdaLabel}
             </span>
           </div>
         </div>

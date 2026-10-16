@@ -301,6 +301,12 @@ export const portfolioDashboardsContent = {
   headingLines: ["Every Portco.", "One File Each."],
   subheading:
     "A live dashboard for every company in the fund: where each one stands, and exactly where the savings and the revenue gains are coming from.",
+  /** The strategy-call card at the foot of the column, as the FAQ has it. */
+  cta: {
+    title: "Want this for your fund?",
+    body: "Book a call.",
+    href: ctaHref("/contact"),
+  },
   overview: {
     tab: "Fund overview",
     label: "EBITDA lift across the fund",
@@ -338,18 +344,21 @@ export const portfolioDashboardsContent = {
   revenue: {
     tab: "Revenue gains",
     label: "Revenue added by AI employees",
-    /** Under the total in the ring's centre. */
-    totalLabel: "added this year",
+    total: 5_200_000,
+    /** The ring's centre: how much of the revenue reaches EBITDA. */
+    toEbitda: 2_600_000,
+    toEbitdaLabel: "to EBITDA",
     sources: [
       { label: "Inbound Responder", value: 2_300_000 },
       { label: "Follow-Up Agent", value: 1_700_000 },
       { label: "Outbound SDR", value: 1_200_000 },
     ],
-    caption: "Revenue by the AI employee that brought it in. $2.6M of it to EBITDA.",
+    caption: "Revenue by the AI employee that brought it in.",
   },
 } as const satisfies {
   headingLines: readonly string[];
   subheading: string;
+  cta: { title: string; body: string; href: string };
   overview: {
     tab: string;
     label: string;
@@ -375,7 +384,9 @@ export const portfolioDashboardsContent = {
   revenue: {
     tab: string;
     label: string;
-    totalLabel: string;
+    total: number;
+    toEbitda: number;
+    toEbitdaLabel: string;
     sources: readonly { label: string; value: number }[];
     caption: string;
   };
