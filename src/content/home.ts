@@ -293,15 +293,14 @@ export const aiEmployeesContent = {
  *   fund EBITDA lift 4.2M = Portco 01 1.35M + 02 1.6M + 03 1.25M
  *                         = cost savings 1.6M + new revenue 5.2M × 50%
  *
- * and the savings' four lines add up to 1.6M. Confirm with the client before
+ * the savings' four lines add up to 1.6M, and the revenue's three sources —
+ * the AI employees of section 5 that bring it in — to 5.2M. Confirm with the client before
  * launch (see HANDOFF.md).
  */
 export const portfolioDashboardsContent = {
-  eyebrow: "Portfolio dashboards",
   headingLines: ["Every Portco.", "One File Each."],
   subheading:
     "A live dashboard for every company in the fund: where each one stands, and exactly where the savings and the revenue gains are coming from.",
-  note: "Illustrative data.",
   overview: {
     tab: "Fund overview",
     label: "EBITDA lift across the fund",
@@ -321,10 +320,8 @@ export const portfolioDashboardsContent = {
     label: "Portco 01 · EBITDA margin",
     before: 0.12,
     after: 0.177,
-    /** Twelve months of margin; the first `liveFrom` are before go-live. */
-    months: [0.118, 0.121, 0.119, 0.12, 0.131, 0.142, 0.151, 0.158, 0.164, 0.169, 0.173, 0.177],
-    liveFrom: 4,
-    legend: { before: "Before go-live", after: "After" },
+    /** Under the two bars. */
+    bars: { before: "Before go-live", after: "After" },
     caption: "Every number for one company, before and after go-live.",
   },
   savings: {
@@ -341,20 +338,18 @@ export const portfolioDashboardsContent = {
   revenue: {
     tab: "Revenue gains",
     label: "Revenue added by AI employees",
-    total: 5_200_000,
-    funnel: [
-      { label: "Leads answered", value: 3_400 },
-      { label: "Followed up", value: 2_900 },
-      { label: "Booked", value: 1_100 },
-      { label: "Won", value: 420 },
+    /** Under the total in the ring's centre. */
+    totalLabel: "added this year",
+    sources: [
+      { label: "Inbound Responder", value: 2_300_000 },
+      { label: "Follow-Up Agent", value: 1_700_000 },
+      { label: "Outbound SDR", value: 1_200_000 },
     ],
-    caption: "From first answer to closed deal, $2.6M of it to EBITDA.",
+    caption: "Revenue by the AI employee that brought it in. $2.6M of it to EBITDA.",
   },
 } as const satisfies {
-  eyebrow: string;
   headingLines: readonly string[];
   subheading: string;
-  note: string;
   overview: {
     tab: string;
     label: string;
@@ -368,9 +363,7 @@ export const portfolioDashboardsContent = {
     label: string;
     before: number;
     after: number;
-    months: readonly number[];
-    liveFrom: number;
-    legend: { before: string; after: string };
+    bars: { before: string; after: string };
     caption: string;
   };
   savings: {
@@ -382,8 +375,8 @@ export const portfolioDashboardsContent = {
   revenue: {
     tab: string;
     label: string;
-    total: number;
-    funnel: readonly { label: string; value: number }[];
+    totalLabel: string;
+    sources: readonly { label: string; value: number }[];
     caption: string;
   };
 };

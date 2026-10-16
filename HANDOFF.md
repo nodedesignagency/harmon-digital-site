@@ -42,7 +42,7 @@ Build the new sections one at a time with the owner's direction; they often shar
 - [ ] **Clean Neighbors Bank Slack screenshot** — the one supplied shows a joke test message, so it isn't used
 - [ ] **Etto dashboard screenshot** — the one used shows sandbox/test data; a version with real-looking data would be better
 - [ ] **Before/After EBITDA figures** — the $20M-revenue portco is illustrative (owner-approved placeholder): $2.4M → $3.75M EBITDA, +$10.8M EV at 8×, 50% contribution margin on new revenue. Confirm with Isaac or swap in real numbers (`src/content/home.ts`, `beforeAfterEbitdaContent`)
-- [ ] **Portfolio dashboard figures** — illustrative (+$4.2M fund EBITDA lift, five portcos, $1.6M saved, $5.2M revenue added), built to agree with the Before/After example. Confirm with Isaac, or swap in a real (anonymised) dashboard (`src/content/home.ts`, `portfolioDashboardsContent`)
+- [ ] **Portfolio dashboard figures** — illustrative (+$4.2M fund EBITDA lift, five portcos, $1.6M saved, $5.2M revenue added by the three AI employees); the page no longer carries an "illustrative" note, so these must be confirmed or replaced, built to agree with the Before/After example. Confirm with Isaac, or swap in a real (anonymised) dashboard (`src/content/home.ts`, `portfolioDashboardsContent`)
 - [ ] Confirm case study order (home shows Hoplite/Etto, Happy Endings, SunMed first)
 
 ## Minor text pages (left for later on purpose)

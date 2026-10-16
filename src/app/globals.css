@@ -949,6 +949,25 @@ body:has([data-page-surface="hero"])
  * query in JS (`pinQuery` there) — change both together. */
 @custom-variant pin (@media (min-width: 810px) and (min-height: 680px));
 
+/* Hatching for the part of a chart that is "before" or "the rest" — the
+ * portfolio dashboards' bars, after the owner's references. Drawn in
+ * currentColor, so a text colour on the element is the stripe colour. */
+@utility hatch-diagonal {
+  background-image: repeating-linear-gradient(
+    135deg,
+    currentColor 0 1.5px,
+    transparent 1.5px 9px
+  );
+}
+
+@utility hatch-vertical {
+  background-image: repeating-linear-gradient(
+    90deg,
+    currentColor 0 1px,
+    transparent 1px 7px
+  );
+}
+
 /* A horizontal scroll strip whose bar is not part of the design. Scrolling
  * stays available to pointer, touch and keyboard — only the bar is hidden. */
 @utility no-scrollbar {

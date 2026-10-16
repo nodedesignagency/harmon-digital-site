@@ -86,12 +86,13 @@ const formatMoney = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
 });
 
-const formatCount = new Intl.NumberFormat("en-US");
-
 const formatPercent = new Intl.NumberFormat("en-US", {
   style: "percent",
   maximumFractionDigits: 1,
 });
+
+/** A share of a whole, to the nearest point: "44%". */
+const formatShare = new Intl.NumberFormat("en-US", { style: "percent" });
 
 /** A dashboard's small capitals: the label over a figure, a tab, a status. */
 const label = "font-ui text-label tracking-(--tracking-label) uppercase";
@@ -120,21 +121,14 @@ export function PortfolioDashboards({ content }: PortfolioDashboardsProps) {
             the files and leave with them rather than lingering after the
             stack has gone. */}
           <div className="text-ink-dynamic tablet:sticky tablet:top-[calc(var(--header-height)+24px)] tablet:flex tablet:h-(--stack-h) tablet:flex-col tablet:self-start">
-            <p className={cn("flex items-center gap-2", label)}>
-              <span aria-hidden="true" className="size-2 bg-accent" />
-              {content.eyebrow}
-            </p>
             <TextReveal
               as="h2"
               lines={content.headingLines}
               settings={sectionTextRevealDynamic}
-              className="mt-5 flex flex-col items-start gap-(--space-heading-line) text-display-lg leading-(--leading-display) tracking-(--tracking-display) font-normal"
+              className="flex flex-col items-start gap-(--space-heading-line) text-display-lg leading-(--leading-display) tracking-(--tracking-display) font-normal"
             />
             <p className="mt-6 max-w-[40ch] font-body text-body-md">
               {content.subheading}
-            </p>
-            <p className="mt-6 font-ui text-label opacity-60 tablet:mt-auto">
-              {content.note}
             </p>
           </div>
 
@@ -169,51 +163,7 @@ export function PortfolioDashboards({ content }: PortfolioDashboardsProps) {
             </Folder>
 
             <Folder index={1} tab={drilldown.tab} tint="green">
-              <p className={label}>{drilldown.label}</p>
-              <p className="mt-2 flex items-baseline gap-4 font-ui text-stat-sm leading-none font-light">
-                <span className="opacity-40">
-                  {formatPercent.format(drilldown.before)}
-                </span>
-                <span aria-hidden="true" className="text-stat-unit">
-                  →
-                </span>
-                <span>{formatPercent.format(drilldown.after)}</span>
-              </p>
-              <div className="mt-6 flex flex-1 flex-col">
-                {/* Twelve months against a 20% scale; the months before go-live
-                  step back. The chart takes whatever height the file has. */}
-                <div
-                  aria-hidden="true"
-                  className="flex min-h-24 flex-1 items-end gap-1.5"
-                >
-                  {drilldown.months.map((month, i) => (
-                    <span
-                      key={i}
-                      className={cn(
-                        "flex-1",
-                        i < drilldown.liveFrom
-                          ? "bg-fg-on-light/20"
-                          : "bg-fg-on-light",
-                      )}
-                      style={{ height: `${(month / 0.2) * 100}%` }}
-                    />
-                  ))}
-                </div>
-                <ul
-                  aria-hidden="true"
-                  className="mt-3 flex gap-5 font-ui text-label"
-                >
-                  <li className="flex items-center gap-2">
-                    <span className="size-2 bg-fg-on-light/20" />
-                    {drilldown.legend.before}
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="size-2 bg-fg-on-light" />
-                    {drilldown.legend.after}
-                  </li>
-                </ul>
-                <p className="mt-4 font-ui text-body-sm">{drilldown.caption}</p>
-              </div>
+              <DrilldownFile drilldown={drilldown} />
             </Folder>
 
             <Folder index={2} tab={savings.tab} tint="lavender">
@@ -221,35 +171,7 @@ export function PortfolioDashboards({ content }: PortfolioDashboardsProps) {
             </Folder>
 
             <Folder index={3} tab={revenue.tab} tint="peach">
-              <p className={label}>{revenue.label}</p>
-              <p className="mt-2 font-ui text-stat-sm leading-none font-light">
-                {`+${formatMoney.format(revenue.total)}`}
-              </p>
-              {/* The funnel: each stage against the first. */}
-              <ul className="mt-auto flex flex-col gap-4 pt-6">
-                {revenue.funnel.map((stage) => (
-                  <li
-                    key={stage.label}
-                    className="grid grid-cols-[7.5rem_1fr_auto] items-center gap-3 font-ui text-label"
-                  >
-                    <span className="tracking-(--tracking-label) uppercase">
-                      {stage.label}
-                    </span>
-                    <span className="h-5 bg-fg-on-light/10">
-                      <span
-                        className="block h-full bg-fg-on-light"
-                        style={{
-                          width: `${(stage.value / revenue.funnel[0].value) * 100}%`,
-                        }}
-                      />
-                    </span>
-                    <span className="text-body-sm">
-                      {formatCount.format(stage.value)}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-5 font-ui text-body-sm">{revenue.caption}</p>
+              <RevenueFile revenue={revenue} />
             </Folder>
 
             {/* The hold: once the last file has settled, the whole stack stays
@@ -326,16 +248,94 @@ function Status({
   );
 }
 
-/** The savings file: the total, one bar split by line, and the lines under it. */
+/**
+ * The drilldown file: the margin before and after as two bars side by side,
+ * against the after — the old one hatched, the new one solid, each figure
+ * inside its bar and its name under it.
+ */
+function DrilldownFile({ drilldown }: { drilldown: Content["drilldown"] }) {
+  const bars = [
+    { value: drilldown.before, name: drilldown.bars.before, before: true },
+    { value: drilldown.after, name: drilldown.bars.after, before: false },
+  ];
+
+  return (
+    <>
+      <p className={label}>{drilldown.label}</p>
+      <p className="mt-2 flex items-baseline gap-4 font-ui text-stat-sm leading-none font-light">
+        <span className="opacity-40">
+          {formatPercent.format(drilldown.before)}
+        </span>
+        <span aria-hidden="true" className="text-stat-unit">
+          →
+        </span>
+        <span>{formatPercent.format(drilldown.after)}</span>
+      </p>
+
+      <div
+        aria-hidden="true"
+        className="mt-8 flex min-h-32 flex-1 gap-3 tablet:gap-4"
+      >
+        {bars.map((bar) => (
+          <div key={bar.name} className="flex flex-1 flex-col">
+            <div className="flex flex-1 items-end">
+              <div
+                className={cn(
+                  "relative w-full",
+                  bar.before
+                    ? "hatch-diagonal border border-fg-on-light/30 text-fg-on-light/25"
+                    : "bg-fg-on-light",
+                )}
+                style={{ height: `${(bar.value / drilldown.after) * 100}%` }}
+              >
+                <span
+                  className={cn(
+                    "absolute top-3 left-3 font-ui text-heading-md",
+                    bar.before ? "text-fg-on-light" : "text-fg",
+                  )}
+                >
+                  {formatPercent.format(bar.value)}
+                </span>
+              </div>
+            </div>
+            <span className="mt-3 text-center font-ui text-body-sm">
+              {bar.name}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <p className="mt-5 font-ui text-body-sm">{drilldown.caption}</p>
+    </>
+  );
+}
+
+/**
+ * Lead lines under the savings bar, longest first, px: each line drops from
+ * the start of its part to a dot and the part's name. Shortening left to right
+ * keeps every name clear of the lines after it.
+ */
+const LEADS = [176, 138, 100, 62];
+
+/**
+ * The savings file, after the owner's reference: one bar split by line — solid
+ * and hatched in turn — with a fine line dropping from the start of each part
+ * to its name, and the amount set beside the line where it leaves the bar.
+ */
 function SavingsFile({ savings }: { savings: Content["savings"] }) {
   const total = savings.parts.reduce((sum, part) => sum + part.value, 0);
-  // Darkest for the largest line, stepping lighter — the reference's bar.
-  const shades = [
+  const fills = [
     "bg-fg-on-light",
     "bg-tool-shape-lavender",
-    "bg-lavender",
+    "hatch-vertical text-fg-on-light/35",
     "bg-bg-white",
   ];
+  // Where each part starts along the bar, as a share of it.
+  const starts = savings.parts.map(
+    (_, i) =>
+      savings.parts.slice(0, i).reduce((sum, part) => sum + part.value, 0) /
+      total,
+  );
 
   return (
     <>
@@ -343,37 +343,140 @@ function SavingsFile({ savings }: { savings: Content["savings"] }) {
       <p className="mt-2 font-ui text-stat-sm leading-none font-light">
         {formatMoney.format(total)}
       </p>
+
       <div className="mt-auto pt-6">
-        <div aria-hidden="true" className="flex h-16 border border-fg-on-light">
-          {savings.parts.map((part, i) => (
-            <span
+        <ul className="sr-only">
+          {savings.parts.map((part) => (
+            <li
               key={part.label}
-              className={shades[i]}
-              style={{ width: `${(part.value / total) * 100}%` }}
-            />
+            >{`${part.label}: ${formatMoney.format(part.value)}`}</li>
           ))}
+        </ul>
+        <div aria-hidden="true">
+          <div className="flex h-16 tablet:h-20">
+            {savings.parts.map((part, i) => (
+              <span
+                key={part.label}
+                className={fills[i]}
+                style={{ width: `${(part.value / total) * 100}%` }}
+              />
+            ))}
+          </div>
+          <div className="relative" style={{ height: LEADS[0] + 12 }}>
+            {savings.parts.map((part, i) => (
+              <div
+                key={part.label}
+                className="absolute top-0"
+                style={{ left: `${starts[i] * 100}%`, height: LEADS[i] }}
+              >
+                <span className="absolute inset-y-0 left-0 w-px bg-fg-on-light/40" />
+                <span className="absolute top-2 left-3 font-ui text-heading-md whitespace-nowrap">
+                  {formatMoney.format(part.value)}
+                </span>
+                <span className="absolute -bottom-[3px] -left-[3px] size-1.5 bg-fg-on-light" />
+                <span className="absolute bottom-0 left-3 translate-y-1/2 font-ui text-body-sm font-medium whitespace-nowrap">
+                  {part.label}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
-        <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 tablet:grid-cols-4">
-          {savings.parts.map((part, i) => (
-            <li key={part.label} className="flex flex-col gap-1">
-              <span className={cn("flex items-center gap-2", label)}>
-                <span
-                  aria-hidden="true"
-                  className={cn(
-                    "size-2 border border-fg-on-light/30",
-                    shades[i],
-                  )}
+      </div>
+
+      <p className="mt-4 font-ui text-body-sm">{savings.caption}</p>
+    </>
+  );
+}
+
+/** Ticks round the revenue ring, and its geometry in its own units. */
+const RING = { ticks: 72, size: 220, radius: 104, length: 18 };
+
+/** Each source's ticks and swatch: the largest in full ink, then lighter. */
+const sourceInks = [
+  "text-fg-on-light",
+  "text-fg-on-light/50",
+  "text-fg-on-light/20",
+];
+
+/**
+ * The revenue file, after the owner's reference: a ring of ticks, each source
+ * taking its share of them in its own ink, the total in the middle, and a
+ * table of the sources under it — or beside it, where there is the width.
+ */
+function RevenueFile({ revenue }: { revenue: Content["revenue"] }) {
+  const total = revenue.sources.reduce((sum, source) => sum + source.value, 0);
+
+  // Which source each tick belongs to: the boundaries are the running shares,
+  // rounded to whole ticks, so the counts always come to the full ring.
+  const owner: number[] = [];
+  let running = 0;
+  revenue.sources.forEach((source, i) => {
+    const from = Math.round((running / total) * RING.ticks);
+    running += source.value;
+    const to = Math.round((running / total) * RING.ticks);
+    for (let t = from; t < to; t++) owner[t] = i;
+  });
+
+  const centre = RING.size / 2;
+
+  return (
+    <>
+      <p className={label}>{revenue.label}</p>
+
+      <div className="mt-6 flex flex-1 flex-col items-center gap-6 tablet:flex-row tablet:gap-10">
+        <div className="relative size-44 shrink-0 tablet:size-52">
+          <svg
+            viewBox={`0 0 ${RING.size} ${RING.size}`}
+            aria-hidden="true"
+            className="size-full"
+          >
+            {owner.map((source, t) => {
+              // From the top, clockwise.
+              const angle = (t / RING.ticks) * Math.PI * 2 - Math.PI / 2;
+              const inner = RING.radius - RING.length;
+              return (
+                <line
+                  key={t}
+                  x1={centre + inner * Math.cos(angle)}
+                  y1={centre + inner * Math.sin(angle)}
+                  x2={centre + RING.radius * Math.cos(angle)}
+                  y2={centre + RING.radius * Math.sin(angle)}
+                  stroke="currentColor"
+                  strokeWidth={3}
+                  className={sourceInks[source]}
                 />
-                {part.label}
-              </span>
-              <span className="font-ui text-body-md">
-                {formatMoney.format(part.value)}
+              );
+            })}
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+            <span className="font-ui text-heading-lg">{`+${formatMoney.format(total)}`}</span>
+            <span className="mt-1 font-ui text-label opacity-60">
+              {revenue.totalLabel}
+            </span>
+          </div>
+        </div>
+
+        <ul className="flex w-full flex-col">
+          {revenue.sources.map((source, i) => (
+            <li
+              key={source.label}
+              className="grid grid-cols-[auto_1fr_auto_auto] items-center gap-3 border-t border-fg-on-light/10 py-3 font-ui text-body-sm"
+            >
+              <span
+                aria-hidden="true"
+                className={cn("size-2.5 bg-current", sourceInks[i])}
+              />
+              <span>{source.label}</span>
+              <span>{formatMoney.format(source.value)}</span>
+              <span className="w-10 text-right opacity-60">
+                {formatShare.format(source.value / total)}
               </span>
             </li>
           ))}
         </ul>
-        <p className="mt-5 font-ui text-body-sm">{savings.caption}</p>
       </div>
+
+      <p className="mt-5 font-ui text-body-sm">{revenue.caption}</p>
     </>
   );
 }
