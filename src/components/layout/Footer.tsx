@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
-import { CtaPanel } from "@/components/layout/CtaPanel";
+import { ClosingCta } from "@/components/layout/ClosingCta";
 import { PatternField } from "@/components/motion/PatternField";
 import { Scramble } from "@/components/motion/Scramble";
-import { Button } from "@/components/ui/Button";
 import { footerNav, legalNav } from "@/config/navigation";
 import { footerContent } from "@/content/footer";
 
@@ -30,42 +29,18 @@ export function Footer() {
     // every link here hovers exactly as the header's do. This ground is
     // always dark, so it takes the header's dark pair.
     <footer className="bg-bg text-fg [--mh-nav-accent:var(--color-accent)] [--mh-nav-ink:var(--color-fg)]">
-      {/* 160 between the panel and the columns, per the owner. */}
-      <Container className="pt-20 pb-40">
-        <CtaPanel className="relative flex flex-col justify-between gap-10 bg-cta p-10 text-fg-on-light tablet:flex-row tablet:items-center tablet:p-16">
-          {/* Both sets of breaks are in the markup and one is shown, the same
-              as the hero: where a line breaks is a decision, not a wrap. */}
-          <h2 className="text-display-lg leading-(--leading-display) tracking-(--tracking-display) font-normal">
-            <span className="flex flex-col max-tablet:hidden">
-              {footerContent.cta.headingLines.map((line) => (
-                <span key={line}>{line}</span>
-              ))}
-            </span>
-            <span className="flex flex-col tablet:hidden">
-              {footerContent.cta.headingLinesMobile.map((line) => (
-                <span key={line}>{line}</span>
-              ))}
-            </span>
-          </h2>
-
-          {/* Full width on a phone, and the label loses its verb there. The
-              accessible name stays the long one either way. */}
-          <Button
-            href={footerContent.cta.action.href}
-            variant="plan"
-            withArrow
-            aria-label={footerContent.cta.action.label}
-            className="w-full shrink-0 tablet:w-auto"
-          >
-            <span className="max-tablet:hidden">
-              {footerContent.cta.action.label}
-            </span>
-            <span className="tablet:hidden">
-              {footerContent.cta.action.labelShort}
-            </span>
-          </Button>
-        </CtaPanel>
-      </Container>
+      {/* 160 between the panel and the columns, per the owner.
+          `data-footer-cta`: a page that closes on its own panel (/partners)
+          renders it itself and this one is taken away. See ClosingCta. */}
+      <div data-footer-cta="">
+        <Container className="pt-20 pb-40">
+          <ClosingCta
+            headingLines={footerContent.cta.headingLines}
+            headingLinesMobile={footerContent.cta.headingLinesMobile}
+            action={footerContent.cta.action}
+          />
+        </Container>
+      </div>
 
       {/* The link columns. `data-chrome-full`: dropped on a landing page,
           where the panel above is the only way on. See PageChrome. */}

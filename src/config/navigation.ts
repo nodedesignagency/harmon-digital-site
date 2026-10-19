@@ -25,7 +25,7 @@ export const mainNav: NavItem[] = [
   { label: "About", href: "/about" },
   { label: "Case Studies", href: "/case-study" },
   { label: "Pricing", href: "/pricing" },
-  { label: "Careers", href: "/careers" },
+  { label: "Partners", href: "/partners" },
   { label: "Blogs", href: "/blogs" },
 ];
 
@@ -59,6 +59,10 @@ export const footerNav: NavGroup[] = [
     title: "{Company}",
     items: [
       { label: "About", href: "/about" },
+      { label: "Partners", href: "/partners" },
+      // Off the header since /partners took its place, kept here: Harmon has a
+      // careers page today, and a page nothing links to cannot be opened from
+      // the preview's Pages menu or by `npm run artifact`.
       { label: "Careers", href: "/careers" },
       { label: "Contact", href: "/contact" },
     ],

@@ -354,6 +354,13 @@ body:has([data-page-chrome="landing"]) [data-chrome-full] {
   display: none !important;
 }
 
+/* A page that closes on its own call to action (see ClosingCta) renders the
+ * panel itself; the footer's copy of it is taken away so the page does not
+ * close twice. */
+body:has([data-page-cta]) [data-footer-cta] {
+  display: none !important;
+}
+
 body:has([data-page-surface="beige"]) .mh-nav-shell {
   background-color: var(--color-bg-light);
 }

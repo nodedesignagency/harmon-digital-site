@@ -273,27 +273,31 @@ key, that is the entire process. Then set three variables:
 ```
 NEXT_PUBLIC_CONTACT_ENDPOINT=https://api.web3forms.com/submit
 NEXT_PUBLIC_CAREERS_ENDPOINT=https://api.web3forms.com/submit
+NEXT_PUBLIC_REFERRAL_ENDPOINT=https://api.web3forms.com/submit
 NEXT_PUBLIC_FORM_ACCESS_KEY=the-key-they-emailed-you
 ```
 
-Both forms can share one endpoint and one key; each submission carries enough
-to tell them apart (an application carries the `role` it was sent from).
+All three forms can share one endpoint and one key; each submission carries
+enough to tell them apart (an application carries the `role` it was sent from,
+a referral from /partners carries `form: "referral"`).
 
 **FormSubmit** needs no account whatsoever. Put your address in the URL:
 
 ```
 NEXT_PUBLIC_CONTACT_ENDPOINT=https://formsubmit.co/ajax/you@example.com
 NEXT_PUBLIC_CAREERS_ENDPOINT=https://formsubmit.co/ajax/you@example.com
+NEXT_PUBLIC_REFERRAL_ENDPOINT=https://formsubmit.co/ajax/you@example.com
 ```
 
 Leave `NEXT_PUBLIC_FORM_ACCESS_KEY` blank. The first submission triggers one
 confirmation email; click it and the form is live.
 
-**Formspree** gives you a URL per form, so use two:
+**Formspree** gives you a URL per form, so use three:
 
 ```
 NEXT_PUBLIC_CONTACT_ENDPOINT=https://formspree.io/f/xxxxxxxx
 NEXT_PUBLIC_CAREERS_ENDPOINT=https://formspree.io/f/yyyyyyyy
+NEXT_PUBLIC_REFERRAL_ENDPOINT=https://formspree.io/f/zzzzzzzz
 ```
 
 ## Where to put them

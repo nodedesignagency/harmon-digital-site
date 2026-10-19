@@ -52,6 +52,24 @@ columns; the footer's "Ready to Grow Portco EBITDA?" panel is its final CTA.
 - [x] **Reachable** — the footer's Navigation column links to it ("Watch the Video"). Without a link the preview's Pages menu and `npm run artifact` can't open it: both open a page by clicking its link. Move the link if you'd rather it sit elsewhere, but keep one
 - [ ] **Exits left on the page** — the header logo goes to `/` and the two case study cards open their case study pages. Keep, or make the cards non-links on the VSL
 
+## Referral Partners page — `/partners`
+
+**Built** — `src/app/(site)/partners/page.tsx`. One goal: send a referral. Every word is in the `partners`
+object at the top of that file. Built from copies of the Careers sections (the Careers components are
+untouched): `PartnersHero`, `PartnerAudience` (Accountants / Lawyers / Bankers, in the gallery's place),
+`PartnerBenefits` (Why Join's layout), `ReferralTypes` (the openings list, no filters or counter),
+`ReferralSteps` (the hiring process), then the new `ReferralFormSection` / `ReferralForm`, and the footer's
+green panel with this page's words (`ClosingCta`; the footer's own copy is hidden on this page via
+`data-page-cta`). "Partners" is in the header nav (in Careers' place) and the footer's Company column.
+
+- [ ] **Payout details** — `partners.benefits` → "Paid Well for Every Referral" `detail` (shows "[Payout details placeholder]")
+- [ ] **Gift details** — `partners.benefits` → "Gifts for Every Intro" `detail` (shows "[Gift details placeholder]")
+- [ ] **Referral form endpoint** — set `NEXT_PUBLIC_REFERRAL_ENDPOINT` (see SETUP.md; TODO in `src/lib/partners.ts`). Unset, the form shows "Sent" and discards the referral
+- [ ] **Copy to confirm** — the step lines under How It Works, the form's subheading and placeholders, and the
+      list's subheading are ours; "Your referral fee is paid when the project closes" should match the real terms
+- [ ] **Careers** — dropped from the header for Partners, kept in the footer so it stays reachable. Remove it
+      entirely if Harmon is not hiring (and then its route, or the artifact route check fails on an unlinked page)
+
 ## Waiting on the client (Isaac)
 
 - [ ] **Logo files** — replace the Mahadeva logo in the header, the loading screen (preloader), the big 3D mark under the hero, and the share/OG image (`src/app/opengraph-image.tsx`)
@@ -76,11 +94,11 @@ columns; the footer's "Ready to Grow Portco EBITDA?" panel is its final CTA.
 - [ ] **Blog** — Harmon has no blog: remove the page and its links, or keep it with real posts (6 demo posts now)
 - [ ] **Privacy Policy & Terms** — port the current site's text (`client-brief/current-site/privacy.md`, `terms.md`) into `src/content/legal.ts`
 - [ ] **404 page** copy (`src/content/not-found.ts`)
-- [ ] **Header menu** — match it to the pages we keep (`src/config/navigation.ts`)
+- [ ] **Header menu** — match it to the pages we keep (`src/config/navigation.ts`); Partners replaced Careers there
 
 ## Setup before going live
 
-- [ ] Contact and careers **form endpoints** (`NEXT_PUBLIC_CONTACT_ENDPOINT`, `NEXT_PUBLIC_CAREERS_ENDPOINT` — see `SETUP.md`); unset, forms show "sent" and throw the message away
+- [ ] Contact, careers and referral **form endpoints** (`NEXT_PUBLIC_CONTACT_ENDPOINT`, `NEXT_PUBLIC_CAREERS_ENDPOINT`, `NEXT_PUBLIC_REFERRAL_ENDPOINT` — see `SETUP.md`); unset, forms show "sent" and throw the message away
 - [ ] `NEXT_PUBLIC_SITE_URL=https://www.harmon-digital.com` on the host (canonical URLs, sitemap, share card)
 - [ ] Sanity CMS — connect it (so Isaac can edit case studies) or leave the built-in content
 - [ ] Remove any leftover template demo assets in `public/uploads/` that nothing uses
