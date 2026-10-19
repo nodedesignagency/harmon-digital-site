@@ -86,7 +86,7 @@ export function WhatYouGet({ content, dashboards, cta }: WhatYouGetProps) {
               key={item.title}
               className="grid border border-border-on-light text-fg-on-light desktop:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]"
             >
-              <div className="flex flex-col bg-bg-white p-6 tablet:p-10 desktop:p-12">
+              <div className="flex flex-col bg-bg-white p-6 tablet:p-8 desktop:p-9">
                 <h3 className="font-display text-display-md leading-(--leading-heading) tracking-(--tracking-display) font-normal">
                   {item.title}
                 </h3>
@@ -94,7 +94,7 @@ export function WhatYouGet({ content, dashboards, cta }: WhatYouGetProps) {
                   {item.body}
                 </p>
 
-                <div className="mt-10 desktop:mt-auto desktop:pt-12">
+                <div className="mt-10 desktop:mt-auto desktop:pt-10">
                   {/* `plan`: the dark body the pricing cards use on their
                       light panels, where the white primary would vanish. */}
                   <Button
@@ -131,7 +131,7 @@ export function WhatYouGet({ content, dashboards, cta }: WhatYouGetProps) {
                   is also read out, from the file's own markup. */}
               <div
                 className={cn(
-                  "flex min-h-[26rem] flex-col p-6 tablet:p-10 desktop:p-12",
+                  "flex min-h-[26rem] flex-col p-6 tablet:p-8 desktop:p-9",
                   tints[item.tone],
                 )}
               >

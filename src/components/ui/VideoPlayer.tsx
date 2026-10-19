@@ -116,12 +116,13 @@ export function VideoPlayer({
         aria-hidden="true"
         className="relative flex size-16 items-center justify-center rounded-full bg-bg-white text-bg tablet:size-20"
       >
-        <svg
-          viewBox="0 0 24 24"
-          className="ml-1 size-7 tablet:size-8"
-          fill="currentColor"
-        >
-          <path d="M7 4.5v15a1 1 0 0 0 1.52.85l12-7.5a1 1 0 0 0 0-1.7l-12-7.5A1 1 0 0 0 7 4.5Z" />
+        {/* Optically centred, not boxed: a triangle's weight sits toward its
+            flat side, so centring its bounding box looks pushed right, and
+            centring its centroid looks pushed left. The box sits about a
+            unit right of the disc's centre, which is where it reads as
+            centred. */}
+        <svg viewBox="0 0 24 24" className="size-7 tablet:size-8" fill="currentColor">
+          <path d="M6 4.5v15a1 1 0 0 0 1.52.85l12-7.5a1 1 0 0 0 0-1.7l-12-7.5A1 1 0 0 0 6 4.5Z" />
         </svg>
       </span>
       <span

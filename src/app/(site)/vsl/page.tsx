@@ -243,9 +243,16 @@ export default async function VslPage() {
             on the same green. It paints its own fill (`data-bg-keep`), so it
             is green from the first frame rather than fading in from white,
             and its words are in the fixed light ink. Taller than the screen,
-            so it pins by its foot — see PinAtFoot. */}
+            so it pins by its foot — see PinAtFoot.
+
+            Its `data-bg` is the white base under it, not its own colour, as
+            the home page's hero does. Declared green, the page behind stayed
+            dark while the problems rode up and only crossfaded to white as
+            What You Get scrolled in — that section arrived green and faded
+            light. Declared white, the page is white from the start and
+            nothing changes until the dark proof. */}
         <PinAtFoot
-          data-bg="green"
+          data-bg="white"
           data-bg-keep=""
           className="overflow-hidden bg-bg pt-[calc(var(--header-height)+9rem)] pb-16 text-fg tablet:pb-20"
         >

@@ -101,5 +101,6 @@ columns; the footer's "Ready to Grow Portco EBITDA?" panel is its final CTA.
 - [x] VSL round 2: longer hero hold, redrawn problem illustrations, Giga-style testimonials, home How It Works, no eyebrow labels
 - [x] VSL round 3: shorter hold (15svh), What You Get as pastel cards with the dashboard files, a colour per testimonial, proof line set right
 - [x] VSL round 4: What You Get cards split white/tint with a Book a Call and icon points, testimonial gaps 10px and one-line heading, plain white play button
+- [x] VSL round 5: card padding 36px, play triangle optically centred, What You Get no longer arrives green (the opening's `data-bg` is the white base, as on home)
 - [x] Feature cards' tints matched to their pictures again
 - [x] Pricing card overflow fixed; footer reworked (Harmon // Digital, legal links, /404 showcase removed)
