@@ -11,7 +11,7 @@ import { cn } from "@/lib/cn";
  *
  * After Ploy's "Who's Ploy for?" on Mobbin, in the site's terms: the heading
  * and a line on the left, and on the right three panels stacked 10 apart, each
- * the partner's name set large with its one line beside it, a small square in
+ * the partner's name set large with its one line under it, a small square in
  * each corner as a drafting mark, and one of the home page's feature pictures
  * in the top corner (`art`, the same 3D set the feature cards and How It Works
  * carry). Static: every panel shows its line, nothing opens or closes.
@@ -79,10 +79,9 @@ export function PartnerAudience({ content }: PartnerAudienceProps) {
               <li
                 key={card.title}
                 className={cn(
-                  // The line in a fixed column, so the three start on one
-                  // vertical whatever the width of the name beside them; the
-                  // picture over the name, the name at the foot.
-                  "relative grid min-h-[13rem] gap-6 p-6 tablet:grid-cols-[minmax(0,1fr)_14rem] tablet:grid-rows-[auto_1fr] tablet:gap-x-10 tablet:p-8",
+                  // The picture at the top, the name and its line together at
+                  // the foot.
+                  "relative flex min-h-[13rem] flex-col justify-between gap-6 p-6 tablet:p-8",
                   tints[card.tone],
                 )}
               >
@@ -99,14 +98,14 @@ export function PartnerAudience({ content }: PartnerAudienceProps) {
                   src={featureArtwork[card.art]}
                   alt=""
                   sizes="64px"
-                  className="size-16 object-contain tablet:col-start-1 tablet:row-start-1"
+                  className="size-16 object-contain"
                 />
-                <h3 className="font-display text-display-lg leading-(--leading-display) tracking-(--tracking-display) font-normal tablet:col-start-1 tablet:row-start-2 tablet:self-end">
-                  {card.title}
-                </h3>
-                <p className="max-w-[28ch] font-body text-body-md tablet:col-start-2 tablet:row-span-2 tablet:row-start-1 tablet:self-start">
-                  {card.body}
-                </p>
+                <div>
+                  <h3 className="font-display text-display-lg leading-(--leading-display) tracking-(--tracking-display) font-normal">
+                    {card.title}
+                  </h3>
+                  <p className="mt-3 max-w-[40ch] font-body text-body-md">{card.body}</p>
+                </div>
               </li>
             ))}
           </ul>

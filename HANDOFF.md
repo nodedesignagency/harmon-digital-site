@@ -76,8 +76,8 @@ green panel with this page's words (`ClosingCta`; the footer's own copy is hidde
       share image. The files keep the template's names, `public/uploads/logos/mahadeva-black.png` / `-white.png`,
       because the navigation-locked preloader imports them by name; the white cut is the wordmark knocked out to
       white. Originals in `client-brief/uploads/brand/`
-- [ ] **3D mark under the home hero** — still the Mahadeva "M" render (`public/uploads/images/hero-mahadeva.png`);
-      needs a 3D version of the "//" mark, or remove it
+- [x] **3D mark under the home hero** — the "//" mark built in the same mint voxel style as the template's render
+      (`public/uploads/images/hero-harmon.png`, generated with Magnific)
 - [x] **Favicon / app icons** — `src/app/favicon.ico` (16/32/48), `icon.png` (128) and `apple-icon.png` (180, square for
       iOS to round) are the green "//" mark, redrawn from the supplied icon so every size is sharp
 - [ ] **Brand colours** — the site still uses the template's green palette (`src/styles/theme.css`)
