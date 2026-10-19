@@ -120,8 +120,11 @@ export function PortfolioDashboards({ content }: PortfolioDashboardsProps) {
           {/* From tablet up: exactly as tall as the settled stack and pinned
             level with its first tab (the 24 is GAP), so the words hold beside
             the files and leave with them rather than lingering after the
-            stack has gone. */}
-          <div className="text-ink-dynamic tablet:sticky tablet:top-[calc(var(--header-height)+24px)] tablet:flex tablet:h-(--stack-h) tablet:flex-col tablet:self-start">
+            stack has gone. The heading, its line and the card sit together in
+            the middle of that height — the middle of the screen under the
+            header — rather than spread to its two ends, which left the
+            heading pinned to the top with an empty stretch under it. */}
+          <div className="text-ink-dynamic tablet:sticky tablet:top-[calc(var(--header-height)+24px)] tablet:flex tablet:h-(--stack-h) tablet:flex-col tablet:justify-center tablet:self-start">
             <TextReveal
               as="h2"
               lines={content.headingLines}
@@ -131,15 +134,14 @@ export function PortfolioDashboards({ content }: PortfolioDashboardsProps) {
             <p className="mt-6 max-w-[40ch] font-body text-body-md">
               {content.subheading}
             </p>
-            {/* The FAQ's strategy-call card, at the foot of the column — so,
-                from tablet up, level with the foot of the settled stack. Beige,
-                where the FAQ's is white: this section is white. */}
+            {/* The FAQ's strategy-call card, under the words. Beige, where the
+                FAQ's is white: this section is white. */}
             <CtaCard
               href={content.cta.href}
               title={content.cta.title}
               body={content.cta.body}
               fill="bg-bg-light"
-              className="mt-10 tablet:mt-auto"
+              className="mt-10"
             />
           </div>
 
