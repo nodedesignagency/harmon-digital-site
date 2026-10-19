@@ -7,7 +7,6 @@ import { Container } from "@/components/layout/Container";
 import { Parallax } from "@/components/motion/Parallax";
 import { TextReveal } from "@/components/motion/TextReveal";
 import { markParallax, sectionTextReveal } from "@/config/animation";
-import type { aboutContent } from "@/content/home";
 
 /**
  * About — the white wrapper directly below the hero.
@@ -22,10 +21,20 @@ import type { aboutContent } from "@/content/home";
  */
 
 type AboutProps = {
-  content: typeof aboutContent;
+  /** The home page's `aboutContent`, or any other statement of the same shape. */
+  content: {
+    eyebrow: string;
+    bodyLines: readonly string[];
+    bodyLinesMobile: readonly string[];
+  };
+  /**
+   * The 3D mark hung under the statement. On by default; /vsl leaves it off,
+   * and the section then closes under the statement with its own padding.
+   */
+  showMark?: boolean;
 };
 
-export function About({ content }: AboutProps) {
+export function About({ content, showMark = true }: AboutProps) {
   return (
     // `sticky` makes this its own stacking context, so the mark's z-index
     // cannot lift it out on its own. The layer goes on the section: above the
@@ -74,7 +83,7 @@ export function About({ content }: AboutProps) {
           horizontal padding below tablet, and the gutter is the measure, which
           is what it is for. Above tablet the section keeps its own 40 and the
           desktop inset is what it always was. */}
-        <Container className="relative flex flex-col items-center justify-center gap-10 lg:min-h-screen">
+      <Container className="relative flex flex-col items-center justify-center gap-10 lg:min-h-screen">
         <p className="flex items-center justify-center gap-2 text-body-md">
           <Image src={ornamentLeft} alt="" aria-hidden className="h-8 w-auto" />
           {content.eyebrow}
@@ -108,28 +117,30 @@ export function About({ content }: AboutProps) {
          * heading below it. Anchoring to the statement rather than to the
          * column's box keeps the mark the same distance under the text whatever
          * height the section takes. */}
-        <div className="relative -mt-10 w-full">
-          <Parallax
-            drift={markParallax.drift}
-            // 40 under the statement where the mark sits in the body of the
-            // section, 220 on desktop where it hangs out of the bottom of it.
-            //
-            // Positioning lives on this wrapper so the parallax has something
-            // of its own to transform. Tailwind centres it with the `translate`
-            // property while the drift writes `transform`; the two compose
-            // rather than overwrite, so the mark stays centred as it climbs.
-            className="absolute top-10 left-1/2 z-20 -translate-x-1/2 lg:top-55"
-          >
-            <Image
-              src={mark}
-              alt=""
-              aria-hidden
-              priority
-              sizes="(min-width: 1024px) 376px, (min-width: 640px) 260px, 200px"
-              className="h-auto w-[200px] object-cover sm:w-[260px] lg:h-[467px] lg:w-[376px]"
-            />
-          </Parallax>
-        </div>
+        {showMark ? (
+          <div className="relative -mt-10 w-full">
+            <Parallax
+              drift={markParallax.drift}
+              // 40 under the statement where the mark sits in the body of the
+              // section, 220 on desktop where it hangs out of the bottom of it.
+              //
+              // Positioning lives on this wrapper so the parallax has something
+              // of its own to transform. Tailwind centres it with the `translate`
+              // property while the drift writes `transform`; the two compose
+              // rather than overwrite, so the mark stays centred as it climbs.
+              className="absolute top-10 left-1/2 z-20 -translate-x-1/2 lg:top-55"
+            >
+              <Image
+                src={mark}
+                alt=""
+                aria-hidden
+                priority
+                sizes="(min-width: 1024px) 376px, (min-width: 640px) 260px, 200px"
+                className="h-auto w-[200px] object-cover sm:w-[260px] lg:h-[467px] lg:w-[376px]"
+              />
+            </Parallax>
+          </div>
+        ) : null}
       </Container>
     </section>
   );

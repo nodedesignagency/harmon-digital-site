@@ -9,7 +9,7 @@ left for later — they still have to be done before handoff.
 
 ## Home page — section plan (owner's order)
 
-Main scope is the **home page, the VSL and careers** (ask the owner what the VSL is if it's still unclear).
+Main scope is the **home page, the VSL and careers**.
 Build the new sections one at a time with the owner's direction; they often share a reference video.
 
 | # | Section | Background | Status |
@@ -29,12 +29,26 @@ Build the new sections one at a time with the owner's direction; they often shar
 | 13 | FAQ | beige | done |
 | 14 | CTA + Footer | dark green | done |
 
+## VSL landing page — `/vsl`
+
+**Built** — `src/app/(site)/vsl/page.tsx`. One goal: book a call. Every word is in the `vsl` object at the
+top of that file. It reuses the home sections through props (Trust `variant="logos"`, About `showMark`,
+Features `layout="row"`, CaseStudies `limit`/`showIndexLink`, HowItWorks `compact`) and the case study
+page's hero; `<PageChrome value="landing" />` hides the header nav and the footer link columns. The
+footer's "Ready to Grow Portco EBITDA?" panel is its final CTA.
+
+- [ ] **VSL video** — set `vsl.hero.video.src` (an .mp4 or an embed URL: YouTube `/embed/<id>`, Vimeo, Loom, Wistia); empty shows the placeholder frame
+- [ ] **Testimonial video** — set `vsl.proof.testimonial.video.src` the same way
+- [ ] **Booking link** — see below; until it is set, every Book a Call on the VSL goes to `/contact`, which has the full site nav
+- [ ] **Link to `/vsl` or skip it in the bundle check** — nothing on the site links to `/vsl` (on purpose, it's for ads/emails), so `npm run artifact` will report it unreachable. Decide: add a link somewhere, or add `/vsl` to the skip list in `scripts/build-artifact.mjs` (navigation-locked: needs `npm run bless-navigation`)
+- [ ] **Exits left on the page** — the header logo goes to `/` and the two case study cards open their case study pages. Keep, or make the cards non-links on the VSL
+
 ## Waiting on the client (Isaac)
 
 - [ ] **Logo files** — replace the Mahadeva logo in the header, the loading screen (preloader), the big 3D mark under the hero, and the share/OG image (`src/app/opengraph-image.tsx`)
 - [ ] **Favicon / app icons** — `src/app/favicon.ico`, `icon.png`, `apple-icon.png` are still the Mahadeva "m" (Harmon's blue "//" icon is in `client-brief/current-site/images/logo/icon.png`)
 - [ ] **Brand colours** — the site still uses the template's green palette (`src/styles/theme.css`)
-- [ ] **Booking link** — every "Book a Call" currently goes to `/contact`
+- [ ] **Booking link** — set `booking` in `src/config/site.config.ts`; every "Book a Call" (header, footer panel, VSL) follows it. Empty, they go to `/contact`
 - [ ] **Prices** for the three tiers — cards show "Unstack" / "1:1 Training" / "Custom Builds" until then (`src/content/pricing.ts`)
 - [ ] **Hero headline** — current line is a placeholder (`src/content/home.ts`, `heroContent`)
 - [ ] **Testimonials** — names for "Operations Lead, Neighbors Bank" and "Owner, Happy Endings"; headshots if we want portraits (they need the background removed)
@@ -73,5 +87,6 @@ Build the new sections one at a time with the owner's direction; they often shar
 - [x] AI Employees bento (five roles from the brief + CTA tile)
 - [x] Before/After EBITDA scroll section (illustrative figures)
 - [x] Portfolio Dashboards stacking-files section (illustrative figures)
+- [x] VSL landing page at `/vsl` (video placeholders, minimal header and footer)
 - [x] Feature cards' tints matched to their pictures again
 - [x] Pricing card overflow fixed; footer reworked (Harmon // Digital, legal links, /404 showcase removed)

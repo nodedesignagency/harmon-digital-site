@@ -187,7 +187,8 @@ export function Header() {
 
         {/* Desktop only. Tablet is narrow enough that six labels plus the CTA
             crowd the strip, so it takes the overlay too. */}
-        <nav aria-label="Main" className="hidden desktop:block">
+        {/* `data-chrome-full`: dropped on a landing page. See PageChrome. */}
+        <nav aria-label="Main" data-chrome-full="" className="hidden desktop:block">
           <ul className="flex items-center gap-4">
             {mainNav.map((item, i) => {
               const active = pathname === item.href;
@@ -255,6 +256,7 @@ export function Header() {
           <button
             ref={toggleRef}
             type="button"
+            data-chrome-full=""
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="mobile-nav"
@@ -284,6 +286,7 @@ export function Header() {
           accessibility tree, which is what unmounting was doing for us. */}
       <div
         id="mobile-nav"
+        data-chrome-full=""
         ref={panelRef}
         tabIndex={-1}
         onKeyDown={onPanelKeyDown}

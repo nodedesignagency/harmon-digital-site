@@ -40,6 +40,14 @@ export const siteConfig = {
   },
 
 
+  /**
+   * The client's booking link (Calendly or similar). Empty until they send it,
+   * and every "Book a Call" on the site falls back to /contact meanwhile. Set
+   * it here and every one of them points at it — the header's, the footer
+   * panel's, the FAQ card's and every button on /vsl. See `ctaHref`.
+   */
+  booking: "" as string,
+
   /** Twitter/X handle including the @, or an empty string to omit the tag. */
   twitterHandle: "",
 
@@ -78,5 +86,7 @@ export const siteConfig = {
  * content files, and a buyer never has to find the other eight.
  */
 export function ctaHref(fallback: string): string {
-  return siteConfig.template.show ? siteConfig.template.href : fallback;
+  if (siteConfig.template.show) return siteConfig.template.href;
+  // The client's booking link, once they have sent it — empty does nothing.
+  return siteConfig.booking || fallback;
 }

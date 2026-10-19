@@ -3,7 +3,6 @@ import { Accordion } from "@/components/motion/Accordion";
 import { TextReveal } from "@/components/motion/TextReveal";
 import { CtaCard } from "@/components/ui/CtaCard";
 import { sectionTextRevealBeige } from "@/config/animation";
-import type { faqContent } from "@/content/faq";
 
 /**
  * FAQ — "Answers to Your Questions".
@@ -18,7 +17,16 @@ import type { faqContent } from "@/content/faq";
  */
 
 type FaqProps = {
-  content: typeof faqContent;
+  /**
+   * The shared `faqContent`, or a page's own selection of the same shape —
+   * /vsl passes four of its questions.
+   */
+  content: {
+    headingLines: readonly string[];
+    subheading: string;
+    cta: { title: string; body: string; href: string };
+    items: ReadonlyArray<{ question: string; answer: string }>;
+  };
 };
 
 export function Faq({ content }: FaqProps) {

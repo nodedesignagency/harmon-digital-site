@@ -46,9 +46,15 @@ const LOGO_GAP = 40;
 
 type TrustProps = {
   content: typeof trustContent;
+  /**
+   * `logos` renders the client-mark strip on its own — its caption and the
+   * marquee, nothing above them — for a page that wants the proof without the
+   * statistics (/vsl). The default is the whole section.
+   */
+  variant?: "full" | "logos";
 };
 
-export function Trust({ content }: TrustProps) {
+export function Trust({ content, variant = "full" }: TrustProps) {
   const cycle = content.logos.length * (LOGO_SLOT + LOGO_GAP);
   const duration = Math.round((cycle / featureMarquee.speed) * 1000);
 
@@ -71,6 +77,56 @@ export function Trust({ content }: TrustProps) {
       />
     </li>
   ));
+
+  // The caption and the marquee — the section's foot, or the whole of it.
+  const logoRow = (className?: string) => (
+    <div
+      className={cn(
+        "flex flex-col gap-8 tablet:flex-row tablet:items-center tablet:gap-16",
+        className,
+      )}
+    >
+      {/* Broken where the file breaks it, not where the measure runs out:
+              the caption sets this row's height beside the marquee, and a
+              line more or less moves the marquee with it. */}
+      {/* Centred on a phone, where the caption sits above the marquee as
+              its own full-width block and a left edge has nothing to line up
+              with. From tablet up it is the left half of a row beside the
+              logos and ranges left, as the file has it. */}
+      <p className="text-ink-dynamic flex shrink-0 flex-col text-center font-body text-body-sm tablet:text-left">
+        {content.logosCaptionLines.map((line) => (
+          <span key={line}>{line}</span>
+        ))}
+      </p>
+
+      <div className="mh-marquee-frame no-scrollbar min-w-0 flex-1 overflow-hidden">
+        <div
+          className="mh-marquee flex w-max items-center"
+          style={
+            {
+              "--mh-marquee-cycle": `${cycle}px`,
+              "--mh-marquee-duration": `${duration}ms`,
+            } as CSSProperties
+          }
+        >
+          <ul className="flex items-center gap-10 pr-10">{logos}</ul>
+          {/* The second copy exists to make the loop seamless. Same marks,
+                  so it is hidden from assistive tech. */}
+          <ul aria-hidden="true" className="flex items-center gap-10 pr-10">
+            {logos}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (variant === "logos") {
+    return (
+      <section data-bg="white" className="bg-bg-white py-16 text-fg-on-light">
+        <Container className="px-10">{logoRow()}</Container>
+      </section>
+    );
+  }
 
   return (
     <section data-bg="white" className="bg-bg-white py-20 text-fg-on-light">
@@ -162,39 +218,7 @@ export function Trust({ content }: TrustProps) {
           ))}
         </ul>
 
-        <div className="mt-15 flex flex-col gap-8 tablet:flex-row tablet:items-center tablet:gap-16">
-          {/* Broken where the file breaks it, not where the measure runs out:
-              the caption sets this row's height beside the marquee, and a
-              line more or less moves the marquee with it. */}
-          {/* Centred on a phone, where the caption sits above the marquee as
-              its own full-width block and a left edge has nothing to line up
-              with. From tablet up it is the left half of a row beside the
-              logos and ranges left, as the file has it. */}
-          <p className="text-ink-dynamic flex shrink-0 flex-col text-center font-body text-body-sm tablet:text-left">
-            {content.logosCaptionLines.map((line) => (
-              <span key={line}>{line}</span>
-            ))}
-          </p>
-
-          <div className="mh-marquee-frame no-scrollbar min-w-0 flex-1 overflow-hidden">
-            <div
-              className="mh-marquee flex w-max items-center"
-              style={
-                {
-                  "--mh-marquee-cycle": `${cycle}px`,
-                  "--mh-marquee-duration": `${duration}ms`,
-                } as CSSProperties
-              }
-            >
-              <ul className="flex items-center gap-10 pr-10">{logos}</ul>
-              {/* The second copy exists to make the loop seamless. Same marks,
-                  so it is hidden from assistive tech. */}
-              <ul aria-hidden="true" className="flex items-center gap-10 pr-10">
-                {logos}
-              </ul>
-            </div>
-          </div>
-        </div>
+        {logoRow("mt-15")}
       </Container>
     </section>
   );

@@ -347,6 +347,13 @@
 }
 
 /* A beige page changes the fill and nothing else. */
+/* A landing page's chrome (see PageChrome): whatever the header and footer
+ * mark `data-chrome-full` — the navigation, the menu toggle, the footer's link
+ * columns — is not there at all, so the booking link is the only way on. */
+body:has([data-page-chrome="landing"]) [data-chrome-full] {
+  display: none !important;
+}
+
 body:has([data-page-surface="beige"]) .mh-nav-shell {
   background-color: var(--color-bg-light);
 }

@@ -41,7 +41,7 @@
     "client": "Happy Endings",
     "year": "Operations",
     "title": "One Platform That Runs an Entire Ice Cream Business",
-    "summary": "Expensive, disconnected tools replaced by one owned system — orders, kitchen, training, wholesale and inventory, plus an AI email agent.",
+    "summary": "Expensive, disconnected tools replaced by one owned system: orders, kitchen, training, wholesale and inventory, plus an AI email agent.",
     "stats": [
       { "label": "Cost Reduction", "value": "30%" },
       { "label": "Order Capture", "value": "100%" },

@@ -4,7 +4,7 @@ import { TextReveal } from "@/components/motion/TextReveal";
 import { Button } from "@/components/ui/Button";
 import { CaseStudyCard } from "@/components/ui/CaseStudyCard";
 import { sectionTextRevealDynamic } from "@/config/animation";
-import type { CaseStudy, caseStudiesContent } from "@/content/case-studies";
+import type { CaseStudy } from "@/content/case-studies";
 
 /**
  * Case studies — "Latest works".
@@ -23,11 +23,28 @@ import type { CaseStudy, caseStudiesContent } from "@/content/case-studies";
 const SHOWN = 3;
 
 type CaseStudiesProps = {
-  content: typeof caseStudiesContent;
+  /** The home page's `caseStudiesContent`, or any other of the same shape. */
+  content: {
+    headingLines: readonly string[];
+    subheading: string;
+    cta: { label: string; href: string };
+  };
   studies: CaseStudy[];
+  /** How many cards to show. The home page's three by default. */
+  limit?: number;
+  /**
+   * The button to the full index beside the heading. On by default; a page
+   * that should not send the reader off elsewhere (/vsl) turns it off.
+   */
+  showIndexLink?: boolean;
 };
 
-export function CaseStudies({ content, studies }: CaseStudiesProps) {
+export function CaseStudies({
+  content,
+  studies,
+  limit = SHOWN,
+  showIndexLink = true,
+}: CaseStudiesProps) {
   return (
     <section data-bg="green" className="bg-bg py-20 tablet:py-30">
       <Container>
@@ -47,19 +64,21 @@ export function CaseStudies({ content, studies }: CaseStudiesProps) {
           {/* `self-start`: in the column this row becomes on a phone, a flex
               item stretches, and the original sizes this button to its own
               228 rather than the screen. */}
-          <Button
-            href={content.cta.href}
-            variant="secondary"
-            withArrow
-            className="shrink-0 self-start"
-          >
-            {content.cta.label}
-          </Button>
+          {showIndexLink ? (
+            <Button
+              href={content.cta.href}
+              variant="secondary"
+              withArrow
+              className="shrink-0 self-start"
+            >
+              {content.cta.label}
+            </Button>
+          ) : null}
         </div>
 
         {/* 10 between cards on a phone, per the owner. */}
         <div className="mt-15 flex flex-col gap-2.5 tablet:gap-5">
-          {studies.slice(0, SHOWN).map((study) => (
+          {studies.slice(0, limit).map((study) => (
             <CaseStudyCard
               key={study.slug}
               study={study}

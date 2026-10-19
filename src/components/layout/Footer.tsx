@@ -67,13 +67,16 @@ export function Footer() {
         </CtaPanel>
       </Container>
 
-      <Container className="pb-14">
-        <div className="grid gap-12 tablet:grid-cols-2 desktop:grid-cols-[1.4fr_repeat(3,1fr)]">
-          <div className="flex flex-col gap-8">
-            {footerContent.contact.map((item) => (
-              <div key={item.label} className="flex flex-col gap-2">
-                <Scramble text={item.label} className={LABEL} />
-                {/* Geist 28 regular, unlike the links beside it, which are
+      {/* The link columns. `data-chrome-full`: dropped on a landing page,
+          where the panel above is the only way on. See PageChrome. */}
+      <div data-chrome-full="">
+        <Container className="pb-14">
+          <div className="grid gap-12 tablet:grid-cols-2 desktop:grid-cols-[1.4fr_repeat(3,1fr)]">
+            <div className="flex flex-col gap-8">
+              {footerContent.contact.map((item) => (
+                <div key={item.label} className="flex flex-col gap-2">
+                  <Scramble text={item.label} className={LABEL} />
+                  {/* Geist 28 regular, unlike the links beside it, which are
                     Almarai — the owner sets the two contact lines apart.
 
                     `self-start` matters: as a flex item this would otherwise
@@ -85,47 +88,48 @@ export function Footer() {
                     on a 360 phone), so at 28 it broke at the hyphen and read
                     as two words. At 24 it is 276 and fits every width.
                     `break-words` only matters on a screen narrower than that. */}
-                <a
-                  href={item.href}
-                  className="mh-nav-link self-start font-ui text-[1.5rem] font-normal break-words"
-                >
-                  {item.value}
-                </a>
-              </div>
-            ))}
-          </div>
+                  <a
+                    href={item.href}
+                    className="mh-nav-link self-start font-ui text-[1.5rem] font-normal break-words"
+                  >
+                    {item.value}
+                  </a>
+                </div>
+              ))}
+            </div>
 
-          {footerNav.map((group) => (
-            <nav
-              key={group.title}
-              className="flex flex-col gap-5"
-              aria-label={group.title}
-            >
-              <Scramble text={group.title} className={LABEL} />
-              {/* A row that wraps on a phone, where a column of five would
+            {footerNav.map((group) => (
+              <nav
+                key={group.title}
+                className="flex flex-col gap-5"
+                aria-label={group.title}
+              >
+                <Scramble text={group.title} className={LABEL} />
+                {/* A row that wraps on a phone, where a column of five would
                   make the footer far taller than the page it closes; a column
                   from tablet up. 16 between links either way, against the 20
                   that separates them from the heading — enough that the hover
                   rule under one clears the link below it. */}
-              <ul className="flex flex-wrap gap-x-10 gap-y-4 tablet:flex-col tablet:flex-nowrap">
-                {group.items.map((item) => (
-                  <li key={item.label} className="w-fit">
-                    <Link
-                      href={item.href}
-                      {...(item.external
-                        ? { target: "_blank", rel: "noreferrer noopener" }
-                        : {})}
-                      className="mh-nav-link font-body text-body-md"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          ))}
-        </div>
-      </Container>
+                <ul className="flex flex-wrap gap-x-10 gap-y-4 tablet:flex-col tablet:flex-nowrap">
+                  {group.items.map((item) => (
+                    <li key={item.label} className="w-fit">
+                      <Link
+                        href={item.href}
+                        {...(item.external
+                          ? { target: "_blank", rel: "noreferrer noopener" }
+                          : {})}
+                        className="mh-nav-link font-body text-body-md"
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            ))}
+          </div>
+        </Container>
+      </div>
 
       {/* Ruled above and below, per the original. */}
       <div className="border-y border-fg/10">

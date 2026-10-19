@@ -1,3 +1,5 @@
+import { ctaHref } from "@/config/site.config";
+
 /**
  * Centralised navigation.
  *
@@ -27,8 +29,11 @@ export const mainNav: NavItem[] = [
   { label: "Blogs", href: "/blogs" },
 ];
 
-/** Header call-to-action. */
-export const navCta: NavItem = { label: "Book a Call", href: "/contact" };
+/**
+ * Header call-to-action. Through `ctaHref`, so it follows the booking link
+ * when the client's arrives, like every other "Book a Call".
+ */
+export const navCta: NavItem = { label: "Book a Call", href: ctaHref("/contact") };
 
 /**
  * Footer link columns, in the original's three groups. Titles carry their
