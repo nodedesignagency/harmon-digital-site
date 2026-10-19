@@ -88,9 +88,9 @@ export function VideoPlayer({
   }
 
   // The placeholder. A hairline so the frame reads on the dark ground it is
-  // drawn on, and the play button in the accent: the one thing on it that
-  // says "this is a video". A poster goes under both, behind a scrim so the
-  // label stays legible on whatever the still is.
+  // drawn on, and a plain play button — a white disc, the dark triangle in it
+  // — the one thing on it that says "this is a video". A poster goes under
+  // both, behind a scrim so the label stays legible on whatever the still is.
   return (
     <div
       role="img"
@@ -114,14 +114,14 @@ export function VideoPlayer({
       ) : null}
       <span
         aria-hidden="true"
-        className="relative flex size-16 items-center justify-center bg-accent text-accent-fg tablet:size-24"
+        className="relative flex size-16 items-center justify-center rounded-full bg-bg-white text-bg tablet:size-20"
       >
         <svg
           viewBox="0 0 24 24"
-          className="ml-1 size-6 tablet:size-9"
+          className="ml-1 size-7 tablet:size-8"
           fill="currentColor"
         >
-          <path d="M6 4.5v15a1 1 0 0 0 1.52.85l12-7.5a1 1 0 0 0 0-1.7l-12-7.5A1 1 0 0 0 6 4.5Z" />
+          <path d="M7 4.5v15a1 1 0 0 0 1.52.85l12-7.5a1 1 0 0 0 0-1.7l-12-7.5A1 1 0 0 0 7 4.5Z" />
         </svg>
       </span>
       <span

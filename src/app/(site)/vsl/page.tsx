@@ -93,9 +93,10 @@ const vsl = {
   },
 
   /**
-   * One coloured card per thing the fund gets. `preview` picks which of the
-   * home page's dashboard files is drawn on it, figures and all; `tone` is
-   * the card's tint.
+   * One card per thing the fund gets: the words on white on the left, and on
+   * the right the matching home page dashboard file, figures and all, on its
+   * tint (`tone`). `includes` runs along the foot of the words, each point
+   * with its own small icon (`icon`).
    */
   offer: {
     headingLines: ["What You Get"],
@@ -106,9 +107,9 @@ const vsl = {
         title: "Cut Costs",
         body: "We retire the software you work around and automate the manual work, so the savings land on the P&L.",
         includes: [
-          "Overlapping software retired",
-          "Fulfillment and data entry automated",
-          "Systems the portco owns",
+          { label: "Software retired", icon: "layers" },
+          { label: "Manual work automated", icon: "bolt" },
+          { label: "Systems you own", icon: "key" },
         ],
         preview: "savings",
         tone: "lavender",
@@ -116,7 +117,11 @@ const vsl = {
       {
         title: "Grow Revenue",
         body: "AI employees answer, follow up and book every lead, day and night.",
-        includes: ["Inbound Responder", "Follow-Up Agent", "Outbound SDR"],
+        includes: [
+          { label: "Inbound Responder", icon: "phone" },
+          { label: "Follow-Up Agent", icon: "repeat" },
+          { label: "Outbound SDR", icon: "send" },
+        ],
         preview: "revenue",
         tone: "peach",
       },
@@ -124,9 +129,9 @@ const vsl = {
         title: "Portco Dashboards",
         body: "A live dashboard for every portco, showing exactly where each gain comes from.",
         includes: [
-          "Every portco on one screen",
-          "Savings traced to the line",
-          "Revenue by the AI employee that won it",
+          { label: "Every portco, one screen", icon: "grid" },
+          { label: "Savings by line", icon: "trendDown" },
+          { label: "Revenue by source", icon: "trendUp" },
         ],
         preview: "overview",
         tone: "blue",
@@ -153,7 +158,8 @@ const vsl = {
    * Zimny's until it is, and should be swapped for the speaker's own.
    */
   testimonial: {
-    headingLines: ["Hear It From", "Our Clients"],
+    headingLines: ["Hear It From Our Clients"],
+    headingLinesMobile: ["Hear It From", "Our Clients"],
     subheading:
       "What operators say once the systems are live and the manual work is gone.",
     featured: {
@@ -299,7 +305,11 @@ export default async function VslPage() {
       </div>
 
       {/* 3. What you get: a coloured card each, with its dashboard. */}
-      <WhatYouGet content={vsl.offer} dashboards={portfolioDashboardsContent} />
+      <WhatYouGet
+        content={vsl.offer}
+        dashboards={portfolioDashboardsContent}
+        cta={vsl.booking}
+      />
 
       {/* 4. Proof: two case studies. The section's own link to the full index
           is off, so it does not lead off the page. */}

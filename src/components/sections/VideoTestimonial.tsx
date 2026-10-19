@@ -19,7 +19,7 @@ import { cn } from "@/lib/cn";
  * colour, from the testimonial family, chosen in content (`tone`).
  *
  * The heading and its line are centred over the cards, as How It Works sets
- * its own. The section crossfades with the page on the dark surface, so those
+ * its own, each on one line from tablet up. The section crossfades with the page on the dark surface, so those
  * are in the dynamic ink; the cards keep fixed dark ink on their tints.
  */
 
@@ -36,6 +36,8 @@ type Testimonial = {
 type VideoTestimonialProps = {
   content: {
     headingLines: readonly string[];
+    /** The heading as a phone breaks it, where one line will not fit. */
+    headingLinesMobile?: readonly string[];
     subheading: string;
     featured: Testimonial & {
       video: { src: string; poster?: StaticImageData | string; title: string };
@@ -82,10 +84,11 @@ export function VideoTestimonial({ content, cta }: VideoTestimonialProps) {
         <TextReveal
           as="h2"
           lines={content.headingLines}
+          mobileLines={content.headingLinesMobile}
           settings={sectionTextRevealDynamic}
           className="flex flex-col items-center gap-(--space-heading-line) text-center text-display-lg leading-(--leading-display) tracking-(--tracking-display) font-normal"
         />
-        <p className="text-ink-dynamic mx-auto mt-6 max-w-[56ch] text-center font-body text-body-md">
+        <p className="text-ink-dynamic mt-6 text-center font-body text-body-md">
           {content.subheading}
         </p>
 
@@ -134,7 +137,8 @@ export function VideoTestimonial({ content, cta }: VideoTestimonialProps) {
           </div>
         </figure>
 
-        <ul className="mt-5 grid gap-5 tablet:grid-cols-3">
+        {/* 10 between the cards, every way, per the owner. */}
+        <ul className="mt-2.5 grid gap-2.5 tablet:grid-cols-3">
           {content.items.map((item) => (
             <li key={item.name}>
               <figure
