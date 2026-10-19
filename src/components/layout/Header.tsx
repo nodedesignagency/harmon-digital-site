@@ -26,6 +26,13 @@ import { cn } from "@/lib/cn";
 const SCROLL_THRESHOLD = 350;
 
 /**
+ * A hero page whose dark opening runs further than the threshold (/vsl) marks
+ * the section its light begins with this attribute instead, and the strip
+ * flips as that section's top passes under it.
+ */
+const FLIP_MARKER = "[data-surface-flip]";
+
+/**
  * Site header.
  *
  * Opaque at every scroll position — the hero's pattern field animates directly
@@ -44,21 +51,31 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const panelRef = useRef<HTMLDivElement>(null);
+  const shellRef = useRef<HTMLElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
   // `passive` keeps this off the scrolling critical path. The initial read is
   // deferred a frame rather than run in the effect body, so a restored scroll
   // position is already settled and the state change cannot cascade a render
   // before first paint.
+  //
+  // Re-run per route: the marker, if any, belongs to the page under the strip.
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > SCROLL_THRESHOLD);
+    const onScroll = () => {
+      const flip = document.querySelector<HTMLElement>(FLIP_MARKER);
+      setScrolled(
+        flip
+          ? flip.getBoundingClientRect().top <= (shellRef.current?.offsetHeight ?? 0)
+          : window.scrollY > SCROLL_THRESHOLD,
+      );
+    };
     const frame = requestAnimationFrame(onScroll);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("scroll", onScroll);
     };
-  }, []);
+  }, [pathname]);
 
   // Close the overlay on navigation, otherwise it stays open over the new page.
   //
@@ -119,6 +136,7 @@ export function Header() {
 
   return (
     <header
+      ref={shellRef}
       // Read by `globals.css`, where a hero page's strip turns light past the
       // threshold. Nothing else consults it.
       data-scrolled={scrolled}

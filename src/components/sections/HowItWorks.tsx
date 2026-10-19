@@ -7,7 +7,7 @@ import { Container } from "@/components/layout/Container";
 import { TextReveal } from "@/components/motion/TextReveal";
 import { featureArtwork } from "@/components/ui/featureArtwork";
 import { sectionTextRevealBeige } from "@/config/animation";
-import type { FeatureImage, FeatureTone } from "@/content/home";
+import type { FeatureTone, howItWorksContent } from "@/content/home";
 import { cn } from "@/lib/cn";
 
 /**
@@ -62,26 +62,10 @@ function stepNumber(index: number) {
 }
 
 type HowItWorksProps = {
-  /** The home page's `howItWorksContent`, or any other of the same shape. */
-  content: {
-    headingLines: readonly string[];
-    subheading: string;
-    steps: readonly {
-      title: string;
-      body: string;
-      image: FeatureImage;
-      tone: FeatureTone;
-    }[];
-  };
-  /**
-   * No pinned stage at any width: the steps side by side in a grid, each with
-   * its own number and tile, for a page that wants the process at a glance
-   * rather than a scroll through it (/vsl). The default is the pinned scroll.
-   */
-  compact?: boolean;
+  content: typeof howItWorksContent;
 };
 
-export function HowItWorks({ content, compact = false }: HowItWorksProps) {
+export function HowItWorks({ content }: HowItWorksProps) {
   const { steps } = content;
   const rows = useRef<(HTMLLIElement | null)[]>([]);
 
@@ -89,19 +73,14 @@ export function HowItWorks({ content, compact = false }: HowItWorksProps) {
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    const items = rows.current.filter(
-      (row): row is HTMLLIElement => row !== null,
-    );
+    const items = rows.current.filter((row): row is HTMLLIElement => row !== null);
     if (items.length === 0) return;
 
     const visible = new Map<Element, number>();
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          visible.set(
-            entry.target,
-            entry.isIntersecting ? entry.intersectionRect.height : 0,
-          );
+          visible.set(entry.target, entry.isIntersecting ? entry.intersectionRect.height : 0);
         }
         // Most visible pixels wins; ties go to the later row, as they do for
         // the background, so a step takes over the moment it covers as much.
@@ -138,152 +117,100 @@ export function HowItWorks({ content, compact = false }: HowItWorksProps) {
           {content.subheading}
         </p>
 
-        {compact ? (
-          <ol className="mt-15 grid gap-10 tablet:grid-cols-2 desktop:grid-cols-5 desktop:gap-6">
-            {steps.map((step, i) => (
-              <li key={step.title} className="flex flex-col gap-5">
+        <div className="mt-15 tablet:grid tablet:grid-cols-2 tablet:gap-10 desktop:gap-20">
+          {/* The stage. Its cell runs the full height of the list beside it,
+              and the stage is sticky inside that, so the pin lasts exactly as
+              long as there are steps to scroll past. Decorative: the list
+              says everything it shows. */}
+          <div aria-hidden="true" className="max-tablet:hidden">
+            <div className="sticky top-[25svh] flex h-[50svh] items-center gap-8 desktop:gap-12">
+              {/* Geist, as every figure on the site is. Rolls up digit by
+                  digit, the same direction the tiles travel.
+
+                  In a fixed-width slot: Geist's figures are proportional, so
+                  "/01" is narrower than "/02", and while the number sized
+                  itself the roll shoved the tile sideways at every step. */}
+              <div className="w-28 shrink-0">
+                <NumberFlow
+                  value={active + 1}
+                  prefix="/"
+                  format={{ minimumIntegerDigits: 2 }}
+                  className="text-ink-dynamic font-ui text-stat-sm font-light leading-none opacity-25"
+                />
+              </div>
+
+              {/* The tiles stand in a column inside a one-tile frame. The
+                  column moves up by a tile per step, so the next tile pushes
+                  the current one up and out — the stack in the brief. */}
+              <div className="relative size-60 shrink-0 overflow-clip desktop:size-80">
                 <div
-                  aria-hidden="true"
-                  className="flex items-start justify-between"
+                  className="flex flex-col transition-[translate] duration-700 ease-(--ease-case-hover) motion-reduce:transition-none"
+                  style={{ translate: `0 ${(-active * 100) / steps.length}%` }}
                 >
+                  {steps.map((step) => (
+                    <div
+                      key={step.title}
+                      className={cn("relative size-60 shrink-0 desktop:size-80", tiles[step.tone])}
+                    >
+                      <Image
+                        src={featureArtwork[step.image]}
+                        alt=""
+                        sizes="(max-width: 1199px) 240px, 320px"
+                        className="absolute top-[15%] left-[15%] size-[70%] object-contain"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <ol className="flex flex-col gap-12 tablet:gap-0">
+            {steps.map((step, i) => (
+              <li
+                key={step.title}
+                ref={(row) => {
+                  rows.current[i] = row;
+                }}
+                className="flex flex-col justify-center gap-6 tablet:min-h-[50svh]"
+              >
+                {/* A phone has no stage, so each step carries its own: the
+                    number at the top left and the tile opposite it, the words
+                    underneath — the owner's mobile reference. */}
+                <div aria-hidden="true" className="flex items-start justify-between tablet:hidden">
                   <span className="text-ink-dynamic font-ui text-stat-unit font-light leading-none opacity-25">
                     {stepNumber(i)}
                   </span>
-                  <div
-                    className={cn(
-                      "relative size-20 shrink-0",
-                      tiles[step.tone],
-                    )}
-                  >
+                  <div className={cn("relative size-44 shrink-0", tiles[step.tone])}>
                     <Image
                       src={featureArtwork[step.image]}
                       alt=""
-                      sizes="80px"
+                      sizes="176px"
                       className="absolute top-[15%] left-[15%] size-[70%] object-contain"
                     />
                   </div>
                 </div>
-                <div className="flex flex-col gap-2">
-                  <h3 className="text-ink-dynamic font-display text-heading-lg leading-(--leading-heading) font-normal">
+
+                {/* The active step at full ink, the rest a step back — from the
+                    tablet up, where there is a stage to be level with. */}
+                <div
+                  className={cn(
+                    "flex flex-col gap-4 transition-opacity duration-500",
+                    i === active ? "tablet:opacity-100" : "tablet:opacity-25",
+                  )}
+                >
+                  <h3 className="text-ink-dynamic font-display text-display-md leading-(--leading-heading) tracking-(--tracking-display) font-normal">
                     <span className="sr-only">{`Step ${i + 1}: `}</span>
                     {step.title}
                   </h3>
-                  <p className="text-ink-dynamic font-body text-body-sm">
+                  <p className="text-ink-dynamic max-w-[44ch] font-body text-body-md">
                     {step.body}
                   </p>
                 </div>
               </li>
             ))}
           </ol>
-        ) : (
-          <div className="mt-15 tablet:grid tablet:grid-cols-2 tablet:gap-10 desktop:gap-20">
-            {/* The stage. Its cell runs the full height of the list beside it,
-              and the stage is sticky inside that, so the pin lasts exactly as
-              long as there are steps to scroll past. Decorative: the list
-              says everything it shows. */}
-            <div aria-hidden="true" className="max-tablet:hidden">
-              <div className="sticky top-[25svh] flex h-[50svh] items-center gap-8 desktop:gap-12">
-                {/* Geist, as every figure on the site is. Rolls up digit by
-                  digit, the same direction the tiles travel.
-
-                  In a fixed-width slot: Geist's figures are proportional, so
-                  "/01" is narrower than "/02", and while the number sized
-                  itself the roll shoved the tile sideways at every step. */}
-                <div className="w-28 shrink-0">
-                  <NumberFlow
-                    value={active + 1}
-                    prefix="/"
-                    format={{ minimumIntegerDigits: 2 }}
-                    className="text-ink-dynamic font-ui text-stat-sm font-light leading-none opacity-25"
-                  />
-                </div>
-
-                {/* The tiles stand in a column inside a one-tile frame. The
-                  column moves up by a tile per step, so the next tile pushes
-                  the current one up and out — the stack in the brief. */}
-                <div className="relative size-60 shrink-0 overflow-clip desktop:size-80">
-                  <div
-                    className="flex flex-col transition-[translate] duration-700 ease-(--ease-case-hover) motion-reduce:transition-none"
-                    style={{
-                      translate: `0 ${(-active * 100) / steps.length}%`,
-                    }}
-                  >
-                    {steps.map((step) => (
-                      <div
-                        key={step.title}
-                        className={cn(
-                          "relative size-60 shrink-0 desktop:size-80",
-                          tiles[step.tone],
-                        )}
-                      >
-                        <Image
-                          src={featureArtwork[step.image]}
-                          alt=""
-                          sizes="(max-width: 1199px) 240px, 320px"
-                          className="absolute top-[15%] left-[15%] size-[70%] object-contain"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <ol className="flex flex-col gap-12 tablet:gap-0">
-              {steps.map((step, i) => (
-                <li
-                  key={step.title}
-                  ref={(row) => {
-                    rows.current[i] = row;
-                  }}
-                  className="flex flex-col justify-center gap-6 tablet:min-h-[50svh]"
-                >
-                  {/* A phone has no stage, so each step carries its own: the
-                    number at the top left and the tile opposite it, the words
-                    underneath — the owner's mobile reference. */}
-                  <div
-                    aria-hidden="true"
-                    className="flex items-start justify-between tablet:hidden"
-                  >
-                    <span className="text-ink-dynamic font-ui text-stat-unit font-light leading-none opacity-25">
-                      {stepNumber(i)}
-                    </span>
-                    <div
-                      className={cn(
-                        "relative size-44 shrink-0",
-                        tiles[step.tone],
-                      )}
-                    >
-                      <Image
-                        src={featureArtwork[step.image]}
-                        alt=""
-                        sizes="176px"
-                        className="absolute top-[15%] left-[15%] size-[70%] object-contain"
-                      />
-                    </div>
-                  </div>
-
-                  {/* The active step at full ink, the rest a step back — from the
-                    tablet up, where there is a stage to be level with. */}
-                  <div
-                    className={cn(
-                      "flex flex-col gap-4 transition-opacity duration-500",
-                      i === active ? "tablet:opacity-100" : "tablet:opacity-25",
-                    )}
-                  >
-                    <h3 className="text-ink-dynamic font-display text-display-md leading-(--leading-heading) tracking-(--tracking-display) font-normal">
-                      <span className="sr-only">{`Step ${i + 1}: `}</span>
-                      {step.title}
-                    </h3>
-                    <p className="text-ink-dynamic max-w-[44ch] font-body text-body-md">
-                      {step.body}
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-        )}
+        </div>
       </Container>
     </section>
   );

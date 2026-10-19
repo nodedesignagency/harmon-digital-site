@@ -4,7 +4,7 @@ import { TextReveal } from "@/components/motion/TextReveal";
 import { FeatureCard } from "@/components/ui/FeatureCard";
 import { featureArtwork } from "@/components/ui/featureArtwork";
 import { featureMarquee, sectionTextRevealDynamic } from "@/config/animation";
-import type { FeatureImage, FeatureTone } from "@/content/home";
+import type { featuresContent } from "@/content/home";
 
 /**
  * Feature strip — the cards travelling left on a continuous marquee.
@@ -27,24 +27,10 @@ const CARD_WIDTH = 265;
 const CARD_GAP = 20;
 
 type FeaturesProps = {
-  /** The home page's `featuresContent`, or any other set of the same shape. */
-  content: {
-    headingLines: readonly string[];
-    cards: readonly {
-      title: string;
-      body: string;
-      image: FeatureImage;
-      tone: FeatureTone;
-    }[];
-  };
-  /**
-   * `row` sets the cards still, side by side and centred, for a set too short
-   * to travel — /vsl's three. The default is the marquee.
-   */
-  layout?: "marquee" | "row";
+  content: typeof featuresContent;
 };
 
-export function Features({ content, layout = "marquee" }: FeaturesProps) {
+export function Features({ content }: FeaturesProps) {
   // One lap is exactly one copy of the set, including the gap that follows its
   // last card — which is why the track and each copy share the same gap.
   const cycle = content.cards.length * (CARD_WIDTH + CARD_GAP);
@@ -75,34 +61,28 @@ export function Features({ content, layout = "marquee" }: FeaturesProps) {
         />
       </Container>
 
-      {layout === "row" ? (
-        <Container className="mt-10 tablet:mt-15">
-          <ul className="flex flex-wrap justify-center gap-5">{cards}</ul>
-        </Container>
-      ) : (
-        /* 40px below the heading on a phone, 60px from tablet up. Full-bleed:
+      {/* 40px below the heading on a phone, 60px from tablet up. Full-bleed:
           the row runs edge to edge, so it sits outside the container's gutter
-          rather than inside it. */
-        <div className="mh-marquee-frame no-scrollbar mt-10 w-full overflow-hidden tablet:mt-15">
-          <div
-            className="mh-marquee flex w-max items-center gap-5"
-            style={
-              {
-                "--mh-marquee-cycle": `${cycle}px`,
-                "--mh-marquee-duration": `${duration}ms`,
-              } as CSSProperties
-            }
-          >
-            <ul className="flex items-center gap-5">{cards}</ul>
-            {/* The second copy exists to make the loop seamless. It is the same
+          rather than inside it. */}
+      <div className="mh-marquee-frame no-scrollbar mt-10 w-full overflow-hidden tablet:mt-15">
+        <div
+          className="mh-marquee flex w-max items-center gap-5"
+          style={
+            {
+              "--mh-marquee-cycle": `${cycle}px`,
+              "--mh-marquee-duration": `${duration}ms`,
+            } as CSSProperties
+          }
+        >
+          <ul className="flex items-center gap-5">{cards}</ul>
+          {/* The second copy exists to make the loop seamless. It is the same
               six cards, so it is hidden from assistive tech — the set should be
               announced once. */}
-            <ul aria-hidden="true" className="flex items-center gap-5">
-              {cards}
-            </ul>
-          </div>
+          <ul aria-hidden="true" className="flex items-center gap-5">
+            {cards}
+          </ul>
         </div>
-      )}
+      </div>
     </section>
   );
 }

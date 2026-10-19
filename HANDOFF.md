@@ -32,13 +32,21 @@ Build the new sections one at a time with the owner's direction; they often shar
 ## VSL landing page — `/vsl`
 
 **Built** — `src/app/(site)/vsl/page.tsx`. One goal: book a call. Every word is in the `vsl` object at the
-top of that file. It reuses the home sections through props (Trust `variant="logos"`, About `showMark`,
-Features `layout="row"`, CaseStudies `limit`/`showIndexLink`, HowItWorks `compact`) and the case study
-page's hero; `<PageChrome value="landing" />` hides the header nav and the footer link columns. The
-footer's "Ready to Grow Portco EBITDA?" panel is its final CTA.
+top of that file. Reworked after the owner's review (Mobbin references): the dark opening (hero, video, client
+marks on green) pins by its foot and the white **Problems** grid rides up over it (`sections/Problems.tsx`,
+after Heron AI); **What You Get** is three ruled rows, each beside the matching Portfolio Dashboards file
+(`sections/WhatYouGet.tsx`, after Phantom Studios); the testimonial is a portrait video beside two written
+quotes (`sections/VideoTestimonial.tsx`, after Grain/monday); **How It Works** is a five-step timeline panel
+with the booking button at its foot (`sections/ProcessSteps.tsx`, after Zaro). The header stays dark until the
+Problems section reaches it (`data-surface-flip`). `<PageChrome value="landing" />` hides the header nav and the
+footer link columns; the footer's "Ready to Grow Portco EBITDA?" panel is its final CTA.
 
 - [ ] **VSL video** — set `vsl.hero.video.src` (an .mp4 or an embed URL: YouTube `/embed/<id>`, Vimeo, Loom, Wistia); empty shows the placeholder frame
-- [ ] **Testimonial video** — set `vsl.proof.testimonial.video.src` the same way
+- [ ] **Testimonial video** — set `vsl.testimonial.video.src` the same way. Its poster is the client's
+      `testimonial-video-poster.jpg` (a portrait phone clip, so the frame is 9:16). **Who is in it?** Once known,
+      put their name in `vsl.testimonial.video.caption` (it says "Client story" until then)
+- [ ] **VSL copy written by us** — the Problems grid's lines and the What You Get rows' "includes" are drawn
+      from the brief, not supplied by Isaac; the offer rows reuse the illustrative dashboard figures above
 - [ ] **Booking link** — see below; until it is set, every Book a Call on the VSL goes to `/contact`, which has the full site nav
 - [x] **Reachable** — the footer's Navigation column links to it ("Watch the Video"). Without a link the preview's Pages menu and `npm run artifact` can't open it: both open a page by clicking its link. Move the link if you'd rather it sit elsewhere, but keep one
 - [ ] **Exits left on the page** — the header logo goes to `/` and the two case study cards open their case study pages. Keep, or make the cards non-links on the VSL
@@ -88,5 +96,6 @@ footer's "Ready to Grow Portco EBITDA?" panel is its final CTA.
 - [x] Before/After EBITDA scroll section (illustrative figures)
 - [x] Portfolio Dashboards stacking-files section (illustrative figures)
 - [x] VSL landing page at `/vsl` (video placeholders, minimal header and footer)
+- [x] VSL rework: green pinned opening with the client marks, new Problems, What You Get, testimonial and How It Works sections
 - [x] Feature cards' tints matched to their pictures again
 - [x] Pricing card overflow fixed; footer reworked (Harmon // Digital, legal links, /404 showcase removed)

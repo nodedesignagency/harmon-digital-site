@@ -145,32 +145,7 @@ export function PortfolioDashboards({ content }: PortfolioDashboardsProps) {
 
           <div>
             <Folder index={0} tab={overview.tab} tint="blue">
-              <p className={label}>{overview.label}</p>
-              <p className="mt-2 font-ui text-stat-sm leading-none font-light">
-                {`+${formatMoney.format(overview.total)}`}
-              </p>
-              <ul className="mt-6 flex flex-col">
-                {overview.rows.map((row) => (
-                  <li
-                    key={row.name}
-                    className="flex items-center justify-between gap-4 border-t border-fg-on-light/10 py-2.5 font-body text-body-sm"
-                  >
-                    <span>{row.name}</span>
-                    <span className="flex items-center gap-6">
-                      <span className="font-ui">
-                        {row.lift ? `+${formatMoney.format(row.lift)}` : "—"}
-                      </span>
-                      <Status
-                        status={row.status}
-                        text={overview.statuses[row.status]}
-                      />
-                    </span>
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-auto pt-6 font-ui text-body-sm">
-                {overview.caption}
-              </p>
+              <OverviewFile overview={overview} />
             </Folder>
 
             <Folder index={1} tab={drilldown.tab} tint="green">
@@ -260,6 +235,46 @@ function Status({
 }
 
 /**
+ * The fund overview file: the lift across the fund, then a row per portco with
+ * its lift and where it stands.
+ *
+ * This and the savings and revenue files are exported for /vsl's "What You
+ * Get", which shows each as the preview of what the fund gets.
+ */
+export function OverviewFile({ overview }: { overview: Content["overview"] }) {
+  return (
+    <>
+      <p className={label}>{overview.label}</p>
+      <p className="mt-2 font-ui text-stat-sm leading-none font-light">
+        {`+${formatMoney.format(overview.total)}`}
+      </p>
+      <ul className="mt-6 flex flex-col">
+        {overview.rows.map((row) => (
+          <li
+            key={row.name}
+            className="flex items-center justify-between gap-4 border-t border-fg-on-light/10 py-2.5 font-body text-body-sm"
+          >
+            <span>{row.name}</span>
+            <span className="flex items-center gap-6">
+              <span className="font-ui">
+                {row.lift ? `+${formatMoney.format(row.lift)}` : "—"}
+              </span>
+              <Status
+                status={row.status}
+                text={overview.statuses[row.status]}
+              />
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-auto pt-6 font-ui text-body-sm">
+        {overview.caption}
+      </p>
+    </>
+  );
+}
+
+/**
  * The drilldown file: the margin before and after as two bars side by side,
  * against the after — the old one a light fill under a heavy cap, the new one
  * solid, each figure above its bar and its name under it.
@@ -332,7 +347,7 @@ const LEADS = [176, 138, 100, 62];
  * and hatched in turn — with a fine line dropping from the start of each part
  * to its name, and the amount set beside the line where it leaves the bar.
  */
-function SavingsFile({ savings }: { savings: Content["savings"] }) {
+export function SavingsFile({ savings }: { savings: Content["savings"] }) {
   const total = savings.parts.reduce((sum, part) => sum + part.value, 0);
   const fills = [
     "bg-fg-on-light",
@@ -414,7 +429,7 @@ const sourceInks = [
  * reaches EBITDA in the middle, and a table of the sources under it — or
  * beside it, where there is the width.
  */
-function RevenueFile({ revenue }: { revenue: Content["revenue"] }) {
+export function RevenueFile({ revenue }: { revenue: Content["revenue"] }) {
   const total = revenue.sources.reduce((sum, source) => sum + source.value, 0);
 
   // Which source each tick belongs to: the boundaries are the running shares,
