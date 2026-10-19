@@ -17,16 +17,19 @@ import { cn } from "@/lib/cn";
  * needs fixed ink"), and it marks itself as where the header turns light. The
  * page puts those attributes on it; this stays a plain section otherwise.
  *
- * A server component. The drawings are inline SVG, computed here in isometric
- * from a few boxes and rings, and drawn in the ink so they follow the section.
+ * A server component. The drawings are inline SVG, built here in isometric from
+ * one primitive — a box — lit from the upper left: the top face in the ground
+ * colour or the cell's tint, the face toward the reader a step darker, the
+ * face to the right a step darker again, and a soft footprint on the floor.
+ * One idea per drawing, one tint per drawing, and dashed outline only ever
+ * for the thing that is missing.
  */
 
-export type ProblemDrawing = "stack" | "funnel" | "repeat" | "portcos";
+export type ProblemDrawing = "stack" | "conveyor" | "systems" | "portcos";
 export type ProblemTone = "peach" | "blue" | "green" | "magenta";
 
 type ProblemsProps = {
   content: {
-    eyebrow: string;
     headingLines: readonly string[];
     subheading: string;
     items: readonly {
@@ -59,16 +62,12 @@ export function Problems({ content, className, ...attributes }: ProblemsProps) {
       <Container>
         <div className="flex flex-col gap-6 desktop:flex-row desktop:items-end desktop:justify-between desktop:gap-16">
           <div>
-            <p className={cn("flex items-center gap-2", label)}>
-              <span aria-hidden="true" className="size-2 bg-fg-on-light" />
-              {content.eyebrow}
-            </p>
             <TextReveal
               as="h2"
               lines={content.headingLines}
               settings={sectionTextReveal}
               lineStagger={sectionTextReveal.lineStagger}
-              className="mt-6 flex flex-col items-start gap-(--space-heading-line) text-display-lg leading-(--leading-display) tracking-(--tracking-display) font-normal"
+              className="flex flex-col items-start gap-(--space-heading-line) text-display-lg leading-(--leading-display) tracking-(--tracking-display) font-normal"
             />
           </div>
           <p className="max-w-[40ch] font-body text-body-md desktop:pb-1">
@@ -148,6 +147,13 @@ function Plate({ children }: { children: ReactNode }) {
  * ------------------------------------------------------------------------- */
 
 const COS = Math.cos(Math.PI / 6);
+const INK = "var(--color-fg-on-light)";
+const WHITE = "var(--color-bg-white)";
+
+/** A face's fill: the base colour with this much of the ink mixed in. */
+function shade(base: string, ink: number) {
+  return ink === 0 ? base : `color-mix(in srgb, ${INK} ${ink}%, ${base})`;
+}
 
 type Origin = readonly [number, number];
 
@@ -163,43 +169,71 @@ type BoxProps = {
   w: number;
   d: number;
   h: number;
-  /** Fill for the top face; the sides stay the ground's white. */
-  tint?: string;
-  /** Drawn in outline only, dashed: the box that is not there yet, or unseen. */
-  dashed?: boolean;
+  /** The box's colour; white when unset. Its sides are this, shaded. */
+  fill?: string;
+  /** Outline only, dashed: the box that is missing. */
+  ghost?: boolean;
+  /** Heights at which a rule runs round the two front faces — rack slots. */
+  rules?: readonly number[];
 };
 
-/** A box, its three visible faces filled so a later box covers an earlier one. */
-function Box({ o, x, y, z, w, d, h, tint, dashed }: BoxProps) {
+/**
+ * A box: the face toward the reader, the face to the right, then the top, so
+ * each covers what it should, and a later box covers an earlier one.
+ */
+function Box({ o, x, y, z, w, d, h, fill = WHITE, ghost, rules = [] }: BoxProps) {
   const p = (a: number, b: number, c: number) => point(o, a, b, c);
   const faces = [
-    // The face toward the bottom left, the one toward the bottom right, the top.
-    [p(x, y + d, z), p(x + w, y + d, z), p(x + w, y + d, z + h), p(x, y + d, z + h)],
-    [p(x + w, y, z), p(x + w, y + d, z), p(x + w, y + d, z + h), p(x + w, y, z + h)],
-    [p(x, y, z + h), p(x + w, y, z + h), p(x + w, y + d, z + h), p(x, y + d, z + h)],
+    { pts: [p(x, y + d, z), p(x + w, y + d, z), p(x + w, y + d, z + h), p(x, y + d, z + h)], ink: 7 },
+    { pts: [p(x + w, y, z), p(x + w, y + d, z), p(x + w, y + d, z + h), p(x + w, y, z + h)], ink: 16 },
+    { pts: [p(x, y, z + h), p(x + w, y, z + h), p(x + w, y + d, z + h), p(x, y + d, z + h)], ink: 0 },
   ];
 
+  if (ghost) {
+    return (
+      <g strokeDasharray="2.5 3" opacity={0.7}>
+        {faces.map((face, i) => (
+          <polygon key={i} points={face.pts.join(" ")} fill="none" />
+        ))}
+      </g>
+    );
+  }
+
   return (
-    <g strokeDasharray={dashed ? "3 3" : undefined}>
+    <g>
       {faces.map((face, i) => (
-        <polygon
-          key={i}
-          points={face.join(" ")}
-          fill={dashed ? "none" : i === 2 && tint ? tint : "var(--color-bg-white)"}
+        <polygon key={i} points={face.pts.join(" ")} fill={shade(fill, face.ink)} />
+      ))}
+      {rules.map((r) => (
+        <polyline
+          key={r}
+          points={[p(x, y + d, z + r), p(x + w, y + d, z + r), p(x + w, y, z + r)].join(" ")}
+          fill="none"
+          strokeOpacity={0.45}
         />
       ))}
     </g>
   );
 }
 
-/** An isometric circle on a level plane: an ellipse √2·cos30 wide, √2/2 tall. */
-function ring(o: Origin, r: number, z: number) {
-  return { cx: o[0], cy: o[1] - z, rx: r * Math.SQRT2 * COS, ry: r * Math.SQRT1_2 };
+/** The soft footprint a box leaves on the floor, cast down and to the right. */
+function Shadow({ o, x, y, w, d }: { o: Origin; x: number; y: number; w: number; d: number }) {
+  const s = 7;
+  const pts = [point(o, x + s, y, 0), point(o, x + w + s, y, 0), point(o, x + w + s, y + d, 0), point(o, x + s, y + d, 0)];
+  return <polygon points={pts.join(" ")} fill={shade(WHITE, 8)} stroke="none" />;
 }
 
-/** A lead: a small square, in the ink or the tint. */
-function Dot({ x, y, fill = "currentColor" }: { x: number; y: number; fill?: string }) {
-  return <rect x={x - 3} y={y - 3} width={6} height={6} fill={fill} stroke="none" />;
+/** Small squares laid flat on a top face: a window's controls, a tool's badge. */
+function Pips({ o, x, y, z, n, tint }: { o: Origin; x: number; y: number; z: number; n: number; tint: string }) {
+  return (
+    <>
+      {Array.from({ length: n }, (_, i) => {
+        const px = x + i * 8;
+        const pts = [point(o, px, y, z), point(o, px + 5, y, z), point(o, px + 5, y + 5, z), point(o, px, y + 5, z)];
+        return <polygon key={i} points={pts.join(" ")} fill={i === 0 ? tint : WHITE} />;
+      })}
+    </>
+  );
 }
 
 function Drawing({ name, tone }: { name: ProblemDrawing; tone: ProblemTone }) {
@@ -207,81 +241,71 @@ function Drawing({ name, tone }: { name: ProblemDrawing; tone: ProblemTone }) {
 
   let art: ReactNode;
   switch (name) {
-    // Software: three tools stacked, and a fourth on its way on top.
+    // Software: tool on tool, and one more on its way down onto the pile.
     case "stack": {
       const o: Origin = [120, 150];
       art = (
         <>
-          {[0, 22, 44].map((z, i) => (
-            <Box key={z} o={o} x={-40} y={-40} z={z} w={80} d={80} h={10} tint={i === 2 ? tint : undefined} />
+          <Shadow o={o} x={-40} y={-40} w={80} d={80} />
+          {[0, 16, 32].map((z, i) => (
+            <Box key={z} o={o} x={-40} y={-40} z={z} w={80} d={80} h={10} fill={i === 2 ? tint : WHITE} />
           ))}
-          <Box o={o} x={-40} y={-40} z={80} w={80} d={80} h={10} dashed />
+          <Pips o={o} x={-32} y={-33} z={42} n={3} tint={WHITE} />
+          <Box o={o} x={-40} y={-40} z={62} w={80} d={80} h={10} ghost />
         </>
       );
       break;
     }
 
-    // Leads: a funnel, two leads falling in and through, two glancing off.
-    case "funnel": {
-      const o: Origin = [120, 156];
-      const top = ring(o, 50, 72);
-      const neck = ring(o, 10, 24);
-      const foot = ring(o, 10, 0);
+    // Leads: a line of them carried along, and the one that fell off the end.
+    case "conveyor": {
+      const o: Origin = [126, 124];
+      const legs = [-80, 34].flatMap((x) => [-12, 6].map((y) => ({ x, y })));
       art = (
         <>
-          <ellipse {...top} fill="var(--color-bg-white)" />
-          <ellipse cx={top.cx} cy={top.cy} rx={top.rx - 8} ry={top.ry - 4.6} fill={tint} stroke="none" />
-          <path
-            d={`M${top.cx - top.rx} ${top.cy} L${neck.cx - neck.rx} ${neck.cy} V${foot.cy} M${top.cx + top.rx} ${top.cy} L${neck.cx + neck.rx} ${neck.cy} V${foot.cy}`}
-            fill="none"
-          />
-          <path
-            d={`M${foot.cx - foot.rx} ${foot.cy} A${foot.rx} ${foot.ry} 0 0 0 ${foot.cx + foot.rx} ${foot.cy}`}
-            fill="none"
-          />
-          <Dot x={112} y={14} />
-          <Dot x={127} y={32} />
-          <Dot x={120} y={176} />
-          {/* The two that miss: off the rim and away, on a dashed line. */}
-          <path d="M184 78 C 200 70, 214 100, 216 140" fill="none" strokeDasharray="3 3" />
-          <Dot x={216} y={150} fill="var(--color-bg-white)" />
-          <path d="M56 78 C 40 70, 28 96, 26 128" fill="none" strokeDasharray="3 3" />
-          <Dot x={26} y={138} fill="var(--color-bg-white)" />
+          <Shadow o={o} x={-84} y={-14} w={128} d={28} />
+          {legs.map((leg) => (
+            <Box key={`${leg.x}${leg.y}`} o={o} x={leg.x} y={leg.y} z={0} w={6} d={6} h={24} />
+          ))}
+          <Box o={o} x={-84} y={-14} z={24} w={128} d={28} h={8} rules={[4]} />
+          {[-76, -48, -20].map((x) => (
+            <Box key={x} o={o} x={x} y={-8} z={32} w={16} d={16} h={16} fill={tint} />
+          ))}
+          <Box o={o} x={62} y={-8} z={0} w={16} d={16} h={16} ghost />
         </>
       );
       break;
     }
 
-    // Manual work: the same job done three times, and round again.
-    case "repeat": {
-      const o: Origin = [120, 120];
+    // Manual work: two systems, and the same record carried between them.
+    case "systems": {
+      const o: Origin = [117, 130];
+      const rack = { y: -15, z: 0, w: 30, d: 30, h: 56, rules: [14, 28, 42] };
       art = (
         <>
-          <path
-            d="M178 72 C 176 20, 84 4, 60 40"
-            fill="none"
-            strokeDasharray="3 3"
-          />
-          <path d="M58 30 L60 40 L70 37" fill="none" />
-          {[-80, -20, 40].map((x, i) => (
-            <Box key={x} o={o} x={x} y={-20} z={0} w={40} d={40} h={40} tint={i === 1 ? tint : undefined} />
+          <Shadow o={o} x={-88} y={-15} w={30} d={30} />
+          <Shadow o={o} x={64} y={-15} w={30} d={30} />
+          <Box o={o} x={-88} {...rack} />
+          {[-46, -22, 2, 26].map((x) => (
+            <Box key={x} o={o} x={x} y={-6} z={0} w={12} d={12} h={12} fill={tint} />
           ))}
+          <Box o={o} x={64} {...rack} />
         </>
       );
       break;
     }
 
-    // Visibility: four portcos on one floor, and only one of them in view.
+    // Visibility: four portcos on one board, and only one of them in view.
     case "portcos": {
-      const o: Origin = [120, 112];
-      const floor = [point(o, -64, -64, 0), point(o, 64, -64, 0), point(o, 64, 64, 0), point(o, -64, 64, 0)];
+      const o: Origin = [120, 116];
       art = (
         <>
-          <polygon points={floor.join(" ")} fill="none" strokeDasharray="3 3" />
-          <Box o={o} x={-48} y={-48} z={0} w={36} d={36} h={44} dashed />
-          <Box o={o} x={12} y={-48} z={0} w={36} d={36} h={64} tint={tint} />
-          <Box o={o} x={-48} y={12} z={0} w={36} d={36} h={28} dashed />
-          <Box o={o} x={12} y={12} z={0} w={36} d={36} h={52} dashed />
+          <Shadow o={o} x={-64} y={-64} w={128} d={128} />
+          <Box o={o} x={-64} y={-64} z={0} w={128} d={128} h={5} />
+          <Box o={o} x={-48} y={-48} z={5} w={36} d={36} h={44} ghost />
+          <Box o={o} x={12} y={-48} z={5} w={36} d={36} h={64} fill={tint} rules={[16, 32, 48]} />
+          <Box o={o} x={-48} y={12} z={5} w={36} d={36} h={28} ghost />
+          <Box o={o} x={12} y={12} z={5} w={36} d={36} h={52} ghost />
         </>
       );
       break;
@@ -295,7 +319,7 @@ function Drawing({ name, tone }: { name: ProblemDrawing; tone: ProblemTone }) {
       className="mx-auto block h-auto w-full max-w-[240px]"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.25}
+      strokeWidth={1.1}
       strokeLinejoin="round"
       strokeLinecap="round"
     >

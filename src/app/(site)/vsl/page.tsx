@@ -6,8 +6,8 @@ import { PatternField } from "@/components/motion/PatternField";
 import { PinAtFoot } from "@/components/motion/PinAtFoot";
 import { CaseStudies } from "@/components/sections/CaseStudies";
 import { Faq } from "@/components/sections/Faq";
+import { HowItWorks } from "@/components/sections/HowItWorks";
 import { Problems } from "@/components/sections/Problems";
-import { ProcessSteps } from "@/components/sections/ProcessSteps";
 import { ClientLogoRow } from "@/components/sections/Trust";
 import { VideoTestimonial } from "@/components/sections/VideoTestimonial";
 import { WhatYouGet } from "@/components/sections/WhatYouGet";
@@ -17,6 +17,7 @@ import { buildMetadata } from "@/config/seo";
 import { ctaHref } from "@/config/site.config";
 import { faqContent } from "@/content/faq";
 import {
+  howItWorksContent,
   portfolioDashboardsContent,
   testimonialsContent,
   trustContent,
@@ -56,7 +57,6 @@ const vsl = {
 
   /** Four pain points, one cell each. `drawing` picks the line drawing. */
   problem: {
-    eyebrow: "Sound Familiar?",
     headingLines: ["Your Portcos Are Doing Work", "That Should Be Automated"],
     subheading:
       "Each of these takes a bite out of EBITDA, and every one of them can be fixed.",
@@ -72,14 +72,14 @@ const vsl = {
         tag: "Leads",
         title: "Leads lost before anyone calls.",
         body: "Calls go unanswered and follow-ups never happen, so revenue walks out the door.",
-        drawing: "funnel",
+        drawing: "conveyor",
         tone: "blue",
       },
       {
         tag: "Manual work",
         title: "Teams stuck on manual work.",
         body: "Skilled people retyping the same data between systems, day after day.",
-        drawing: "repeat",
+        drawing: "systems",
         tone: "green",
       },
       {
@@ -93,8 +93,10 @@ const vsl = {
   },
 
   /**
-   * One row per thing the fund gets. `preview` picks which of the home page's
-   * dashboard files is shown beside it, figures and all.
+   * One dark card per thing the fund gets. `preview` picks which of the home
+   * page's dashboard files the white figure cards are taken from; `graphic`
+   * is the status line and log drawn beside them (the dashboards card lists
+   * that file's portcos instead of a log of its own).
    */
   offer: {
     headingLines: ["What You Get"],
@@ -102,6 +104,7 @@ const vsl = {
       "Lower costs, more revenue, and a live view of both across the fund.",
     items: [
       {
+        label: "Cost savings",
         title: "Cut Costs",
         body: "We retire the software you work around and automate the manual work, so the savings land on the P&L.",
         includes: [
@@ -110,14 +113,34 @@ const vsl = {
           "Systems the portco owns",
         ],
         preview: "savings",
+        graphic: {
+          status: "Auditing software spend",
+          progress: 0.64,
+          log: [
+            { event: "Tool retired", detail: "Duplicate CRM seats" },
+            { event: "Workflow automated", detail: "Order entry to fulfillment" },
+            { event: "Process mapped", detail: "Month-end close" },
+          ],
+        },
       },
       {
+        label: "Revenue gains",
         title: "Grow Revenue",
         body: "AI employees answer, follow up and book every lead, day and night.",
         includes: ["Inbound Responder", "Follow-Up Agent", "Outbound SDR"],
         preview: "revenue",
+        graphic: {
+          status: "Answering a new lead",
+          progress: 0.42,
+          log: [
+            { event: "Inbound call answered", detail: "New lead, after hours" },
+            { event: "Follow-up sent", detail: "Quote reminder, day 3" },
+            { event: "Call booked", detail: "Tuesday, 10:00" },
+          ],
+        },
       },
       {
+        label: "Fund overview",
         title: "Portco Dashboards",
         body: "A live dashboard for every portco, showing exactly where each gain comes from.",
         includes: [
@@ -126,6 +149,7 @@ const vsl = {
           "Revenue by the AI employee that won it",
         ],
         preview: "overview",
+        graphic: { status: "Syncing portfolio data", progress: 0.86 },
       },
     ],
   },
@@ -140,61 +164,29 @@ const vsl = {
   },
 
   /**
-   * The client's video beside two written quotes. The quotes are the home
-   * page's, picked by `name`. The poster is the still the client sent with
-   * the video; who is in it is still to be confirmed (see HANDOFF.md), so the
-   * caption does not name them yet.
+   * One large card with the client's video, three plain ones under it. The
+   * words are the home page's testimonials, picked by `name`; the marks and
+   * lines of business are this page's.
+   *
+   * The video's poster is the still the client sent with it. Who is in it is
+   * not confirmed (see HANDOFF.md): the featured quote beside it is George
+   * Zimny's until it is, and should be swapped for the speaker's own.
    */
   testimonial: {
-    eyebrow: "Client Stories",
     headingLines: ["Hear It From", "Our Clients"],
     subheading:
       "What operators say once the systems are live and the manual work is gone.",
-    video: {
-      src: "",
-      poster: testimonialPoster,
-      title: "Client testimonial",
-      caption: "Client story",
+    featured: {
+      name: "George Zimny",
+      mark: "producifyx",
+      category: "Recruiting",
+      video: { src: "", poster: testimonialPoster, title: "Client testimonial" },
     },
-    quotes: ["George Zimny", "Operations Lead"],
-  },
-
-  howItWorks: {
-    eyebrow: "How It Works",
-    headingLines: ["From Audit to Results", "in Five Steps"],
-    subheading:
-      "We map how your portcos run, build what moves the numbers, and keep improving it.",
-    steps: [
-      {
-        label: "Step 01",
-        title: "Audit",
-        body: "Every workflow mapped, with visual process maps and SOPs.",
-      },
-      {
-        label: "Step 02",
-        title: "Identify",
-        body: "The costs to cut and the revenue being missed.",
-      },
-      {
-        label: "Step 03",
-        title: "Build",
-        body: "Custom software and AI employees, built in sprints.",
-      },
-      {
-        label: "Step 04",
-        title: "Deploy & Train",
-        body: "We launch it and train your teams to use it.",
-      },
-      {
-        label: "Ongoing",
-        title: "Keep Improving",
-        body: "We track the gains and keep making them bigger.",
-      },
+    items: [
+      { name: "Operations Lead", mark: "neighborsBank", category: "Mortgage lending" },
+      { name: "Owner", mark: "happyEndings", category: "Food & beverage" },
+      { name: "Mike", mark: "mikesFences", category: "Home services" },
     ],
-    footer: {
-      label: "Yours either way",
-      body: "You keep the process maps, the SOPs and the measured before and after.",
-    },
   },
 
   /** Four of the home page's questions, by their wording there. */
@@ -222,12 +214,18 @@ const faq = {
   ),
 };
 
-/** The testimonial section, its quotes looked up from the home page's. */
+/** A testimonial's words, looked up from the home page's by `name`. */
+function said(name: string) {
+  const item = testimonialsContent.items.find((t) => t.name === name);
+  if (!item) throw new Error(`/vsl: no testimonial by "${name}" on the home page`);
+  return { quote: item.quote, name: item.name, role: item.role };
+}
+
+/** The testimonial section, with its words filled in. */
 const testimonial = {
   ...vsl.testimonial,
-  quotes: vsl.testimonial.quotes.flatMap((name) =>
-    testimonialsContent.items.filter((item) => item.name === name),
-  ),
+  featured: { ...vsl.testimonial.featured, ...said(vsl.testimonial.featured.name) },
+  items: vsl.testimonial.items.map((item) => ({ ...item, ...said(item.name) })),
 };
 
 /**
@@ -239,8 +237,8 @@ const testimonial = {
  *
  * Surfaces, top to bottom: the dark opening (hero, video and client marks)
  * pinned while the white problems ride up over it, as the home page hands
- * over; the white offer; the dark proof and testimonial; the beige process and
- * questions; the dark footer.
+ * over; the white offer and its dark cards; the dark proof and testimonials;
+ * the beige process and questions; the dark footer.
  */
 export default async function VslPage() {
   const studies = await getCaseStudies();
@@ -303,6 +301,11 @@ export default async function VslPage() {
           </Container>
         </PinAtFoot>
 
+        {/* The hold: once the opening has pinned, this much more scrolling
+            before the problems start to cover it. Clear, so the pinned
+            opening shows through it the whole way. */}
+        <div aria-hidden="true" className="h-[40svh]" />
+
         {/* 2. The problems, riding up over the pinned opening: positioned,
             above it, and opaque in its own white. A screen tall from desktop
             up, so it has covered the opening by the time the two leave. */}
@@ -315,7 +318,7 @@ export default async function VslPage() {
         />
       </div>
 
-      {/* 3. What you get, each with the dashboard it shows up in. */}
+      {/* 3. What you get: a dark card each, the words beside it at work. */}
       <WhatYouGet content={vsl.offer} dashboards={portfolioDashboardsContent} />
 
       {/* 4. Proof: two case studies. The section's own link to the full index
@@ -327,11 +330,11 @@ export default async function VslPage() {
         showIndexLink={false}
       />
 
-      {/* 5. The client's video, and two more in writing. */}
-      <VideoTestimonial content={testimonial} />
+      {/* 5. The client's video in a large card, three more under it. */}
+      <VideoTestimonial content={testimonial} cta={vsl.booking} />
 
-      {/* 6. How it works, with the call to book at its foot. */}
-      <ProcessSteps content={vsl.howItWorks} cta={vsl.booking} />
+      {/* 6. How it works: the home page's section, as it is there. */}
+      <HowItWorks content={howItWorksContent} />
 
       {/* 7. Four questions. Its strategy-call card books the same call. */}
       <Faq content={faq} />

@@ -26,8 +26,11 @@ type VideoPlayerProps = {
    * button while there is no video. Ignored for embeds.
    */
   poster?: string | StaticImageData;
-  /** `landscape` (16:9) by default; `portrait` (9:16) for a phone clip. */
-  aspect?: "landscape" | "portrait";
+  /**
+   * `landscape` (16:9) by default; `portrait` (9:16) for a phone clip; `fill`
+   * takes whatever height its holder gives it, cropping to cover.
+   */
+  aspect?: "landscape" | "portrait" | "fill";
   /** What the video is, for assistive tech and the embed's frame title. */
   title: string;
   /** The line under the play button while there is no video. */
@@ -47,7 +50,8 @@ export function VideoPlayer({
 }: VideoPlayerProps) {
   const frame = cn(
     "relative w-full overflow-hidden bg-bg-raised",
-    aspect === "portrait" ? "aspect-[9/16]" : "aspect-video",
+    aspect === "portrait" && "aspect-[9/16]",
+    aspect === "landscape" && "aspect-video",
     className,
   );
   const posterSrc = typeof poster === "string" ? poster : poster?.src;
