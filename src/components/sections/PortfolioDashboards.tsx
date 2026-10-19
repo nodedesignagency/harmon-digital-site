@@ -36,7 +36,11 @@ type Content = typeof portfolioDashboardsContent;
 const TAB = 36;
 /** How much lower each file sticks than the one before: its tab and a sliver of body. */
 const STEP = TAB + 12;
-/** Space between the fixed header and the top of the stack, px. */
+/**
+ * The least space between the fixed header and the top of the stack, px —
+ * what it gets on a screen only just tall enough to hold it. Taller than
+ * that, the stack is centred in the space under the header (`stackTop`).
+ */
 const GAP = 24;
 /** Files in the stack. */
 const FILES = 4;
@@ -69,6 +73,15 @@ function bodyHeight(index: number) {
 
 /** The settled stack, from the first tab to the shared bottom line. */
 const stackHeight = `calc(var(--folder-h) + ${TAB + STEP * (FILES - 1)}px)`;
+
+/**
+ * Where the settled stack and the words beside it pin: centred in the screen
+ * under the header, never closer to it than GAP. The file's height is capped,
+ * so on most screens there is room to spare — and pinned at GAP, all of it
+ * went under the stack and the whole composition sat at the top of the
+ * screen. Shared by the words and every file, so they stay level.
+ */
+const stackTop = `calc(var(--header-height) + max(${GAP}px, (100svh - var(--header-height) - var(--stack-h)) / 2))`;
 
 /** Fills come from theme.css; the section never names a colour itself. */
 const tints = {
@@ -114,17 +127,15 @@ export function PortfolioDashboards({ content }: PortfolioDashboardsProps) {
             {
               "--folder-h": folderHeight,
               "--stack-h": stackHeight,
+              "--stack-top": stackTop,
             } as CSSProperties
           }
         >
           {/* From tablet up: exactly as tall as the settled stack and pinned
-            level with its first tab (the 24 is GAP), so the words hold beside
+            level with its first tab (`--stack-top`), so the words hold beside
             the files and leave with them rather than lingering after the
-            stack has gone. The heading, its line and the card sit together in
-            the middle of that height — the middle of the screen under the
-            header — rather than spread to its two ends, which left the
-            heading pinned to the top with an empty stretch under it. */}
-          <div className="text-ink-dynamic tablet:sticky tablet:top-[calc(var(--header-height)+24px)] tablet:flex tablet:h-(--stack-h) tablet:flex-col tablet:justify-center tablet:self-start">
+            stack has gone. */}
+          <div className="text-ink-dynamic tablet:sticky tablet:top-(--stack-top) tablet:flex tablet:h-(--stack-h) tablet:flex-col tablet:self-start">
             <TextReveal
               as="h2"
               lines={content.headingLines}
@@ -134,14 +145,15 @@ export function PortfolioDashboards({ content }: PortfolioDashboardsProps) {
             <p className="mt-6 max-w-[40ch] font-body text-body-md">
               {content.subheading}
             </p>
-            {/* The FAQ's strategy-call card, under the words. Beige, where the
-                FAQ's is white: this section is white. */}
+            {/* The FAQ's strategy-call card, at the foot of the column — so,
+                from tablet up, level with the foot of the settled stack. Beige,
+                where the FAQ's is white: this section is white. */}
             <CtaCard
               href={content.cta.href}
               title={content.cta.title}
               body={content.cta.body}
               fill="bg-bg-light"
-              className="mt-10"
+              className="mt-10 tablet:mt-auto"
             />
           </div>
 
@@ -191,7 +203,7 @@ function Folder({ index, tab, tint, children }: FolderProps) {
   return (
     <article
       className="sticky text-fg-on-light"
-      style={{ top: `calc(var(--header-height) + ${GAP + index * STEP}px)` }}
+      style={{ top: `calc(var(--stack-top) + ${index * STEP}px)` }}
     >
       <div className={cn("flex", right ? "justify-end pr-6" : "pl-6")}>
         <h3 className={cn("flex h-9 items-center px-5", label, tints[tint])}>
