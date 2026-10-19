@@ -40,7 +40,7 @@ footer's "Ready to Grow Portco EBITDA?" panel is its final CTA.
 - [ ] **VSL video** — set `vsl.hero.video.src` (an .mp4 or an embed URL: YouTube `/embed/<id>`, Vimeo, Loom, Wistia); empty shows the placeholder frame
 - [ ] **Testimonial video** — set `vsl.proof.testimonial.video.src` the same way
 - [ ] **Booking link** — see below; until it is set, every Book a Call on the VSL goes to `/contact`, which has the full site nav
-- [ ] **Link to `/vsl` or skip it in the bundle check** — nothing on the site links to `/vsl` (on purpose, it's for ads/emails), so `npm run artifact` will report it unreachable. Decide: add a link somewhere, or add `/vsl` to the skip list in `scripts/build-artifact.mjs` (navigation-locked: needs `npm run bless-navigation`)
+- [x] **Reachable** — the footer's Navigation column links to it ("Watch the Video"). Without a link the preview's Pages menu and `npm run artifact` can't open it: both open a page by clicking its link. Move the link if you'd rather it sit elsewhere, but keep one
 - [ ] **Exits left on the page** — the header logo goes to `/` and the two case study cards open their case study pages. Keep, or make the cards non-links on the VSL
 
 ## Waiting on the client (Isaac)

@@ -50,6 +50,9 @@ export const footerNav: NavGroup[] = [
       { label: "Pricing", href: "/pricing" },
       { label: "Case Studies", href: "/case-study" },
       { label: "Blog", href: "/blogs" },
+      // The VSL landing page. Linked here so the site reaches it: the preview's
+      // Pages menu and the artifact route check both open a page by its link.
+      { label: "Watch the Video", href: "/vsl" },
     ],
   },
   {
