@@ -4,6 +4,8 @@ import { useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import type { StaticImageData } from "next/image";
+import georgeZimny from "@public/uploads/images/testimonial-george-zimny.jpg";
+import terri from "@public/uploads/images/testimonial-terri.jpg";
 import { CarouselArrowLeft, CarouselArrowRight } from "@/components/ui/SiteIcons";
 import { useInView } from "motion/react";
 import { Container } from "@/components/layout/Container";
@@ -38,11 +40,17 @@ import { viewport } from "@/lib/motion";
  */
 
 /**
- * The cut-out a quote names. Content says which; this says what it is. Empty
- * until the client supplies cut-out portraits — import each here under the
- * key its quote's `photo` uses.
+ * The photo a quote names. Content says which; this says what it is — the
+ * client's own photos, background and all, and where in the frame the face is
+ * (`focus`, an object-position), so the crop to the column keeps it in view.
+ * Import any new one here under the key its quote's `photo` uses.
  */
-const portraits: Partial<Record<TestimonialPhoto, StaticImageData>> = {};
+const portraits: Partial<
+  Record<TestimonialPhoto, { src: StaticImageData; focus: string }>
+> = {
+  george: { src: georgeZimny, focus: "50% 30%" },
+  terri: { src: terri, focus: "50% 40%" },
+};
 
 /** Fills come from theme.css; the section never names a colour itself. */
 const tones: Record<TestimonialTone, string> = {
@@ -137,9 +145,11 @@ export function Testimonials({ content }: TestimonialsProps) {
       </Container>
 
       <Container className="mt-15">
+        {/* A size container, so a card can hold the file's proportion as a
+            minimum (see `cardClass`). */}
         <div
           ref={track}
-          className="flex transition-transform ease-(--ease-case-hover)"
+          className="@container flex transition-transform ease-(--ease-case-hover)"
           style={{
             gap: `${GAP}px`,
             transitionDuration: `${testimonialCarousel.slide}ms`,
@@ -187,49 +197,36 @@ export function Testimonials({ content }: TestimonialsProps) {
                   ))}
                 </div>
 
-                {/* The portrait: a 40% column beside the quote from tablet up,
+                {/* The photo: a 40% column beside the quote from tablet up,
                     and a 300px band under it on a phone — which is why it is
-                    ordered last there and first above. It is a cut-out standing
-                    on the card's own fill, so it has no frame of its own.
+                    ordered last there and first above. The client's photo as
+                    sent, background included, filling its column edge to edge
+                    and cropped to it around the face.
 
-                    `contain` and not `cover`: the file is a person cut out of
-                    their background, and cropping one to fill a column takes the
-                    top of their head off. Anchored to the bottom so they stand
-                    on the card's floor rather than floating in the middle of it.
+                    `mt-auto` below the tablet: stacked, the cards are a flex
+                    row and all of them stretch to the tallest, but this band is
+                    a fixed 300 and does not grow, so the slack on a card with a
+                    shorter quote goes above the picture rather than under it.
 
-                    Decorative: the caption below names them, and an alt here
-                    would have a screen reader say it twice.
+                    `z-10` puts it over the rectangles: `order-first` makes it
+                    the first thing painted, and a rectangle sliding over a
+                    face reads as a mistake.
 
-                    Left out entirely for a quote with no portrait, and the quote
+                    Decorative: the caption names them, and an alt here would
+                    have a screen reader say it twice.
+
+                    Left out entirely for a quote with no photo, and the quote
                     below takes the whole card. */}
                 {portrait && (
-                  <div className="relative order-last h-[300px] w-full shrink-0 max-tablet:mt-auto tablet:order-first tablet:h-auto tablet:w-2/5">
-                    {/* `mt-auto` below the tablet: stacked, the cards are a flex
-                        row and all of them stretch to the tallest, but this band is
-                        a fixed 300 and does not grow — so on every card with a
-                        shorter quote than the longest the leftover height collected
-                        underneath it and stood the picture off the card's floor.
-                        36px of it at 760, and none at all on the one card that sets
-                        the height, which is why only that one looked right. The
-                        margin sends the slack above the picture instead. */}
-
-                    {/* Four fifths of the card's height, standing on its floor —
-                        the owner's proportion, and the space it leaves above the
-                        head is what keeps the quote beside it from feeling
-                        crowded. Given here rather than left to the file: each
-                        cut-out is trimmed to its subject, so without a height to
-                        fill they would each come out at whatever size their own
-                        framing implied, which is exactly the inconsistency
-                        between these three that had to be fixed once already. */}
-                    <div className="absolute inset-x-0 bottom-0 h-[85%]">
-                      <Image
-                        src={portrait}
-                        alt=""
-                        fill
-                        sizes="(max-width: 810px) 100vw, 40vw"
-                        className="object-contain object-bottom"
-                      />
-                    </div>
+                  <div className="relative z-10 order-last h-[300px] w-full shrink-0 max-tablet:mt-auto tablet:order-first tablet:h-auto tablet:w-2/5">
+                    <Image
+                      src={portrait.src}
+                      alt=""
+                      fill
+                      sizes="(max-width: 810px) 100vw, 40vw"
+                      className="object-cover"
+                      style={{ objectPosition: portrait.focus }}
+                    />
                   </div>
                 )}
 
@@ -271,14 +268,17 @@ export function Testimonials({ content }: TestimonialsProps) {
 }
 
 /**
- * The card's box. 1120x516 in the file, held as a ratio so it keeps its
- * proportion as the container narrows; on a phone it stacks — quote over
- * portrait — and takes whatever height the two need.
+ * The card's box. 1120x516 in the file, held as a minimum height against the
+ * track's width so it keeps that proportion as the container narrows, and
+ * grows past it when a quote set beside a photo needs more room — a fixed
+ * ratio clipped the caption off the foot of the longest one. The track
+ * stretches every card to the tallest, so the row stays one height. On a
+ * phone it stacks — quote over photo — and takes whatever height the two need.
  */
 function cardClass(tone: TestimonialTone) {
   return [
     "relative flex w-full shrink-0 flex-col overflow-clip tablet:flex-row",
-    "tablet:aspect-[1120/516]",
+    "tablet:min-h-[calc(100cqw*516/1120)]",
     tones[tone],
   ].join(" ");
 }

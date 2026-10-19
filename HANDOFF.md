@@ -42,10 +42,9 @@ reaches it (`data-surface-flip`). `<PageChrome value="landing" />` hides the hea
 columns; the footer's "Ready to Grow Portco EBITDA?" panel is its final CTA.
 
 - [ ] **VSL video** — set `vsl.hero.video.src` (an .mp4 or an embed URL: YouTube `/embed/<id>`, Vimeo, Loom, Wistia); empty shows the placeholder frame
-- [ ] **Testimonial video** — set `vsl.testimonial.featured.video.src` the same way. Its poster is the client's
-      `testimonial-video-poster.jpg`. **Who is in it?** The large card pairs it with George Zimny's (ProducifyX)
-      quote as a stand-in; once the speaker is known, set `vsl.testimonial.featured` to their name and mark
-      (their quote must be in the home page's testimonials)
+- [ ] **Testimonial video** — set `vsl.testimonial.featured.video.src` the same way. The speaker is George Zimny
+      (ProducifyX), as the card already says: the client's file is `producifyx-george-…testimonial.mp4`, which is
+      not in the repo yet. Host it (or drop it in `public/`) and set the src
 - [ ] **VSL copy written by us** — the Problems grid's lines and the What You Get points ("Software retired",
       "Systems you own"…) are drawn from the brief, not supplied by Isaac; the What You Get cards show the illustrative dashboard figures above
 - [ ] **Booking link** — see below; until it is set, every Book a Call on the VSL goes to `/contact`, which has the full site nav
@@ -84,7 +83,11 @@ green panel with this page's words (`ClosingCta`; the footer's own copy is hidde
 - [ ] **Booking link** — set `booking` in `src/config/site.config.ts`; every "Book a Call" (header, footer panel, VSL) follows it. Empty, they go to `/contact`
 - [ ] **Prices** for the three tiers — cards show "Unstack" / "1:1 Training" / "Custom Builds" until then (`src/content/pricing.ts`)
 - [ ] **Hero headline** — current line is a placeholder (`src/content/home.ts`, `heroContent`)
-- [ ] **Testimonials** — names for "Operations Lead, Neighbors Bank" and "Owner, Happy Endings"; headshots if we want portraits (they need the background removed)
+- [ ] **Testimonials** — names for "Operations Lead, Neighbors Bank" and "Owner, Happy Endings" (the photo is
+      Terri; credit her by name once the client confirms). The home cards for George and Happy Endings carry the
+      client's photos, background included (`testimonial-george-zimny.jpg`, `testimonial-terri.jpg`, the second
+      upscaled 2x from the 575px original). Neighbors Bank and Mike's Fences have none. The ProducifyX team photo
+      is unused
 - [ ] **ProducifyX dashboard screenshot** — OK to use? It shows "$0 MRR", "0 hires" and ProducifyX's customer names
 - [ ] **Clean Neighbors Bank Slack screenshot** — the one supplied shows a joke test message, so it isn't used
 - [ ] **Etto dashboard screenshot** — the one used shows sandbox/test data; a version with real-looking data would be better

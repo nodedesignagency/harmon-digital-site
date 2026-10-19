@@ -104,7 +104,7 @@ export function PartnerAudience({ content }: PartnerAudienceProps) {
                   <h3 className="font-display text-display-lg leading-(--leading-display) tracking-(--tracking-display) font-normal">
                     {card.title}
                   </h3>
-                  <p className="mt-3 max-w-[40ch] font-body text-body-md">{card.body}</p>
+                  <p className="mt-3 font-body text-body-md">{card.body}</p>
                 </div>
               </li>
             ))}

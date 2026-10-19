@@ -507,9 +507,10 @@ export type ToolMark = (typeof techStackContent.tools)[number]["mark"];
  * One card at a time with the next peeking past the right gutter, advanced by
  * the pair of arrows beside the heading.
  *
- * `photo` is optional and names a cut-out in `public/uploads/images` that the
- * section imports; the cut-out sits on the card's own fill. A quote without one
- * takes the card's full width rather than standing beside an empty column.
+ * `photo` is optional and names one of the client's photos, imported by the
+ * section from `public/uploads/images` (see `portraits` in Testimonials.tsx);
+ * it fills a column beside the quote. A quote without one takes the card's
+ * full width rather than standing beside an empty column.
  *
  * The four quotes are verbatim from the client's current site. Where the site
  * credits a role rather than a person, `name` carries the role.
@@ -535,6 +536,7 @@ export const testimonialsContent = {
       name: "George Zimny",
       role: "Co-Founder @ ProducifyX",
       tone: "blue",
+      photo: "george",
     },
     {
       quote:
@@ -549,6 +551,7 @@ export const testimonialsContent = {
       name: "Owner",
       role: "Happy Endings",
       tone: "yellow",
+      photo: "terri",
     },
     {
       quote:
