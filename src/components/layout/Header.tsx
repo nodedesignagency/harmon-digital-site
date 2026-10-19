@@ -180,11 +180,18 @@ export function Header() {
             Black rests, for the white and beige surfaces; the dark surface
             brings the white one up.
 
-            19px tall, which at the files' 417x65 crop is 122 wide — the size
-            it is in the owner's file. Fixed rather than fluid, because the
-            strip it sits in is: the row is a fixed 80 there too, and a
-            wordmark that grew inside a height that did not would drift
-            against the links beside it.
+            The files are Harmon Digital's logo — the green mark and the
+            wordmark — under the template's file names, `mahadeva-black` and
+            `mahadeva-white`, because the preloader (navigation-locked) imports
+            the black one by that name. The white cut is the same file with
+            the wordmark knocked out to white; the mark keeps its green.
+
+            24px tall, which at the files' 724x99 crop is 176 wide. Taller than
+            the template's 19 because the mark takes the full height and the
+            letters sit inside it: at 19 the words read a size small. Fixed
+            rather than fluid, because the strip it sits in is: the row is a
+            fixed 80 there too, and a wordmark that grew inside a height that
+            did not would drift against the links beside it.
 
             The link carries the name and both images are decorative, so a
             screen reader hears the site once rather than three times. */}
@@ -193,13 +200,13 @@ export function Header() {
           aria-label={siteConfig.shortName}
           className="mh-nav-mark relative block"
         >
-          <Image src={markBlack} alt="" data-mark="black" priority className="h-[19px] w-auto" />
+          <Image src={markBlack} alt="" data-mark="black" priority className="h-6 w-auto" />
           <Image
             src={markWhite}
             alt=""
             data-mark="white"
             priority
-            className="absolute inset-0 h-[19px] w-auto"
+            className="absolute inset-0 h-6 w-auto"
           />
         </Link>
 

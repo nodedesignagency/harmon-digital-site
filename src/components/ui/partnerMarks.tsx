@@ -2,15 +2,11 @@ import Image from "next/image";
 import type { StaticImageData } from "next/image";
 import continuousGrowth from "@public/uploads/icons/continuous-growth.png";
 import highOwnership from "@public/uploads/icons/high-ownership.png";
-import humanFirst from "@public/uploads/icons/human-first.png";
-import modernStack from "@public/uploads/icons/modern-stack.png";
-import realImpact from "@public/uploads/icons/real-impact.png";
 import reliableDelivery from "@public/uploads/icons/reliable-delivery.png";
 import teamWork from "@public/uploads/icons/team-work.png";
-import wellnessSupport from "@public/uploads/icons/wellness-support.png";
 
 /**
- * The marks the /partners sections set in their tinted squares.
+ * The marks /partners sets in its benefits' tinted squares.
  *
  * The owner's own drawings wherever one fits — the same files the About
  * principles and the Careers benefits use — and two drawn here to match them
@@ -19,11 +15,7 @@ import wellnessSupport from "@public/uploads/icons/wellness-support.png";
  */
 
 const files = {
-  layers: modernStack,
-  people: humanFirst,
-  growth: realImpact,
   crown: highOwnership,
-  heart: wellnessSupport,
   shield: reliableDelivery,
   handshake: teamWork,
   loop: continuousGrowth,

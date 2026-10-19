@@ -36,27 +36,32 @@ const partners = {
     cta: { label: "Refer a Company", href: REFER },
   },
 
-  /** Three cards. `mark` is the drawing in the square, `tone` the card's tint. */
+  /**
+   * Three panels, stacked beside the heading. `art` is the home page feature
+   * picture in the corner, `tone` the panel's tint, matched to the picture.
+   */
   audience: {
     headingLines: ["Who It's For"],
+    subheading:
+      "You see where a company is losing money long before anyone else does.",
     cards: [
       {
         title: "Accountants",
         body: "You see the books, the software spend and the manual work first.",
-        mark: "layers",
-        tone: "blue",
+        art: "data",
+        tone: "lavender",
       },
       {
         title: "Lawyers",
         body: "You're in the room for every acquisition and new portco.",
-        mark: "people",
-        tone: "green",
+        art: "integrations",
+        tone: "rose",
       },
       {
         title: "Bankers",
         body: "You know which companies are growing and which are stuck.",
-        mark: "growth",
-        tone: "lavender",
+        art: "revenue",
+        tone: "peach",
       },
     ],
   },

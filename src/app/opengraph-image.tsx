@@ -72,7 +72,7 @@ export default async function Image() {
           {/* A raw <img>, and it has to be: this is drawn by ImageResponse on
               the server, into a PNG. There is no browser and no document, so
               next/image has nothing to optimise and nothing to hydrate. */}
-          <img src={markSrc} alt="" width={385} height={60} />
+          <img src={markSrc} alt="" width={439} height={60} />
           <div
             style={{
               display: "flex",

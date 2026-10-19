@@ -72,8 +72,14 @@ green panel with this page's words (`ClosingCta`; the footer's own copy is hidde
 
 ## Waiting on the client (Isaac)
 
-- [ ] **Logo files** — replace the Mahadeva logo in the header, the loading screen (preloader), the big 3D mark under the hero, and the share/OG image (`src/app/opengraph-image.tsx`)
-- [ ] **Favicon / app icons** — `src/app/favicon.ico`, `icon.png`, `apple-icon.png` are still the Mahadeva "m" (Harmon's blue "//" icon is in `client-brief/current-site/images/logo/icon.png`)
+- [x] **Logo** — the Harmon Digital logo (green "//" mark + wordmark) is in the header, the loading screen and the
+      share image. The files keep the template's names, `public/uploads/logos/mahadeva-black.png` / `-white.png`,
+      because the navigation-locked preloader imports them by name; the white cut is the wordmark knocked out to
+      white. Originals in `client-brief/uploads/brand/`
+- [ ] **3D mark under the home hero** — still the Mahadeva "M" render (`public/uploads/images/hero-mahadeva.png`);
+      needs a 3D version of the "//" mark, or remove it
+- [x] **Favicon / app icons** — `src/app/favicon.ico` (16/32/48), `icon.png` (128) and `apple-icon.png` (180, square for
+      iOS to round) are the green "//" mark, redrawn from the supplied icon so every size is sharp
 - [ ] **Brand colours** — the site still uses the template's green palette (`src/styles/theme.css`)
 - [ ] **Booking link** — set `booking` in `src/config/site.config.ts`; every "Book a Call" (header, footer panel, VSL) follows it. Empty, they go to `/contact`
 - [ ] **Prices** for the three tiers — cards show "Unstack" / "1:1 Training" / "Custom Builds" until then (`src/content/pricing.ts`)
