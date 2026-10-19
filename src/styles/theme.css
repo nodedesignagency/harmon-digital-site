@@ -161,6 +161,9 @@
   --color-quote-blue: var(--mh-blue-50); /* DCECFF */
   --color-quote-green: var(--mh-green-100); /* DCFFE4 */
   --color-quote-yellow: var(--mh-yellow-50); /* FFFBDD */
+  /* A fourth, for /vsl, where four testimonials sit side by side and each
+   * takes its own colour. */
+  --color-quote-lavender: var(--mh-lavender-50); /* EADFFF */
   --color-quote-shape-blue: var(--mh-blue-200); /* A8DEFF */
   --color-quote-shape-green: var(--mh-green-200); /* ABFFA8 */
   --color-quote-shape-yellow: var(--mh-yellow); /* FFE8A8 */
@@ -694,6 +697,7 @@
   --color-quote-blue: var(--color-quote-blue);
   --color-quote-green: var(--color-quote-green);
   --color-quote-yellow: var(--color-quote-yellow);
+  --color-quote-lavender: var(--color-quote-lavender);
   --color-tool-shape-rose: var(--color-tool-shape-rose);
   --color-tool-shape-green: var(--color-tool-shape-green);
   --color-tool-shape-magenta: var(--color-tool-shape-magenta);

@@ -13,18 +13,21 @@ import { cn } from "@/lib/cn";
  * Testimonials — /vsl's "Hear It From Our Clients".
  *
  * The owner's reference (Giga's customers section on Mobbin), in the site's
- * terms: one large card with a client's words on the left — their mark and
- * line of business, the quote, who said it and the call to book — and their
- * video filling the right half; three plain cards under it, mark, quote and
- * name. Square corners, the raised dark fill, Geist for every name and label.
+ * terms: one large card with a client's words on the left — their mark, the
+ * quote, who said it and the call to book — and their video filling the right
+ * half; three cards under it, mark, quote and who said it. Every card its own
+ * colour, from the testimonial family, chosen in content (`tone`).
  *
- * Crossfades with the page on the dark surface; the cards paint the raised
- * fill and keep fixed light ink.
+ * The heading and its line are centred over the cards, as How It Works sets
+ * its own. The section crossfades with the page on the dark surface, so those
+ * are in the dynamic ink; the cards keep fixed dark ink on their tints.
  */
+
+export type QuoteTone = "blue" | "green" | "yellow" | "lavender";
 
 type Testimonial = {
   mark: ClientMark;
-  category: string;
+  tone: QuoteTone;
   quote: string;
   name: string;
   role: string;
@@ -42,7 +45,13 @@ type VideoTestimonialProps = {
   cta: { label: string; href: string };
 };
 
-const label = "font-ui text-label tracking-(--tracking-label) uppercase";
+/** Fills come from theme.css; the section never names a colour itself. */
+const tints: Record<QuoteTone, string> = {
+  blue: "bg-quote-blue",
+  green: "bg-quote-green",
+  yellow: "bg-quote-yellow",
+  lavender: "bg-quote-lavender",
+};
 
 /** "George Zimny" → "GZ"; a role-only credit ("Operations Lead") the same. */
 function initials(name: string) {
@@ -54,17 +63,13 @@ function initials(name: string) {
     .toUpperCase();
 }
 
-/** The client's mark, knocked out to white, and what they do beside it. */
-function Byline({ mark, category }: { mark: ClientMark; category: string }) {
+/** Who said it: the name over the company, both in Geist. */
+function Credit({ name, role }: { name: string; role: string }) {
   return (
-    <p className="flex items-center gap-4">
-      <Image
-        src={clientMarks[mark]}
-        alt=""
-        className="h-5 w-auto brightness-0 invert"
-      />
-      <span className={cn(label, "opacity-60")}>{category}</span>
-    </p>
+    <span className="flex flex-col gap-1 font-ui">
+      <span className="text-body-md">{name}</span>
+      <span className="text-body-sm text-fg-on-light-muted">{role}</span>
+    </span>
   );
 }
 
@@ -74,21 +79,24 @@ export function VideoTestimonial({ content, cta }: VideoTestimonialProps) {
   return (
     <section data-bg="green" className="bg-bg py-20 tablet:py-30">
       <Container>
-        <div className="text-ink-dynamic flex flex-col gap-6 tablet:flex-row tablet:items-end tablet:justify-between tablet:gap-16">
-          <TextReveal
-            as="h2"
-            lines={content.headingLines}
-            settings={sectionTextRevealDynamic}
-            className="flex flex-col items-start gap-(--space-heading-line) text-display-lg leading-(--leading-display) tracking-(--tracking-display) font-normal"
-          />
-          <p className="max-w-[40ch] font-body text-body-md tablet:pb-1">
-            {content.subheading}
-          </p>
-        </div>
+        <TextReveal
+          as="h2"
+          lines={content.headingLines}
+          settings={sectionTextRevealDynamic}
+          className="flex flex-col items-center gap-(--space-heading-line) text-center text-display-lg leading-(--leading-display) tracking-(--tracking-display) font-normal"
+        />
+        <p className="text-ink-dynamic mx-auto mt-6 max-w-[56ch] text-center font-body text-body-md">
+          {content.subheading}
+        </p>
 
-        <figure className="mt-12 grid border border-border bg-bg-raised text-fg tablet:mt-15 desktop:grid-cols-2">
+        <figure
+          className={cn(
+            "mt-12 grid text-fg-on-light tablet:mt-15 desktop:grid-cols-2",
+            tints[featured.tone],
+          )}
+        >
           <div className="flex flex-col p-6 tablet:p-10 desktop:p-12">
-            <Byline mark={featured.mark} category={featured.category} />
+            <Image src={clientMarks[featured.mark]} alt="" className="h-5 w-auto self-start" />
             <blockquote className="mt-10 font-display text-heading-lg leading-(--leading-heading) tracking-(--tracking-display)">
               {`“${featured.quote}”`}
             </blockquote>
@@ -97,18 +105,15 @@ export function VideoTestimonial({ content, cta }: VideoTestimonialProps) {
               <figcaption className="flex items-center gap-4">
                 <span
                   aria-hidden="true"
-                  className="flex size-12 shrink-0 items-center justify-center bg-accent font-ui text-body-sm text-accent-fg"
+                  className="flex size-12 shrink-0 items-center justify-center bg-bg font-ui text-body-sm text-fg"
                 >
                   {initials(featured.name)}
                 </span>
-                <span className="flex flex-col font-ui">
-                  <span className="text-body-md">{featured.name}</span>
-                  <span className="text-body-sm opacity-60">{featured.role}</span>
-                </span>
+                <Credit name={featured.name} role={featured.role} />
               </figcaption>
               <Link
                 href={cta.href}
-                className="inline-flex items-center gap-2 font-ui text-body-sm transition-colors hover:text-accent"
+                className="inline-flex items-center gap-2 font-ui text-body-sm transition-opacity hover:opacity-60"
               >
                 {cta.label}
                 <ButtonArrow className="size-3" />
@@ -124,7 +129,7 @@ export function VideoTestimonial({ content, cta }: VideoTestimonialProps) {
               poster={featured.video.poster}
               title={featured.video.title}
               aspect="fill"
-              className="absolute inset-0 h-full border-0"
+              className="absolute inset-0 h-full"
             />
           </div>
         </figure>
@@ -132,14 +137,18 @@ export function VideoTestimonial({ content, cta }: VideoTestimonialProps) {
         <ul className="mt-5 grid gap-5 tablet:grid-cols-3">
           {content.items.map((item) => (
             <li key={item.name}>
-              <figure className="flex h-full flex-col border border-border bg-bg-raised p-6 text-fg tablet:p-8">
-                <Byline mark={item.mark} category={item.category} />
+              <figure
+                className={cn(
+                  "flex h-full flex-col p-6 text-fg-on-light tablet:p-8",
+                  tints[item.tone],
+                )}
+              >
+                <Image src={clientMarks[item.mark]} alt="" className="h-5 w-auto self-start" />
                 <blockquote className="mt-6 font-body text-body-md">
                   {`“${item.quote}”`}
                 </blockquote>
-                <figcaption className="mt-auto flex flex-wrap gap-x-3 pt-6 font-ui text-body-sm">
-                  <span>{item.name}</span>
-                  <span className="opacity-60">{item.role}</span>
+                <figcaption className="mt-auto pt-8">
+                  <Credit name={item.name} role={item.role} />
                 </figcaption>
               </figure>
             </li>

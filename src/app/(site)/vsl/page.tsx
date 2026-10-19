@@ -93,10 +93,9 @@ const vsl = {
   },
 
   /**
-   * One dark card per thing the fund gets. `preview` picks which of the home
-   * page's dashboard files the white figure cards are taken from; `graphic`
-   * is the status line and log drawn beside them (the dashboards card lists
-   * that file's portcos instead of a log of its own).
+   * One coloured card per thing the fund gets. `preview` picks which of the
+   * home page's dashboard files is drawn on it, figures and all; `tone` is
+   * the card's tint.
    */
   offer: {
     headingLines: ["What You Get"],
@@ -104,7 +103,6 @@ const vsl = {
       "Lower costs, more revenue, and a live view of both across the fund.",
     items: [
       {
-        label: "Cost savings",
         title: "Cut Costs",
         body: "We retire the software you work around and automate the manual work, so the savings land on the P&L.",
         includes: [
@@ -113,34 +111,16 @@ const vsl = {
           "Systems the portco owns",
         ],
         preview: "savings",
-        graphic: {
-          status: "Auditing software spend",
-          progress: 0.64,
-          log: [
-            { event: "Tool retired", detail: "Duplicate CRM seats" },
-            { event: "Workflow automated", detail: "Order entry to fulfillment" },
-            { event: "Process mapped", detail: "Month-end close" },
-          ],
-        },
+        tone: "lavender",
       },
       {
-        label: "Revenue gains",
         title: "Grow Revenue",
         body: "AI employees answer, follow up and book every lead, day and night.",
         includes: ["Inbound Responder", "Follow-Up Agent", "Outbound SDR"],
         preview: "revenue",
-        graphic: {
-          status: "Answering a new lead",
-          progress: 0.42,
-          log: [
-            { event: "Inbound call answered", detail: "New lead, after hours" },
-            { event: "Follow-up sent", detail: "Quote reminder, day 3" },
-            { event: "Call booked", detail: "Tuesday, 10:00" },
-          ],
-        },
+        tone: "peach",
       },
       {
-        label: "Fund overview",
         title: "Portco Dashboards",
         body: "A live dashboard for every portco, showing exactly where each gain comes from.",
         includes: [
@@ -149,7 +129,7 @@ const vsl = {
           "Revenue by the AI employee that won it",
         ],
         preview: "overview",
-        graphic: { status: "Syncing portfolio data", progress: 0.86 },
+        tone: "blue",
       },
     ],
   },
@@ -164,9 +144,9 @@ const vsl = {
   },
 
   /**
-   * One large card with the client's video, three plain ones under it. The
-   * words are the home page's testimonials, picked by `name`; the marks and
-   * lines of business are this page's.
+   * One large card with the client's video, three under it, each its own
+   * colour (`tone`). The words are the home page's testimonials, picked by
+   * `name`; the marks are this page's.
    *
    * The video's poster is the still the client sent with it. Who is in it is
    * not confirmed (see HANDOFF.md): the featured quote beside it is George
@@ -179,13 +159,13 @@ const vsl = {
     featured: {
       name: "George Zimny",
       mark: "producifyx",
-      category: "Recruiting",
+      tone: "blue",
       video: { src: "", poster: testimonialPoster, title: "Client testimonial" },
     },
     items: [
-      { name: "Operations Lead", mark: "neighborsBank", category: "Mortgage lending" },
-      { name: "Owner", mark: "happyEndings", category: "Food & beverage" },
-      { name: "Mike", mark: "mikesFences", category: "Home services" },
+      { name: "Operations Lead", mark: "neighborsBank", tone: "green" },
+      { name: "Owner", mark: "happyEndings", tone: "yellow" },
+      { name: "Mike", mark: "mikesFences", tone: "lavender" },
     ],
   },
 
@@ -237,7 +217,7 @@ const testimonial = {
  *
  * Surfaces, top to bottom: the dark opening (hero, video and client marks)
  * pinned while the white problems ride up over it, as the home page hands
- * over; the white offer and its dark cards; the dark proof and testimonials;
+ * over; the white offer and its coloured cards; the dark proof and testimonials;
  * the beige process and questions; the dark footer.
  */
 export default async function VslPage() {
@@ -304,7 +284,7 @@ export default async function VslPage() {
         {/* The hold: once the opening has pinned, this much more scrolling
             before the problems start to cover it. Clear, so the pinned
             opening shows through it the whole way. */}
-        <div aria-hidden="true" className="h-[40svh]" />
+        <div aria-hidden="true" className="h-[15svh]" />
 
         {/* 2. The problems, riding up over the pinned opening: positioned,
             above it, and opaque in its own white. A screen tall from desktop
@@ -318,7 +298,7 @@ export default async function VslPage() {
         />
       </div>
 
-      {/* 3. What you get: a dark card each, the words beside it at work. */}
+      {/* 3. What you get: a coloured card each, with its dashboard. */}
       <WhatYouGet content={vsl.offer} dashboards={portfolioDashboardsContent} />
 
       {/* 4. Proof: two case studies. The section's own link to the full index
@@ -328,6 +308,7 @@ export default async function VslPage() {
         studies={studies}
         limit={vsl.proof.count}
         showIndexLink={false}
+        subheadingAside
       />
 
       {/* 5. The client's video in a large card, three more under it. */}

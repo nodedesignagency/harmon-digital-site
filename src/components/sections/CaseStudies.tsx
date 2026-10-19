@@ -37,6 +37,12 @@ type CaseStudiesProps = {
    * that should not send the reader off elsewhere (/vsl) turns it off.
    */
   showIndexLink?: boolean;
+  /**
+   * The line under the heading set to its right instead, where the index
+   * button stands on the home page — /vsl, which has no button there and
+   * sets every other section's line that way.
+   */
+  subheadingAside?: boolean;
 };
 
 export function CaseStudies({
@@ -44,6 +50,7 @@ export function CaseStudies({
   studies,
   limit = SHOWN,
   showIndexLink = true,
+  subheadingAside = false,
 }: CaseStudiesProps) {
   return (
     <section data-bg="green" className="bg-bg py-20 tablet:py-30">
@@ -56,10 +63,18 @@ export function CaseStudies({
               settings={sectionTextRevealDynamic}
               className="flex flex-col items-start gap-(--space-heading-line) text-display-lg leading-(--leading-display) tracking-(--tracking-display) font-normal"
             />
-            <p className="text-ink-dynamic mt-6 max-w-[46ch] font-body text-body-md">
+            {subheadingAside ? null : (
+              <p className="text-ink-dynamic mt-6 max-w-[46ch] font-body text-body-md">
+                {content.subheading}
+              </p>
+            )}
+          </div>
+
+          {subheadingAside ? (
+            <p className="text-ink-dynamic max-w-[40ch] font-body text-body-md tablet:pb-1">
               {content.subheading}
             </p>
-          </div>
+          ) : null}
 
           {/* `self-start`: in the column this row becomes on a phone, a flex
               item stretches, and the original sizes this button to its own

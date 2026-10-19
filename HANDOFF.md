@@ -32,25 +32,22 @@ Build the new sections one at a time with the owner's direction; they often shar
 ## VSL landing page — `/vsl`
 
 **Built** — `src/app/(site)/vsl/page.tsx`. One goal: book a call. Every word is in the `vsl` object at the
-top of that file. The dark opening (hero, video, client marks on green) pins by its foot, holds for 40svh of
+top of that file. The dark opening (hero, video, client marks on green) pins by its foot, holds for 15svh of
 scroll, then the white **Problems** grid rides up over it (`sections/Problems.tsx`, after Heron AI; shaded
-isometric drawings); **What You Get** is three dark cards, words left and a status panel, log and white figure
-cards right (`sections/WhatYouGet.tsx`, after the owner's reference; figures from Portfolio Dashboards);
-**testimonials** are one large card with the video plus three small ones (`sections/VideoTestimonial.tsx`, after
-Giga); **How It Works** is the home page's section as it is. The header stays dark until the Problems section
+isometric drawings); **What You Get** is three pastel cards, words left and the matching Portfolio Dashboards
+file right (`sections/WhatYouGet.tsx`); **testimonials** are one large card with the video plus three small ones,
+each its own colour (`sections/VideoTestimonial.tsx`, after Giga; the fourth tint is `--color-quote-lavender`);
+**How It Works** is the home page's section as it is. The header stays dark until the Problems section
 reaches it (`data-surface-flip`). `<PageChrome value="landing" />` hides the header nav and the footer link
 columns; the footer's "Ready to Grow Portco EBITDA?" panel is its final CTA.
 
 - [ ] **VSL video** — set `vsl.hero.video.src` (an .mp4 or an embed URL: YouTube `/embed/<id>`, Vimeo, Loom, Wistia); empty shows the placeholder frame
 - [ ] **Testimonial video** — set `vsl.testimonial.featured.video.src` the same way. Its poster is the client's
       `testimonial-video-poster.jpg`. **Who is in it?** The large card pairs it with George Zimny's (ProducifyX)
-      quote as a stand-in; once the speaker is known, set `vsl.testimonial.featured` to their name, mark and line
-      of business (their quote must be in the home page's testimonials)
-- [ ] **VSL copy written by us** — the Problems grid's lines, the What You Get "includes", and the status lines
-      and logs in its cards ("Tool retired · Duplicate CRM seats" etc.) are drawn from the brief, not supplied by
-      Isaac; the white figure cards reuse the illustrative dashboard figures above
-- [ ] **Testimonial lines of business** — "Recruiting", "Mortgage lending", "Food & beverage", "Home services"
-      are our labels for ProducifyX, Neighbors Bank, Happy Endings and Mike's Fences; confirm
+      quote as a stand-in; once the speaker is known, set `vsl.testimonial.featured` to their name and mark
+      (their quote must be in the home page's testimonials)
+- [ ] **VSL copy written by us** — the Problems grid's lines and the What You Get "includes" are drawn from the
+      brief, not supplied by Isaac; the What You Get cards show the illustrative dashboard figures above
 - [ ] **Booking link** — see below; until it is set, every Book a Call on the VSL goes to `/contact`, which has the full site nav
 - [x] **Reachable** — the footer's Navigation column links to it ("Watch the Video"). Without a link the preview's Pages menu and `npm run artifact` can't open it: both open a page by clicking its link. Move the link if you'd rather it sit elsewhere, but keep one
 - [ ] **Exits left on the page** — the header logo goes to `/` and the two case study cards open their case study pages. Keep, or make the cards non-links on the VSL
@@ -101,6 +98,7 @@ columns; the footer's "Ready to Grow Portco EBITDA?" panel is its final CTA.
 - [x] Portfolio Dashboards stacking-files section (illustrative figures)
 - [x] VSL landing page at `/vsl` (video placeholders, minimal header and footer)
 - [x] VSL rework: green pinned opening with the client marks, new Problems, What You Get, testimonial and How It Works sections
-- [x] VSL round 2: longer hero hold, redrawn problem illustrations, What You Get dark data cards, Giga-style testimonials, home How It Works, no eyebrow labels
+- [x] VSL round 2: longer hero hold, redrawn problem illustrations, Giga-style testimonials, home How It Works, no eyebrow labels
+- [x] VSL round 3: shorter hold (15svh), What You Get as pastel cards with the dashboard files, a colour per testimonial, proof line set right
 - [x] Feature cards' tints matched to their pictures again
 - [x] Pricing card overflow fixed; footer reworked (Harmon // Digital, legal links, /404 showcase removed)
