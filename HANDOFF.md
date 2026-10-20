@@ -79,8 +79,11 @@ green panel with this page's words (`ClosingCta`; the footer's own copy is hidde
       share image. The files keep the template's names, `public/uploads/logos/mahadeva-black.png` / `-white.png`,
       because the navigation-locked preloader imports them by name; the white cut is the wordmark knocked out to
       white. Originals in `client-brief/uploads/brand/`
-- [x] **3D mark under the home hero** — the "//" mark built in the same mint voxel style as the template's render
-      (`public/uploads/images/hero-harmon.png`, generated with Magnific)
+- [x] **3D mark under the home hero** — removed at the client's request (no 3D artwork anywhere)
+- [x] **No 3D icons** (client, Oct 20) — the feature cards, How It Works and the AI Employees tiles show small
+      product screens instead (`src/components/ui/ProductScreen.tsx`, every word in `src/content/screens.ts`); the
+      Who It's For panels on /partners have no picture. The figures on the screens are illustrative, like the
+      portfolio dashboards'; confirm or adjust them in `src/content/screens.ts`
 - [x] **Favicon / app icons** — `src/app/favicon.ico` (16/32/48), `icon.png` (128) and `apple-icon.png` (180, square for
       iOS to round) are the green "//" mark, redrawn from the supplied icon so every size is sharp
 - [ ] **Brand colours** — the site still uses the template's green palette (`src/styles/theme.css`)

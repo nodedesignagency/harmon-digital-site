@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import NumberFlow from "@number-flow/react";
 import { Container } from "@/components/layout/Container";
 import { TextReveal } from "@/components/motion/TextReveal";
-import { featureArtwork } from "@/components/ui/featureArtwork";
+import { ProductScreen } from "@/components/ui/ProductScreen";
 import { sectionTextRevealBeige } from "@/config/animation";
 import type { FeatureTone, howItWorksContent } from "@/content/home";
 import { cn } from "@/lib/cn";
@@ -14,7 +13,8 @@ import { cn } from "@/lib/cn";
  * How It Works — a pinned scroll, after the owner's reference.
  *
  * Two halves. On the left a stage holds still in the middle of the screen: the
- * step's number, large and faint, and a tile carrying the step's picture. On
+ * step's number, large and faint, and a tile carrying the step's product
+ * screen (see ProductScreen) — what that step produces, drawn. On
  * the right the steps' words scroll past normally. Whichever step holds the
  * middle of the screen is the active one — its words at full ink, the others
  * a step back — and when the next one takes over, the number rolls up to it
@@ -152,11 +152,10 @@ export function HowItWorks({ content }: HowItWorksProps) {
                       key={step.title}
                       className={cn("relative size-60 shrink-0 desktop:size-80", tiles[step.tone])}
                     >
-                      <Image
-                        src={featureArtwork[step.image]}
-                        alt=""
-                        sizes="(max-width: 1199px) 240px, 320px"
-                        className="absolute top-[15%] left-[15%] size-[70%] object-contain"
+                      <ProductScreen
+                        screen={step.screen}
+                        tone={step.tone}
+                        className="absolute top-1/2 left-1/2 w-[90%] -translate-x-1/2 -translate-y-1/2"
                       />
                     </div>
                   ))}
@@ -181,12 +180,14 @@ export function HowItWorks({ content }: HowItWorksProps) {
                   <span className="text-ink-dynamic font-ui text-stat-unit font-light leading-none opacity-25">
                     {stepNumber(i)}
                   </span>
-                  <div className={cn("relative size-44 shrink-0", tiles[step.tone])}>
-                    <Image
-                      src={featureArtwork[step.image]}
-                      alt=""
-                      sizes="176px"
-                      className="absolute top-[15%] left-[15%] size-[70%] object-contain"
+                  {/* 224 rather than the picture's 176: a screen is read, not
+                      just seen, and this is as wide as the row allows beside
+                      the number. */}
+                  <div className={cn("relative size-56 shrink-0", tiles[step.tone])}>
+                    <ProductScreen
+                      screen={step.screen}
+                      tone={step.tone}
+                      className="absolute top-1/2 left-1/2 w-[90%] -translate-x-1/2 -translate-y-1/2"
                     />
                   </div>
                 </div>

@@ -1,10 +1,7 @@
 import type { CSSProperties } from "react";
-import Image from "next/image";
 import { Container } from "@/components/layout/Container";
 import { TextReveal } from "@/components/motion/TextReveal";
-import { featureArtwork } from "@/components/ui/featureArtwork";
 import { sectionTextRevealDynamic } from "@/config/animation";
-import type { FeatureImage } from "@/content/home";
 import { cn } from "@/lib/cn";
 
 /**
@@ -12,25 +9,23 @@ import { cn } from "@/lib/cn";
  *
  * After Ploy's "Who's Ploy for?" on Mobbin, in the site's terms: the heading
  * and a line on the left, and on the right three panels, each the partner's
- * name set large with its one line under it, a small square in each corner as
- * a drafting mark, and one of the home page's feature pictures in the top
- * corner (`art`, the same 3D set the feature cards and How It Works carry).
+ * name set large with its one line under it at the foot, and a small square in
+ * each corner as a drafting mark. No picture: the client asked for no 3D
+ * artwork anywhere, and the tint and the name carry the panel.
  *
  * The panels stack as the reader scrolls, exactly as the home page's portfolio
  * files do (PortfolioDashboards): each sticks one step lower than the one
  * before and the next rides up over it, leaving a band of each earlier tint
  * above it, while the heading holds still beside them. Nothing but
- * `position: sticky` — no script, no scroll events. The step is the panel's own
- * top padding, so the band an earlier panel leaves is its fill and its two top
- * corner marks, with nothing cut through.
+ * `position: sticky` — no script, no scroll events. The band an earlier panel
+ * leaves is its fill and its two top corner marks.
  *
  * Follows the Careers-style gallery that rides over the hero, so it is an
  * ordinary white section that crossfades with the page: the words beside the
  * stack take the dynamic ink, the panels paint their own tints and keep fixed
  * ink.
  *
- * Tints come from content (`tone`), at the 50 depth text sits on, and are
- * matched to the picture, as the feature cards' are.
+ * Tints come from content (`tone`), at the 50 depth text sits on.
  *
  * A server component; only the heading moves.
  */
@@ -44,7 +39,6 @@ type PartnerAudienceProps = {
     cards: readonly {
       title: string;
       body: string;
-      art: FeatureImage;
       tone: AudienceTone;
     }[];
   };
@@ -62,8 +56,7 @@ const corners = ["top-2 left-2", "top-2 right-2", "bottom-2 left-2", "bottom-2 r
 
 /**
  * How much lower each panel sticks than the one before, px: the panel's top
- * padding (`pt-8`, at every size), so the band left showing ends where the
- * picture starts.
+ * padding (`pt-8`, at every size) — a band of the tint with its corner marks.
  */
 const STEP = 32;
 /**
@@ -74,11 +67,12 @@ const GAP = 24;
 
 /**
  * The last panel's height: as tall as the screen allows once the header, the
- * gaps and the bands piled above it are taken out — capped, so a tall screen
- * does not get a cavernous panel.
+ * gaps and the bands piled above it are taken out — capped at a little more
+ * than the name and its line need, so a tall screen does not get a cavernous
+ * panel.
  */
 function panelHeight(panels: number) {
-  return `min(300px, calc(100svh - var(--header-height) - ${GAP * 2 + STEP * (panels - 1)}px))`;
+  return `min(220px, calc(100svh - var(--header-height) - ${GAP * 2 + STEP * (panels - 1)}px))`;
 }
 
 /**
@@ -131,9 +125,8 @@ export function PartnerAudience({ content }: PartnerAudienceProps) {
               <li
                 key={card.title}
                 className={cn(
-                  // The picture at the top, the name and its line together at
-                  // the foot.
-                  "sticky flex flex-col justify-between gap-6 overflow-clip px-6 pt-8 pb-6 text-fg-on-light tablet:p-8",
+                  // The name and its line together at the foot.
+                  "sticky flex flex-col justify-end overflow-clip px-6 pt-8 pb-6 text-fg-on-light tablet:p-8",
                   tints[card.tone],
                 )}
                 style={{
@@ -149,13 +142,6 @@ export function PartnerAudience({ content }: PartnerAudienceProps) {
                   />
                 ))}
 
-                {/* Decorative: the name under it says who this is. */}
-                <Image
-                  src={featureArtwork[card.art]}
-                  alt=""
-                  sizes="64px"
-                  className="size-16 shrink-0 object-contain"
-                />
                 <div>
                   <h3 className="font-display text-display-lg leading-(--leading-display) tracking-(--tracking-display) font-normal">
                     {card.title}

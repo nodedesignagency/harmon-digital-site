@@ -7,12 +7,11 @@ import { motion, useReducedMotion, useScroll, useTransform } from "motion/react"
  * Scroll-linked drift, the equivalent of Framer's Scroll Speed effect.
  *
  * At 100% an element travels with the page. Above that it outruns it, so it
- * climbs the content around it as you scroll — which is the effect here: the 3D
- * mark rises past the statement above it rather than sitting still beneath it.
+ * climbs the content around it as you scroll rather than sitting still.
  *
  * `drift` is the total climb over a full traverse, as a percentage of the
  * element's own height, so nothing has to be measured and the server and client
- * agree on the markup. See `markParallax` for how it derives from a speed.
+ * agree on the markup.
  *
  * Runs at every breakpoint — the element is sized down on smaller screens
  * rather than pinned, which is what keeps the drift from crowding the content

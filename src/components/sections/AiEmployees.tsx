@@ -1,11 +1,10 @@
-import Image from "next/image";
 import { Container } from "@/components/layout/Container";
 import { StaggerGroup, StaggerItem } from "@/components/motion/StaggerGroup";
 import { TextReveal } from "@/components/motion/TextReveal";
 import { Button } from "@/components/ui/Button";
-import { featureArtwork } from "@/components/ui/featureArtwork";
+import { ProductScreen } from "@/components/ui/ProductScreen";
 import { sectionTextRevealDynamic } from "@/config/animation";
-import type { aiEmployeesContent } from "@/content/home";
+import type { FeatureTone, aiEmployeesContent } from "@/content/home";
 import { cn } from "@/lib/cn";
 
 /**
@@ -23,12 +22,13 @@ import { cn } from "@/lib/cn";
  * columns, the fifth tile and the strip running the full width; a phone
  * stacks them.
  *
- * The two rows carry their pictures differently, as the owner's reference
- * does. On top, the 3D picture sits loose in the top-right corner — no tint
- * behind it, set large and pushed past the tile's edges so the tile crops it,
- * which is what gives it depth. Below, the picture stands whole in the
- * top-left corner, above the words. The words are at the foot of every tile.
- * The strip is a heading and a button, on one line from tablet up.
+ * Each role shows what it does as a small product screen (see ProductScreen)
+ * on a stage in the role's tint, inset at the top of the tile the way Retool's
+ * old feature cards set theirs, filling whatever the words below it leave.
+ * Stacked in every tile rather than set beside the words on the wide top row:
+ * beside a screen there the words had a column too narrow for "Follow-Up
+ * Agent". The words are at the foot of every tile. The strip is a heading and
+ * a button, on one line from tablet up.
  *
  * The tiles are always light, so their ink is fixed — but which light follows
  * the page (`--color-tile-dynamic`): white while the page is still the beige of
@@ -54,20 +54,15 @@ const placements = [
 /** How many of the roles take the top row. */
 const TOP = 2;
 
-/**
- * The top row's picture: its size, and how far it is pushed past the corner —
- * about a fifth of its size, enough to clear the transparent margin the
- * artwork carries and crop into the drawing itself.
- */
-const cornerPicture =
-  "absolute size-52 -top-11 -right-11 tablet:size-64 tablet:-top-14 tablet:-right-14 desktop:size-72 desktop:-top-14 desktop:-right-14";
-
-/**
- * The lower row's: whole, in the top-left corner. Nudged up and left by about
- * the artwork's transparent margin, so the drawing lines up with the words
- * rather than sitting inset from them.
- */
-const standingPicture = "relative -mt-2 -ml-2 size-32 tablet:size-36 desktop:size-40";
+/** The stage behind each screen: the tech stack's tints, as How It Works'. */
+const stages: Record<FeatureTone, string> = {
+  blue: "bg-tool-blue",
+  magenta: "bg-tool-magenta",
+  green: "bg-tool-green",
+  rose: "bg-tool-rose",
+  lavender: "bg-tool-lavender",
+  peach: "bg-tool-peach",
+};
 
 /**
  * The light tile every role and the strip share. Its fill fades on the body's
@@ -82,22 +77,16 @@ function RoleTile({ role, index }: { role: Role; index: number }) {
   const top = index < TOP;
 
   return (
-    <article
-      className={cn(tile, "flex min-h-[340px] w-full flex-col tablet:min-h-[360px]")}
-    >
-      <Image
-        src={featureArtwork[role.image]}
-        alt=""
+    <article className={cn(tile, "flex w-full flex-col gap-8")}>
+      {/* Decorative: the words under it say what the role does. */}
+      <div
         aria-hidden="true"
-        sizes={top ? "288px" : "160px"}
-        className={cn(
-          "pointer-events-none object-contain",
-          top ? cornerPicture : standingPicture,
-        )}
-      />
+        className={cn("flex flex-1 items-center justify-center px-5 py-6", stages[role.tone])}
+      >
+        <ProductScreen screen={role.screen} tone={role.tone} className="max-w-[300px]" />
+      </div>
 
-      {/* `relative`: above the picture, should a long title reach under it. */}
-      <div className={cn("relative mt-auto pt-10", top && "tablet:max-w-[44ch]")}>
+      <div className={cn(top && "tablet:max-w-[44ch]")}>
         <h3 className="text-heading-lg leading-(--leading-heading) font-normal">
           {role.title}
         </h3>

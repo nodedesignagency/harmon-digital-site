@@ -58,9 +58,8 @@ const partners = {
   },
 
   /**
-   * Three panels that stack as the page scrolls, beside the heading. `art` is
-   * the home page feature picture in the corner, `tone` the panel's tint,
-   * matched to the picture.
+   * Three panels that stack as the page scrolls, beside the heading. `tone` is
+   * the panel's tint.
    */
   audience: {
     headingLines: ["Who It's For"],
@@ -70,19 +69,16 @@ const partners = {
       {
         title: "Accountants",
         body: "You see the books, the software spend and the manual work first.",
-        art: "data",
         tone: "lavender",
       },
       {
         title: "Lawyers",
         body: "You're in the room for every acquisition and new portco.",
-        art: "integrations",
         tone: "rose",
       },
       {
         title: "Bankers",
         body: "You know which companies are growing and which are stuck.",
-        art: "revenue",
         tone: "peach",
       },
     ],

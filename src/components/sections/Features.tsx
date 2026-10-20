@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import { Container } from "@/components/layout/Container";
 import { TextReveal } from "@/components/motion/TextReveal";
 import { FeatureCard } from "@/components/ui/FeatureCard";
-import { featureArtwork } from "@/components/ui/featureArtwork";
+import { ProductScreen } from "@/components/ui/ProductScreen";
 import { featureMarquee, sectionTextRevealDynamic } from "@/config/animation";
 import type { featuresContent } from "@/content/home";
 
@@ -42,7 +42,7 @@ export function Features({ content }: FeaturesProps) {
         title={card.title}
         body={card.body}
         tone={card.tone}
-        image={featureArtwork[card.image]}
+        art={<ProductScreen screen={card.screen} tone={card.tone} />}
       />
     </li>
   ));

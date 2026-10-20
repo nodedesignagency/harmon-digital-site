@@ -387,13 +387,6 @@ export const missionCards = {
   scramble: { tick: 45 },
 } as const;
 
-export const markParallax = {
-  /** Per the Framer panel. The climb below is derived from it. */
-  speed: 1.3,
-  /** Total climb over a full traverse, as a share of the mark's height. */
-  drift: "128%",
-} as const;
-
 /**
  * The careers page's photo fan, assembling itself.
  *

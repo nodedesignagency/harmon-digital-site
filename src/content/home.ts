@@ -10,6 +10,7 @@
 
 import { ctaHref } from "@/config/site.config";
 import { clientLogos } from "./clients";
+import type { ScreenName } from "./screens";
 type CtaLink = {
   label: string;
   href: string;
@@ -96,57 +97,50 @@ export const featuresContent = {
    * Six cards, each with its own pastel. Order is the reading order and the
    * order they pass through the marquee.
    *
-   * `image` names the artwork rather than importing it — content stays plain
-   * data with no bundler imports, and a card whose art has not landed yet is
-   * simply a key the artwork map does not answer, which the card renders as a
-   * placeholder instead of failing.
-   *
-   * `tone` follows `image`, not the card's position: each picture was drawn
-   * for one tint (coin/peach, database/magenta, arrows/lavender, bolt/green,
-   * robot/blue, puzzle/rose). Move a picture and its tone moves with it.
+   * `screen` names the small product screen drawn in the card (its words are
+   * in `content/screens.ts`), and `tone` is the card's tint, which the screen
+   * takes its accents from.
    */
   cards: [
     {
       title: "Cut Software Spend",
       body: "Replace the stack of SaaS tools your teams work around with one system you own.",
-      image: "revenue",
+      screen: "spend",
       tone: "peach",
     },
     {
       title: "Lower Fulfillment Costs",
       body: "Automate the data entry and back-office work your people do by hand every day.",
-      image: "data",
+      screen: "orders",
       tone: "magenta",
     },
     {
       title: "Automated Follow-Up",
       body: "Every lead and missed call gets an instant, consistent follow-up, around the clock.",
-      image: "improvement",
+      screen: "followUp",
       tone: "lavender",
     },
     {
       title: "Inbound That Converts",
       body: "AI responders answer, qualify and book inbound leads the moment they arrive.",
-      image: "workflow",
+      screen: "chat",
       tone: "green",
     },
     {
       title: "Outbound That Scales",
       body: "AI SDRs prospect and follow up, so pipeline grows without adding headcount.",
-      image: "agents",
+      screen: "outbound",
       tone: "blue",
     },
     {
       title: "Custom Software Moats",
       body: "Own your data and workflows, and ship new features without waiting on vendors.",
-      image: "integrations",
+      screen: "app",
       tone: "rose",
     },
   ],
 } as const;
 
-/** Keys the feature cards use to pick their artwork. */
-export type FeatureImage = (typeof featuresContent.cards)[number]["image"];
 
 /** Which pastel a card is filled with. */
 export type FeatureTone = (typeof featuresContent.cards)[number]["tone"];
@@ -160,9 +154,8 @@ export type FeatureTone = (typeof featuresContent.cards)[number]["tone"];
  * improving." The sentences under them borrow from the client's current
  * site's "How it works" where it says the same thing.
  *
- * `image` names one of the six 3D pictures the feature strip also uses, and
- * `tone` is the tint that picture was drawn for — the same pairing as the
- * feature cards, so the two sections read as one set.
+ * `screen` names the small product screen on the step's tile (its words are
+ * in `content/screens.ts`), and `tone` is the tile's tint.
  */
 export const howItWorksContent = {
   headingLines: ["How It Works"],
@@ -172,31 +165,31 @@ export const howItWorksContent = {
     {
       title: "Audit",
       body: "A full audit of how the business runs — visual process maps and SOPs for every workflow, so you see exactly where time and money go.",
-      image: "data",
+      screen: "audit",
       tone: "magenta",
     },
     {
       title: "Identify",
       body: "We pinpoint the bottlenecks and the biggest opportunities: the software and fulfillment costs to cut, and the revenue being left on the table.",
-      image: "integrations",
+      screen: "identify",
       tone: "rose",
     },
     {
       title: "Build",
       body: "Custom software, AI employees and automations, scoped to the business and built in sprints. Working software along the way, no surprises.",
-      image: "workflow",
+      screen: "build",
       tone: "green",
     },
     {
       title: "Deploy & Train",
       body: "We launch it, train your people on the systems and on Claude, ChatGPT and Unstack, and make sure it works in the real world — not just in a demo.",
-      image: "agents",
+      screen: "deploy",
       tone: "blue",
     },
     {
       title: "Keep Improving",
       body: "As the business changes, the systems should too. We stay on, track the gains, and keep making it better.",
-      image: "improvement",
+      screen: "improve",
       tone: "lavender",
     },
   ],
@@ -206,7 +199,7 @@ export const howItWorksContent = {
   steps: readonly {
     title: string;
     body: string;
-    image: FeatureImage;
+    screen: ScreenName;
     tone: FeatureTone;
   }[];
 };
@@ -221,8 +214,8 @@ export const howItWorksContent = {
  * order — the component places each role by its position, so moving a role
  * here moves it in the grid.
  *
- * `image` names one of the 3D pictures. It is set loose in the tile's corner
- * rather than on a tint, so no `tone` is needed.
+ * `screen` names the small product screen at the top of the tile (its words
+ * are in `content/screens.ts`), and `tone` the tint it stands on.
  */
 export const aiEmployeesContent = {
   headingLines: ["AI Employees That", "Never Clock Out"],
@@ -232,27 +225,32 @@ export const aiEmployeesContent = {
     {
       title: "Inbound Responder",
       body: "Answers every call, form and chat in seconds, qualifies the lead and books the meeting — nights and weekends included.",
-      image: "workflow",
+      screen: "calls",
+      tone: "green",
     },
     {
       title: "Follow-Up Agent",
       body: "Chases every quote, missed call and quiet thread until it closes. No lead goes cold because someone forgot.",
-      image: "improvement",
+      screen: "sequence",
+      tone: "lavender",
     },
     {
       title: "Outbound SDR",
       body: "Researches accounts, writes personal outreach and books meetings, so pipeline grows without adding headcount.",
-      image: "revenue",
+      screen: "email",
+      tone: "blue",
     },
     {
       title: "Ops Coordinator",
       body: "Keeps jobs, schedules and hand-offs moving between teams, and flags what’s stuck before it costs you.",
-      image: "integrations",
+      screen: "dispatch",
+      tone: "rose",
     },
     {
       title: "Back-Office Assistant",
       body: "Takes over the data entry, invoicing and reconciliation your people do by hand every day.",
-      image: "data",
+      screen: "reconcile",
+      tone: "magenta",
     },
   ],
   /**
@@ -269,7 +267,8 @@ export const aiEmployeesContent = {
   roles: readonly {
     title: string;
     body: string;
-    image: FeatureImage;
+    screen: ScreenName;
+    tone: FeatureTone;
   }[];
   custom: {
     title: string;

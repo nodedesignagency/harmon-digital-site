@@ -1,13 +1,13 @@
-import Image, { type StaticImageData } from "next/image";
+import type { ReactNode } from "react";
 import type { FeatureTone } from "@/content/home";
 import { cn } from "@/lib/cn";
 
 /**
  * One card from the feature strip.
  *
- * Every card is the same object — a title across the top, artwork filling the
- * middle, a line of copy at the foot — and only the words, the picture and the
- * tint change. Those are props; nothing else about a card is configurable,
+ * Every card is the same object — a title across the top, a small product
+ * screen in the middle (see ProductScreen), a line of copy at the foot — and
+ * only the words, the screen and the tint change. Those are props; nothing else about a card is configurable,
  * which is what keeps six of them looking like one set.
  *
  * Geometry is fixed at the original's 265×400. The card is a fixed-size tile in
@@ -29,15 +29,15 @@ type FeatureCardProps = {
   body: string;
   tone: FeatureTone;
   /**
-   * Omitted while a card's artwork is still to come. The tile keeps its size
-   * and reserves the space rather than collapsing, so the row's rhythm holds
-   * and a missing picture is obvious instead of invisible.
+   * What stands in the middle: the card's product screen. Omitted, the tile
+   * keeps its size and reserves the space rather than collapsing, so the row's
+   * rhythm holds and a missing picture is obvious instead of invisible.
    */
-  image?: StaticImageData;
+  art?: ReactNode;
   className?: string;
 };
 
-export function FeatureCard({ title, body, tone, image, className }: FeatureCardProps) {
+export function FeatureCard({ title, body, tone, art, className }: FeatureCardProps) {
   return (
     <article
       className={cn(
@@ -50,14 +50,12 @@ export function FeatureCard({ title, body, tone, image, className }: FeatureCard
         {title}
       </h3>
 
-      {image ? (
-        <Image
-          src={image}
-          alt=""
-          aria-hidden
-          sizes="260px"
-          className="absolute top-[calc(50%-28px)] left-1/2 size-[260px] -translate-x-1/2 -translate-y-1/2 object-cover"
-        />
+      {/* The 260 square the artwork always had, the screen centred in it at
+          the card's full width, so its construction lines run to the edges. */}
+      {art ? (
+        <div className="absolute top-[calc(50%-28px)] left-1/2 flex size-[260px] -translate-x-1/2 -translate-y-1/2 items-center justify-center">
+          <div className="w-[265px] shrink-0">{art}</div>
+        </div>
       ) : (
         <div
           aria-hidden
