@@ -342,6 +342,13 @@
    * two headings in two colours traded on scroll, one heading whose colour
    * travels with the surface underneath it. */
   --color-fg-dynamic: var(--color-fg);
+
+  /* A light fill that stands off whatever --color-bg-dynamic currently is —
+   * white over beige, beige over white or green — written by the same
+   * component in the same breath. For tiles in the changing-background zone,
+   * which would otherwise vanish into a surface of their own colour while the
+   * page is still crossfading towards their section's. */
+  --color-tile-dynamic: var(--color-bg-light);
 }
 
 /* ---------------------------------------------------------------------------
@@ -670,6 +677,7 @@
   --color-bg: var(--color-bg);
   --color-bg-raised: var(--color-bg-raised);
   --color-bg-dynamic: var(--color-bg-dynamic);
+  --color-tile-dynamic: var(--color-tile-dynamic);
   --color-bg-light: var(--color-bg-light);
   --color-bg-white: var(--color-bg-white);
   --color-card-blue: var(--color-card-blue);

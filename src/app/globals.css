@@ -1109,8 +1109,14 @@ body:has([data-page-surface="hero"])
  * any of it changed. `forwards` and no backwards fill is what makes the pair
  * compose — the second contributes nothing until its delay elapses, and then
  * wins on opacity by being later in the list, while the transform stays where
- * the first one left it. */
+ * the first one left it.
+ *
+ * Twice the type step the span carries: the logo is sized in `em` against it,
+ * and at the step's own size the Harmon Digital wordmark read small on the
+ * sheet. Set here rather than on the span because Preloader.tsx is
+ * navigation-locked; this rule is unlayered, so it wins over the utility. */
 .mh-preload-word {
+  font-size: calc(var(--text-display-md) * 2);
   animation:
     mh-preload-word-in var(--mh-preload-word-in) var(--ease-preload-word)
       forwards,

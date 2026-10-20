@@ -55,12 +55,16 @@ columns; the footer's "Ready to Grow Portco EBITDA?" panel is its final CTA.
 
 **Built** — `src/app/(site)/partners/page.tsx`. One goal: send a referral. Every word is in the `partners`
 object at the top of that file. Built from copies of the Careers sections (the Careers components are
-untouched): `PartnersHero`, `PartnerAudience` (Accountants / Lawyers / Bankers, in the gallery's place),
-`PartnerBenefits` (Why Join's layout), `ReferralTypes` (the openings list, no filters or counter),
+untouched): `PartnersHero`, `PartnersGallery` (the Careers photo fan, riding over the pinned hero),
+`PartnerAudience` (Accountants / Lawyers / Bankers, panels that stack on scroll like the home page's portfolio
+files), `PartnerBenefits` (Why Join's layout), `ReferralTypes` (the openings list, no filters or counter),
 `ReferralSteps` (the hiring process), then the new `ReferralFormSection` / `ReferralForm`, and the footer's
 green panel with this page's words (`ClosingCta`; the footer's own copy is hidden on this page via
 `data-page-cta`). "Partners" is in the header nav (in Careers' place) and the footer's Company column.
 
+- [ ] **Photo fan** — `partners.gallery`: placeholder heading and line ("Partner With Harmon Digital"), and the
+      seven photos are the template's stock careers shots (`careers-1…7.avif`, shared with /careers). Needs real
+      Harmon photos and copy, or drop the section
 - [ ] **Payout details** — `partners.benefits` → "Paid Well for Every Referral" `detail` (shows "[Payout details placeholder]")
 - [ ] **Gift details** — `partners.benefits` → "Gifts for Every Intro" `detail` (shows "[Gift details placeholder]")
 - [ ] **Referral form endpoint** — set `NEXT_PUBLIC_REFERRAL_ENDPOINT` (see SETUP.md; TODO in `src/lib/partners.ts`). Unset, the form shows "Sent" and discards the referral

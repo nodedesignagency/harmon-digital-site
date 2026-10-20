@@ -3,6 +3,7 @@ import { Container } from "@/components/layout/Container";
 import { PageSurface } from "@/components/layout/PageSurface";
 import { PartnerAudience } from "@/components/sections/PartnerAudience";
 import { PartnerBenefits } from "@/components/sections/PartnerBenefits";
+import { PartnersGallery } from "@/components/sections/PartnersGallery";
 import { PartnersHero } from "@/components/sections/PartnersHero";
 import { ReferralFormSection } from "@/components/sections/ReferralFormSection";
 import { ReferralSteps } from "@/components/sections/ReferralSteps";
@@ -37,8 +38,29 @@ const partners = {
   },
 
   /**
-   * Three panels, stacked beside the heading. `art` is the home page feature
-   * picture in the corner, `tone` the panel's tint, matched to the picture.
+   * The Careers page's photo fan, under this page's words. [Placeholder copy,
+   * and the photos are the template's own: see HANDOFF.md.]
+   */
+  gallery: {
+    headingLines: ["Partner With Harmon Digital"],
+    subheading:
+      "We work alongside the advisors PE-backed companies already trust, and make every introduction one you are glad you made.",
+    imagePending: "Photo to come",
+    photos: [
+      { photo: "strategist", alt: "A strategist presenting at the window" },
+      { photo: "notebook", alt: "Hands over a workflow sketched in a notebook" },
+      { photo: "pool", alt: "The team around the pool table" },
+      { photo: "lounge", alt: "The lounge, mid-conversation" },
+      { photo: "whiteboard", alt: "An automation walkthrough at the whiteboard" },
+      { photo: "meeting", alt: "A walkthrough on the meeting room screens" },
+      { photo: "team", alt: "The team together" },
+    ],
+  },
+
+  /**
+   * Three panels that stack as the page scrolls, beside the heading. `art` is
+   * the home page feature picture in the corner, `tone` the panel's tint,
+   * matched to the picture.
    */
   audience: {
     headingLines: ["Who It's For"],
@@ -213,11 +235,12 @@ export const metadata = buildMetadata({
  * /partners — the referral partner page. One goal: send a referral.
  *
  * Built from copies of the Careers page's sections, in its order and on its
- * surfaces: the dark hero pinned while the white "who it's for" rides up over
- * it, the white reasons, then the beige list and process. The form follows on
- * white, and the page closes on its own green panel — the footer's, with this
- * page's words, which is why the footer's copy is taken away here (see
- * ClosingCta and `data-page-cta`).
+ * surfaces: the dark hero pinned while the white photo fan rides up over it,
+ * then "who it's for" with its panels stacking as the page scrolls, the white
+ * reasons, then the beige list and process. The form follows on white, and the
+ * page closes on its own green panel — the footer's, with this page's words,
+ * which is why the footer's copy is taken away here (see ClosingCta and
+ * `data-page-cta`).
  */
 export default function PartnersPage() {
   return (
@@ -227,8 +250,9 @@ export default function PartnersPage() {
 
       <div data-scroll-stack>
         <PartnersHero content={partners.hero} />
-        <PartnerAudience content={partners.audience} />
+        <PartnersGallery content={partners.gallery} />
       </div>
+      <PartnerAudience content={partners.audience} />
       <PartnerBenefits content={partners.benefits} />
       <ReferralTypes content={partners.referralTypes} />
       <ReferralSteps content={partners.process} />

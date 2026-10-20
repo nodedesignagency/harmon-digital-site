@@ -74,9 +74,9 @@ export function CtaCard({ href, title, body, fill, className }: CtaCardProps) {
           of padding is the card's 80, and it is the mark that sets that rather
           than the words beside it.
 
-          Harmon Digital's icon from their current site, in the slot the
-          template gave a portrait — a person's face here should be someone the
-          reader would actually talk to. */}
+          Harmon Digital's green "//" mark, the favicon's drawing, in the slot
+          the template gave a portrait — a person's face here should be someone
+          the reader would actually talk to. */}
       <span
         aria-hidden="true"
         className="relative block size-16 shrink-0 overflow-clip bg-placeholder"
