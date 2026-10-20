@@ -1,4 +1,23 @@
 import type { ReactNode } from "react";
+import {
+  AppWindow,
+  CreditCard,
+  Mail,
+  MessageSquare,
+  Package,
+  Phone,
+  Receipt,
+  Repeat,
+  Rocket,
+  Route,
+  Search,
+  Send,
+  TrendingUp,
+  Truck,
+  UserRound,
+  Wrench,
+  type LucideIcon,
+} from "lucide-react";
 import type { FeatureTone } from "@/content/home";
 import { screens, type ScreenName, type ScreenStatus } from "@/content/screens";
 import { cn } from "@/lib/cn";
@@ -12,9 +31,14 @@ import { cn } from "@/lib/cn";
  * simplified until it reads at a glance. Built in this site's own terms, the
  * portfolio dashboard files' rather than an app's: one white sheet, square
  * corners, hairlines and no shadow; a label in Geist small capitals beside a
- * square in the screen's tint; statuses as a tinted square and a word, never a
- * pill; figures in Geist; grey bars where a real screen would have text no one
- * needs to read. Dashed construction lines run off the sheet's edges and a
+ * line icon for what the screen is; statuses as a tinted square and a word,
+ * never a pill; figures in Geist; grey bars where a real screen would have
+ * text no one needs to read.
+ *
+ * The header carries an icon, in the ink, rather than a square in the tint.
+ * It used to be a square, and a square in the same tint as the statuses and
+ * bars below it read as one more of them — the title looked like a status.
+ * So squares mean one thing on these screens: a status. Dashed construction lines run off the sheet's edges and a
  * small square marks each corner — the drafting marks the Partners panels and
  * the VSL drawings carry — so it reads as a drawing of software, not a
  * screenshot of it.
@@ -177,10 +201,20 @@ function Aside({ children }: { children: string }) {
 
 /**
  * The sheet: construction lines off its four edges, the white sheet, its
- * header — the tint's square, the label, whatever stands at the right — and a
- * square on each corner.
+ * header — the icon, the label, whatever stands at the right — and a square
+ * on each corner.
  */
-function Sheet({ paint, label, right, children }: { paint: Paint; label: string; right?: ReactNode; children: ReactNode }) {
+function Sheet({
+  icon: Icon,
+  label,
+  right,
+  children,
+}: {
+  icon: LucideIcon;
+  label: string;
+  right?: ReactNode;
+  children: ReactNode;
+}) {
   const corners = [
     [0, 0],
     [W, 0],
@@ -207,8 +241,23 @@ function Sheet({ paint, label, right, children }: { paint: Paint; label: string;
         vectorEffect="non-scaling-stroke"
       />
 
-      <rect x={PAD} y={9} width={8} height={8} fill={paint.shape} stroke={INK} strokeOpacity={0.3} vectorEffect="non-scaling-stroke" />
-      <Label x={PAD + 13} y={15.5}>
+      {/* The icon set at the label's height, centred on the header band.
+
+          Its height again as a style, and that is not redundant: globals.css
+          gives every `svg` `height: auto` so media never overflows its column,
+          and on an svg nested in this one a CSS height beats the attribute —
+          the icon's box stretched to the whole sheet and the icon sat in the
+          middle of it. In SVG content a CSS pixel is the sheet's own unit. */}
+      <Icon
+        x={PAD - 0.5}
+        y={7}
+        width={12}
+        height={12}
+        style={{ height: 12, maxWidth: "none" }}
+        color={INK}
+        strokeWidth={1.75}
+      />
+      <Label x={PAD + 16} y={15.5}>
         {label}
       </Label>
       {right}
@@ -236,7 +285,7 @@ const spend: Drawing = (paint) => {
   const saved = s.retired.reduce((sum, n) => sum + n, 0) - s.own.amount;
 
   return (
-    <Sheet paint={paint} label={s.label} right={<Aside>{s.aside}</Aside>}>
+    <Sheet icon={CreditCard} label={s.label} right={<Aside>{s.aside}</Aside>}>
       {s.retired.map((amount, i) => {
         const mid = HEAD + 16 + i * 20;
         const text = money.format(amount);
@@ -288,7 +337,7 @@ const orders: Drawing = (paint) => {
   const cell = (W - PAD * 3) / 2;
 
   return (
-    <Sheet paint={paint} label={s.label} right={<HeadStatus text={s.status} fill="tone" paint={paint} />}>
+    <Sheet icon={Package} label={s.label} right={<HeadStatus text={s.status} fill="tone" paint={paint} />}>
       {s.kpis.map((kpi, i) => {
         const x = PAD + i * (cell + PAD);
         return (
@@ -327,7 +376,7 @@ const followUp: Drawing = (paint) => {
   const last = s.events.length - 1;
 
   return (
-    <Sheet paint={paint} label={s.label} right={<HeadStatus text={s.status} fill="ink" paint={paint} />}>
+    <Sheet icon={UserRound} label={s.label} right={<HeadStatus text={s.status} fill="ink" paint={paint} />}>
       <line x1={PAD + 3.5} x2={PAD + 3.5} y1={42} y2={122} stroke={INK} strokeOpacity={0.18} vectorEffect="non-scaling-stroke" />
       {s.events.map((event, i) => {
         const y = 42 + i * 20;
@@ -360,7 +409,7 @@ const chat: Drawing = (paint) => {
   const offerW = 116;
 
   return (
-    <Sheet paint={paint} label={s.label} right={<Aside>{s.aside}</Aside>}>
+    <Sheet icon={MessageSquare} label={s.label} right={<Aside>{s.aside}</Aside>}>
       <rect x={PAD} y={36} width={132} height={24} fill={WHITE} stroke={INK} strokeOpacity={0.14} vectorEffect="non-scaling-stroke" />
       <Bar x={PAD + 8} y={42.5} w={104} />
       <Bar x={PAD + 8} y={50.5} w={70} />
@@ -401,7 +450,7 @@ const outbound: Drawing = (paint) => {
   const base = 156;
 
   return (
-    <Sheet paint={paint} label={s.label} right={<HeadStatus text={s.status} fill="tone" paint={paint} />}>
+    <Sheet icon={Send} label={s.label} right={<HeadStatus text={s.status} fill="tone" paint={paint} />}>
       {s.kpis.map((kpi, i) => {
         const x = PAD + i * col + (i ? 10 : 0);
         return (
@@ -445,7 +494,7 @@ const app: Drawing = (paint) => {
   const x0 = side + PAD;
 
   return (
-    <Sheet paint={paint} label={s.label} right={<Aside>{s.aside}</Aside>}>
+    <Sheet icon={AppWindow} label={s.label} right={<Aside>{s.aside}</Aside>}>
       <Rule x1={side} x2={side} y1={HEAD} y2={H} />
       <rect x={0} y={HEAD + 6} width={side} height={17} fill={paint.field} />
       <rect x={0} y={HEAD + 6} width={2} height={17} fill={INK} />
@@ -506,7 +555,7 @@ const audit: Drawing = (paint) => {
   ];
 
   return (
-    <Sheet paint={paint} label={s.label} right={<Aside>{s.aside}</Aside>}>
+    <Sheet icon={Route} label={s.label} right={<Aside>{s.aside}</Aside>}>
       <g fill="none" stroke={INK} strokeOpacity={0.4} strokeDasharray="2 2">
         {links.map((d) => (
           <path key={d} d={d} vectorEffect="non-scaling-stroke" />
@@ -548,7 +597,7 @@ const identify: Drawing = (paint) => {
   const span = W - PAD * 2;
 
   return (
-    <Sheet paint={paint} label={s.label} right={<Aside>{s.aside}</Aside>}>
+    <Sheet icon={Search} label={s.label} right={<Aside>{s.aside}</Aside>}>
       {s.rows.map((row, i) => {
         const y = 34 + i * 24;
         return (
@@ -583,7 +632,7 @@ const build: Drawing = (paint) => {
   const done = span * s.progress.value;
 
   return (
-    <Sheet paint={paint} label={s.label} right={<HeadStatus text={s.status} fill="tone" paint={paint} />}>
+    <Sheet icon={Wrench} label={s.label} right={<HeadStatus text={s.status} fill="tone" paint={paint} />}>
       {s.sprints.map((sprint, c) => {
         const x = PAD + c * (cw + 6);
         return (
@@ -625,7 +674,7 @@ const deploy: Drawing = (paint) => {
   const last = s.rows.length - 1;
 
   return (
-    <Sheet paint={paint} label={s.label} right={<HeadStatus text={s.status} fill="ink" paint={paint} />}>
+    <Sheet icon={Rocket} label={s.label} right={<HeadStatus text={s.status} fill="ink" paint={paint} />}>
       {s.rows.map((row, i) => {
         const mid = HEAD + 14 + i * 27;
         return (
@@ -675,7 +724,7 @@ const improve: Drawing = (paint) => {
   const [endX, endY] = pts[pts.length - 1];
 
   return (
-    <Sheet paint={paint} label={s.label} right={<HeadStatus text={s.status} fill="tone" paint={paint} />}>
+    <Sheet icon={TrendingUp} label={s.label} right={<HeadStatus text={s.status} fill="tone" paint={paint} />}>
       <Text x={PAD} y={62} size={FIGURE + 8} weight={300}>
         {s.value}
       </Text>
@@ -708,7 +757,7 @@ const calls: Drawing = (paint) => {
   const last = s.rows.length - 1;
 
   return (
-    <Sheet paint={paint} label={s.label} right={<HeadStatus text={s.status} fill="tone" paint={paint} />}>
+    <Sheet icon={Phone} label={s.label} right={<HeadStatus text={s.status} fill="tone" paint={paint} />}>
       {s.rows.map((row, i) => {
         const mid = HEAD + 18 + i * 32;
         return (
@@ -738,7 +787,7 @@ const sequence: Drawing = (paint) => {
   const last = s.rows.length - 1;
 
   return (
-    <Sheet paint={paint} label={s.label} right={<Aside>{s.aside}</Aside>}>
+    <Sheet icon={Repeat} label={s.label} right={<Aside>{s.aside}</Aside>}>
       {s.rows.map((row, i) => {
         const mid = HEAD + 18 + i * 32;
         return (
@@ -770,7 +819,7 @@ const email: Drawing = (paint) => {
   const sendW = 54;
 
   return (
-    <Sheet paint={paint} label={s.label} right={<HeadStatus text={s.status} fill="tone" paint={paint} />}>
+    <Sheet icon={Mail} label={s.label} right={<HeadStatus text={s.status} fill="tone" paint={paint} />}>
       <Label x={PAD} y={44} muted>
         {s.to}
       </Label>
@@ -805,7 +854,7 @@ const dispatch: Drawing = (paint) => {
   const hour = (RIGHT - x0) / 8;
 
   return (
-    <Sheet paint={paint} label={s.label} right={<HeadStatus text={s.status} fill="ink" paint={paint} />}>
+    <Sheet icon={Truck} label={s.label} right={<HeadStatus text={s.status} fill="ink" paint={paint} />}>
       {s.hours.map((h, i) => {
         const x = x0 + i * 2 * hour;
         return (
@@ -868,7 +917,7 @@ const reconcile: Drawing = (paint) => {
   const span = W - PAD * 2;
 
   return (
-    <Sheet paint={paint} label={s.label} right={<HeadStatus text={s.status} fill="tone" paint={paint} />}>
+    <Sheet icon={Receipt} label={s.label} right={<HeadStatus text={s.status} fill="tone" paint={paint} />}>
       {s.rows.map((row, i) => {
         const mid = HEAD + 14 + i * 24;
         return (
