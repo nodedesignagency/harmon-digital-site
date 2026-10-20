@@ -51,26 +51,11 @@ import { usePathname } from "next/navigation";
  * The three variants the original's component switches between, under the
  * names it uses for them. "Green" is the dark surface — the whole palette is
  * built on that green, so it is the page's colour rather than a section's.
- *
- * `tile` is the light fill that stands off that surface (see
- * `--color-tile-dynamic`): white on beige, beige on the other two.
  */
-const variants: Record<string, { bg: string; ink: string; tile: string }> = {
-  white: {
-    bg: "var(--color-bg-white)",
-    ink: "var(--color-fg-on-light)",
-    tile: "var(--color-bg-light)",
-  },
-  green: {
-    bg: "var(--color-bg)",
-    ink: "var(--color-fg)",
-    tile: "var(--color-bg-light)",
-  },
-  beige: {
-    bg: "var(--color-bg-light)",
-    ink: "var(--color-fg-on-light)",
-    tile: "var(--color-bg-white)",
-  },
+const variants: Record<string, { bg: string; ink: string }> = {
+  white: { bg: "var(--color-bg-white)", ink: "var(--color-fg-on-light)" },
+  green: { bg: "var(--color-bg)", ink: "var(--color-fg)" },
+  beige: { bg: "var(--color-bg-light)", ink: "var(--color-fg-on-light)" },
 };
 
 /**
@@ -157,7 +142,6 @@ export function BackgroundTransition() {
           // beneath it.
           rootStyle.setProperty("--color-bg-dynamic", value.bg);
           rootStyle.setProperty("--color-fg-dynamic", value.ink);
-          rootStyle.setProperty("--color-tile-dynamic", value.tile);
         }
       },
       { threshold: thresholds },
@@ -174,7 +158,6 @@ export function BackgroundTransition() {
         body.style.backgroundColor = "";
         rootStyle.removeProperty("--color-bg-dynamic");
         rootStyle.removeProperty("--color-fg-dynamic");
-        rootStyle.removeProperty("--color-tile-dynamic");
       }
     };
     // `pathname`: tear the observer down and build it again against the

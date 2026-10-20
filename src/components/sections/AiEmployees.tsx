@@ -30,11 +30,9 @@ import { cn } from "@/lib/cn";
  * Agent". The words are at the foot of every tile. The strip is a heading and
  * a button, on one line from tablet up.
  *
- * The tiles are always light, so their ink is fixed — but which light follows
- * the page (`--color-tile-dynamic`): white while the page is still the beige of
- * How It Works above, where beige tiles vanished into it, then beige once the
- * green has arrived. Only the heading and the line beside it sit on the page,
- * and those follow the crossfade (`data-bg="green"`).
+ * The tiles are pure white, so their ink is fixed. Only the heading and the
+ * line beside it sit on the page, and those follow the crossfade
+ * (`data-bg="green"`).
  */
 
 /**
@@ -64,12 +62,9 @@ const stages: Record<FeatureTone, string> = {
   peach: "bg-tool-peach",
 };
 
-/**
- * The light tile every role and the strip share. Its fill fades on the body's
- * own clock, so tile and page change together.
- */
+/** The white tile every role and the strip share. */
 const tile =
-  "relative overflow-clip bg-tile-dynamic p-6 text-fg-on-light transition-[background-color] duration-(--duration-base) ease-(--ease-in-out) tablet:p-8";
+  "relative overflow-clip bg-bg-white p-6 text-fg-on-light tablet:p-8";
 
 type Role = (typeof aiEmployeesContent.roles)[number];
 
