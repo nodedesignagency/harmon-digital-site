@@ -425,3 +425,90 @@ later. `src/app/favicon.ico` is the one exception and has to stay where it is.
 Two icons are inline components in `src/components/ui/SiteIcons.tsx` rather
 than files, because an `<img>` paints an SVG in the colour it was exported at.
 Anything that has to follow the surface it sits on belongs there.
+
+# What the Harmon Digital build added
+
+Everything above is the template's. These are the standing decisions for what
+was built on top of it for Harmon Digital — the home page sections, `/vsl`,
+`/partners` and the small product screens. Same rule as above: each one is
+here because it is not guessable from the code in front of you.
+
+## Product screens: a square means a status, and nothing else
+
+The feature cards, How It Works and the AI Employees tiles carry small drawn
+product screens (`src/components/ui/ProductScreen.tsx`) where the template had
+3D pictures. The client asked for no 3D artwork anywhere; do not bring it back.
+
+They are drawn in this site's own terms — the portfolio dashboard files',
+which the client chose as the direction — not as app screenshots:
+
+- One white sheet, square corners, hairlines, **no shadow, no rounded cards,
+  no pills, no monospace.** Those are what made the client's first mockup
+  read as AI-made.
+- **A square is a status.** A small square in the screen's tint, in the ink,
+  or outlined (`tone`, `ink`, `open`) and a word in Geist small capitals.
+- **The header carries a line icon, never a square.** It used to be a square
+  in the tint, and it read as one more status — the title looked like data.
+- **One tint per screen**, the card's or step's own: `tool-shape-*` for marks
+  and bars, `tool-*` for a selected row, the ink for the one thing that
+  matters most.
+- Grey bars where a real screen would have words nobody needs to read.
+
+Every word and figure on a screen is in `src/content/screens.ts`. A new screen
+is an entry there, a drawing in `ProductScreen.tsx` under the same key, and
+`screen:` on the card, step or role that shows it.
+
+They are inline SVG on one 240×168 sheet so they scale as one drawing. One
+trap: `globals.css` gives every `svg` `height: auto`, and on an `<svg>` nested
+inside another a CSS height beats the `height` attribute — an icon dropped into
+a screen stretches to the whole sheet and sits in the middle of it. Give a
+nested `svg` its height as a style too (see the header icon).
+
+## A page may own its closing panel
+
+The green "Ready to Grow…" panel above the footer is site-wide
+(`footerContent.cta`). A page that needs its own words renders
+`<section data-page-cta>` with `<ClosingCta …/>` at its foot, and `globals.css`
+hides the footer's panel on that page only. `/partners` does this. Do not edit
+the footer to special-case a page.
+
+## A dark opening taller than the screen pins by its foot
+
+The handover above pins an opening with `sticky top-0`. That only works for
+one that fits the screen — pinned by its top, a taller one never shows its
+lower half. `/vsl`'s opening (hero, video, client logos) is taller, so it is a
+`PinAtFoot` section: it scrolls until its foot meets the bottom of the screen,
+then holds while the next section rides over it.
+
+## The header flips where the page says
+
+By default the header turns light 350px down the page. A page whose dark
+opening is longer than that marks the section that should turn it with
+`data-surface-flip`; the header flips when that section reaches it. `/vsl`
+marks its Problems section. Without the marker the header goes white over a
+dark opening.
+
+## A landing page drops the navigation
+
+`<PageChrome value="landing" />` keeps the header's wordmark and "Book a Call"
+and drops the navigation, and keeps the footer's closing panel and legal bar
+and drops its link columns. `/vsl` uses it: one goal, one way off the page. It
+still has to be linked from somewhere — the footer's "Watch the Video" — or
+`check-artifact-routes` cannot reach it.
+
+## Two columns from desktop, not tablet
+
+Wide side-by-side compositions — the portfolio dashboards beside their words,
+the upright EBITDA bridge, the hero's side pattern columns — switch on at
+`desktop:`, not `tablet:`. Measured at 810–1000px each one either squeezed its
+neighbour to a word a line, ran its labels together, or sat under the heading.
+Below desktop they stack, or use their phone form. The savings file decides by
+its own width (`@container`), because it sits in a half card on `/vsl` and a
+folder on the home page. Check a new one at 834px, not only at 390 and 1440.
+
+## The logo files keep the template's names
+
+`public/uploads/logos/mahadeva-black.png` and `mahadeva-white.png` are the
+Harmon Digital logo. The navigation-locked preloader imports them by those
+names, so they were overwritten in place rather than renamed. Replace the
+files to change the logo; do not rename them.

@@ -1,19 +1,23 @@
 # Harmon Digital — Website
 
-Client website for **Harmon Digital**, built by customizing the **Mahadeva** Next.js template.
-The template's own guide follows below this section.
+The Harmon Digital website, built on the **Mahadeva** Next.js template. The template's own guide
+follows below this section.
+
+**Going live?** Start with [GO-LIVE.md](GO-LIVE.md): hosting, environment variables, and the content
+still to supply.
 
 | Path | What lives there |
 | --- | --- |
 | `src/content/` | Every word on the site, which is where most client copy goes |
 | `src/styles/theme.css` | Colours, sizes, motion, which is where the client's brand goes |
 | `public/uploads/` | Logos, photos and icons |
-| `client-brief/` | Content and details shared by the client: copy, brand info, logos, references |
+| `client-brief/` | What Harmon Digital supplied: the current site's copy, brand files, photos, logos |
 
 ## Workflow
 
-All work happens directly on **`main`**: no feature branches, no pull requests. Every Claude chat/session
-commits and pushes to `main` (this rule is also in `CLAUDE.md`, which Claude reads at the start of each session).
+Work lands directly on **`main`** (see `AGENTS.md`). Before pushing, `npm run lint` and `npm run build`
+must both pass. Working with an AI agent: see "Working with an AI agent" below, and the last section of
+`GO-LIVE.md`.
 
 To get the latest version locally:
 

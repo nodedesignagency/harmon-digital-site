@@ -28,6 +28,10 @@ Everything still to do before the site is handed to the client is in `HANDOFF.md
 mentions handoff, launch, delivery, or asks what's left, **remind them of the open items there**.
 Keep it current: tick items off when done, add new ones as they come up.
 
+**The client's zip** is `git archive` of `main` with two changes: `CLAUDE.md` in the zip is
+`handoff/CLAUDE.client.md` (this file is the owner's workflow, not the client's), and `HANDOFF.md` and
+`handoff/` are left out. The client's launch checklist is `GO-LIVE.md`; keep it in step with this list.
+
 # Project context
 
 Client site for **Harmon Digital**. It is a customization of the owner's own **Mahadeva** Next.js website template: rebrand and re-content the template, don't rebuild it from scratch.

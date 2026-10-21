@@ -138,3 +138,12 @@ green panel with this page's words (`ClosingCta`; the footer's own copy is hidde
 - [x] VSL round 5: card padding 36px, play triangle optically centred, What You Get no longer arrives green (the opening's `data-bg` is the white base, as on home)
 - [x] Feature cards' tints matched to their pictures again
 - [x] Pricing card overflow fixed; footer reworked (Harmon // Digital, legal links, /404 showcase removed)
+- [x] Client approved the site (Oct 21). Responsive sweep before handoff: every route checked for overflow at
+      360–1920px, home / VSL / partners / pricing read screen by screen at phone and tablet widths; fixed the
+      savings file on phones, the dashboards, EBITDA bridge and hero patterns on tablets, the fund card's
+      arrow, and the phone How It Works tile
+- [x] Agent-ready handoff docs: `GO-LIVE.md` (the client's launch checklist), a section in `AGENTS.md` for
+      everything built here, `CONTENT.md` updated for /vsl, /partners and the screens, `.env.example` lists the
+      referral endpoint, package renamed `harmon-digital-site`, client `CLAUDE.md` in `handoff/`
+- [x] Code zip sent to the client "as is" (owner's call): the template-text pages, placeholders and setup
+      below are on the client's `GO-LIVE.md` for him or his agent to finish. Blog and Careers stay in the code

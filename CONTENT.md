@@ -73,16 +73,49 @@ per family are typed, so a wrong one is a compile error. See
 | Section on screen | Content export | File |
 | --- | --- | --- |
 | Hero — big heading, two buttons | `heroContent` | `content/home.ts` |
-| "AI First Agency" statement | `aboutContent` | `content/home.ts` |
-| Feature cards | `featuresContent` | `content/home.ts` |
-| Latest works | `caseStudiesContent` | `content/case-studies.ts` |
-| …the three cards themselves | **CMS** (`production`) | — |
-| "Why Top Companies Trust Us" — figures + logos | `trustContent` | `content/home.ts` |
-| Tech stack tiles | `techStackContent` | `content/home.ts` |
-| Testimonials | `testimonialsContent` | `content/home.ts` |
-| Before / after | `beforeAfterContent` | `content/home.ts` |
+| "Sound Familiar?" statement | `aboutContent` | `content/home.ts` |
+| "Both Sides of the P&L" — the six feature cards | `featuresContent` | `content/home.ts` |
+| …the small product screen in each card | `screens` | `content/screens.ts` |
+| How It Works — five steps | `howItWorksContent` | `content/home.ts` |
+| AI Employees — the bento of roles | `aiEmployeesContent` | `content/home.ts` |
+| Portfolio dashboards — the stacking files | `portfolioDashboardsContent` | `content/home.ts` |
+| Case studies heading | `caseStudiesContent` | `content/case-studies.ts` |
+| …the cards themselves | **CMS** (`production`) | falls back to `content/case-studies.json` |
+| "Why We're Trusted" — figures + client logos | `trustContent` (logos: `clientLogos`) | `content/home.ts`, `content/clients.ts` |
+| Tools we build with | `techStackContent` | `content/home.ts` |
+| Testimonials (and which photo each carries) | `testimonialsContent` | `content/home.ts` |
+| Before / After EBITDA | `beforeAfterEbitdaContent` | `content/home.ts` |
 | Pricing plans | `pricingContent` | `content/pricing.ts` |
 | FAQ | `faqContent` | `content/faq.ts` |
+
+The figures on the portfolio dashboards, the Before/After bridge and the product
+screens are illustrative, and built to agree with each other — the comments
+above each export say which numbers have to add up. Change one, check the rest.
+
+### VSL landing page — `/vsl`
+
+Every word on the page is in the `vsl` object at the top of
+`src/app/(site)/vsl/page.tsx`, not in `src/content/` — the page is a one-off and
+its copy is written for it. `vsl.hero.video.src` and
+`vsl.testimonial.featured.video.src` take an .mp4 path or an embed URL (YouTube
+`/embed/<id>`, Vimeo, Loom, Wistia); empty shows the "video coming soon" frame.
+The How It Works section is the home page's (`howItWorksContent`); the
+dashboard previews in What You Get are the home page's files.
+
+### Referral partners — `/partners`
+
+Every word is in the `partners` object at the top of
+`src/app/(site)/partners/page.tsx`, for the same reason. The referral form
+posts to `NEXT_PUBLIC_REFERRAL_ENDPOINT` (see SETUP.md and `src/lib/partners.ts`).
+The page's closing panel is its own (`partners.closing`) — see "Site-wide".
+
+### Product screens
+
+The small drawn screens in the feature cards, How It Works and the AI Employees
+tiles. Every word and figure on them is in `src/content/screens.ts`, one object
+per screen; a card, step or role names its screen with `screen:` and its tint
+with `tone:`. The drawings are `src/components/ui/ProductScreen.tsx` — see the
+house rules in AGENTS.md before changing one.
 
 ### About — `/about`
 
@@ -172,6 +205,8 @@ real misses and by `/404` so you can look at it without breaking something.
 | What | Where |
 | --- | --- |
 | Site name, tagline, description, URL, contact email | `src/config/site.config.ts` |
+| **Booking link** — every "Book a Call" | `src/config/site.config.ts` → `booking` (empty: they go to `/contact`) |
+| Client logos (trust strip, contact page, /vsl) | `src/content/clients.ts`, files in `src/components/ui/clientMarks.ts` |
 | The "Buy Template" badge | `src/config/site.config.ts` → `template` |
 | Header menu and its CTA | `src/config/navigation.ts` → `mainNav`, `navCta` |
 | Footer link columns | `src/config/navigation.ts` → `footerNav` |
@@ -179,8 +214,10 @@ real misses and by `/404` so you can look at it without breaking something.
 | Page titles and descriptions | each `page.tsx` via `buildMetadata()` |
 | Default share card and JSON-LD | `src/config/seo.ts` |
 
-The closing call-to-action panel above the footer is site-wide, not per-page —
-it is in `footerContent.cta`, and changing it changes it everywhere.
+The closing call-to-action panel above the footer is in `footerContent.cta` and
+is the same on every page — except a page that renders its own: put a
+`<section data-page-cta>` with `<ClosingCta …/>` in it at the foot of the page,
+and the footer's panel is hidden on that page (`/partners` does this).
 
 The footer's `credits` block names the three people who built the template.
 **Change or remove that** when the site becomes yours.
