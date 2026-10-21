@@ -11,18 +11,17 @@
  * shipped silently across the whole codebase for exactly that reason. Run as
  * part of `npm run lint`.
  */
-import { readFileSync } from "node:fs";
-import { execSync } from "node:child_process";
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 
-// git pathspec has no brace expansion — "*.{ts,tsx,css}" matches literally and
-// silently returns nothing, which is exactly the kind of "looks fine, does
-// nothing" failure this script exists to catch elsewhere. List each extension.
-const files = execSync(
-  'git ls-files "src/**/*.ts" "src/**/*.tsx" "src/**/*.css"',
-  { encoding: "utf8" },
-)
-  .split("\n")
-  .filter(Boolean);
+// Every .ts, .tsx and .css file under src/, read from disk. It used to ask
+// `git ls-files`, and a copy of the project without its git history — the
+// zip a client is handed — failed `npm run lint` right here, before checking
+// anything. From disk it also sees a new file before it is committed.
+const files = readdirSync("src", { recursive: true })
+  .map(String)
+  .filter((file) => /\.(tsx?|css)$/.test(file))
+  .map((file) => join("src", file));
 
 const pattern = /-\[(--[a-zA-Z0-9-]+)\]/g;
 let failures = 0;
