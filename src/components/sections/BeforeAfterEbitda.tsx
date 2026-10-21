@@ -327,7 +327,10 @@ function VerticalBridge({ bars, after }: { bars: Bar[]; after: boolean }) {
   const plot = "h-[clamp(220px,40svh,400px)]";
 
   return (
-    <div aria-hidden="true" className="hidden tablet:block">
+    // Desktop only: seven columns need about 490px for their labels, and a
+    // tablet's chart column is nearer 400 — the names ran together and the
+    // step lines cut through the amounts. Narrower, the bridge lies on its side.
+    <div aria-hidden="true" className="hidden desktop:block">
       <div className="flex">
         <div className={cn("relative flex-1 border-b-[3px]", plot, ink.border)}>
           <div className="absolute inset-0 grid grid-cols-7">
@@ -408,12 +411,12 @@ function VerticalBridge({ bars, after }: { bars: Bar[]; after: boolean }) {
 }
 
 /**
- * The bridge on its side, for a phone: a row per column, each bar running
+ * The bridge on its side, for a phone or a tablet: a row per column, each bar running
  * right from nothing to its value against the same scale, drawn the same way.
  */
 function HorizontalBridge({ bars, after }: { bars: Bar[]; after: boolean }) {
   return (
-    <ul aria-hidden="true" className="flex flex-col gap-3 tablet:hidden">
+    <ul aria-hidden="true" className="flex flex-col gap-3 desktop:hidden">
       {bars.map((bar) => {
         const { shown, delay } = rise(bar, after);
         const carried = bar.base / bar.top;

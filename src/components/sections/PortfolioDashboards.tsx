@@ -122,7 +122,7 @@ export function PortfolioDashboards({ content }: PortfolioDashboardsProps) {
     <section data-bg="white" className="bg-bg-white py-20 tablet:py-30">
       <Container>
         <div
-          className="grid gap-12 tablet:grid-cols-[2fr_3fr] tablet:gap-10 desktop:gap-16"
+          className="grid gap-12 desktop:grid-cols-[2fr_3fr] desktop:gap-16"
           style={
             {
               "--folder-h": folderHeight,
@@ -131,11 +131,15 @@ export function PortfolioDashboards({ content }: PortfolioDashboardsProps) {
             } as CSSProperties
           }
         >
-          {/* From tablet up: exactly as tall as the settled stack and pinned
+          {/* Beside the files from desktop up; above them on a tablet, as on a
+            phone — the revenue file needs about 514px, and beside a tablet's
+            words it took that from them and left one word to a line.
+
+            From desktop up: exactly as tall as the settled stack and pinned
             level with its first tab (`--stack-top`), so the words hold beside
             the files and leave with them rather than lingering after the
             stack has gone. */}
-          <div className="text-ink-dynamic tablet:sticky tablet:top-(--stack-top) tablet:flex tablet:h-(--stack-h) tablet:flex-col tablet:self-start">
+          <div className="text-ink-dynamic desktop:sticky desktop:top-(--stack-top) desktop:flex desktop:h-(--stack-h) desktop:flex-col desktop:self-start">
             <TextReveal
               as="h2"
               lines={content.headingLines}
@@ -153,7 +157,7 @@ export function PortfolioDashboards({ content }: PortfolioDashboardsProps) {
               title={content.cta.title}
               body={content.cta.body}
               fill="bg-bg-light"
-              className="mt-10 tablet:mt-auto"
+              className="mt-10 desktop:mt-auto"
             />
           </div>
 
@@ -383,7 +387,15 @@ export function SavingsFile({ savings }: { savings: Content["savings"] }) {
         {formatMoney.format(total)}
       </p>
 
-      <div className="mt-auto pt-6">
+      {/* A size container: the leader lines need room. Each name and amount
+          stands to the right of its line, so the last part, which starts
+          seven eighths along, needs the drawing to be about 28rem wide —
+          narrower, the last two amounts ran into each other and the last name
+          ran off the card. Below that the lines give way to a legend, ruled as
+          the overview's rows are. The query is on the drawing's own width, not
+          the screen's, because it sits in a half card on /vsl and a folder on
+          the home page. */}
+      <div className="@container mt-auto pt-6">
         <ul className="sr-only">
           {savings.parts.map((part) => (
             <li
@@ -401,7 +413,22 @@ export function SavingsFile({ savings }: { savings: Content["savings"] }) {
               />
             ))}
           </div>
-          <div className="relative" style={{ height: LEADS[0] + 12 }}>
+          <ul className="mt-4 @min-[28rem]:hidden">
+            {savings.parts.map((part, i) => (
+              <li
+                key={part.label}
+                className="flex items-center gap-3 border-t border-fg-on-light/10 py-2 font-ui text-body-sm"
+              >
+                <span className={cn("size-3 shrink-0 border border-fg-on-light/20", fills[i])} />
+                <span className="font-medium">{part.label}</span>
+                <span className="ml-auto">{formatMoney.format(part.value)}</span>
+              </li>
+            ))}
+          </ul>
+          <div
+            className="relative hidden @min-[28rem]:block"
+            style={{ height: LEADS[0] + 12 }}
+          >
             {savings.parts.map((part, i) => (
               <div
                 key={part.label}

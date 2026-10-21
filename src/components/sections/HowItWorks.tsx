@@ -174,20 +174,20 @@ export function HowItWorks({ content }: HowItWorksProps) {
                 className="flex flex-col justify-center gap-6 tablet:min-h-[50svh]"
               >
                 {/* A phone has no stage, so each step carries its own: the
-                    number at the top left and the tile opposite it, the words
-                    underneath — the owner's mobile reference. */}
-                <div aria-hidden="true" className="flex items-start justify-between tablet:hidden">
+                    number at the top left, the tile under it at the full
+                    width, the words underneath. The owner's mobile reference
+                    set the tile beside the number, which suited a picture; a
+                    product screen is read, and beside the number its words
+                    came out at about 5px. */}
+                <div aria-hidden="true" className="flex flex-col gap-4 tablet:hidden">
                   <span className="text-ink-dynamic font-ui text-stat-unit font-light leading-none opacity-25">
                     {stepNumber(i)}
                   </span>
-                  {/* 224 rather than the picture's 176: a screen is read, not
-                      just seen, and this is as wide as the row allows beside
-                      the number. */}
-                  <div className={cn("relative size-56 shrink-0", tiles[step.tone])}>
+                  <div className={cn("relative aspect-[4/3] w-full", tiles[step.tone])}>
                     <ProductScreen
                       screen={step.screen}
                       tone={step.tone}
-                      className="absolute top-1/2 left-1/2 w-[90%] -translate-x-1/2 -translate-y-1/2"
+                      className="absolute top-1/2 left-1/2 w-[88%] -translate-x-1/2 -translate-y-1/2"
                     />
                   </div>
                 </div>

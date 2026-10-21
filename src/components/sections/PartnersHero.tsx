@@ -43,7 +43,7 @@ export function PartnersHero({ content }: PartnersHeroProps) {
       data-bg-keep=""
       // `100dvh` tracks mobile browser chrome as it hides and shows; the
       // `h-screen` fallback covers browsers without dynamic viewport units.
-      className="sticky top-0 flex h-screen min-h-[40rem] items-center overflow-hidden bg-bg h-[100dvh] max-tablet:pt-(--mh-band-top) max-tablet:pb-(--mh-band-bottom)"
+      className="sticky top-0 flex h-screen min-h-[40rem] items-center overflow-hidden bg-bg h-[100dvh] max-desktop:pt-(--mh-band-top) max-desktop:pb-(--mh-band-bottom)"
       // The band is laid over the section, not in it, so nothing about the
       // centring below knows it is there. These reserve its worst-case height
       // at each edge, so what the content is centred in is the gap between the
@@ -66,7 +66,11 @@ export function PartnersHero({ content }: PartnersHeroProps) {
           edge and a bar caught halfway reads as clipped rather than placed.
           `top-*` alone would drop `inset-y-0` wholesale in the class merge and
           take `bottom` with it, so both edges are stated. */}
-      <div className="hidden tablet:contents">
+      {/* Desktop only, and the bands below for everything narrower. Between
+          about 810 and 1000 the columns take the outer fifth of each side
+          while the heading still runs most of the width, and white words over
+          a pastel bar all but vanish; above that the heading clears them. */}
+      <div className="hidden desktop:contents">
         <PatternField
           side="right"
           orientation="vertical"
@@ -80,7 +84,7 @@ export function PartnersHero({ content }: PartnersHeroProps) {
       {/* The band drifts with the words, on the same range and the same
           distance, so the two keep station instead of converging. Static, it
           sat at the top of the screen while the heading climbed into it —
-          about 250px of scroll on a phone before they met. Only below tablet:
+          about 250px of scroll on a phone before they met. Only below desktop:
           above it the side columns are what the section carries, and those do
           not drift today.
 
@@ -91,7 +95,7 @@ export function PartnersHero({ content }: PartnersHeroProps) {
         drift={heroParallax.drift}
         trackSelector="[data-scroll-stack]"
         range="top"
-        className="absolute inset-0 tablet:hidden"
+        className="absolute inset-0 desktop:hidden"
       >
         <PatternField side="top" orientation="horizontal" className="top-header" />
         <PatternField side="bottom" orientation="horizontal" className="bottom-0" />

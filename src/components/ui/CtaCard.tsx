@@ -89,7 +89,9 @@ export function CtaCard({ href, title, body, fill, className }: CtaCardProps) {
           className="object-cover"
         />
       </span>
-      <span className="relative flex flex-col gap-2">
+      {/* `pr-8` keeps the words clear of the arrow's corner box: where the
+          card is narrow, the heading wraps and its first line ran under it. */}
+      <span className="relative flex flex-col gap-2 pr-8">
         {/* A heading at the body's leading is half a line taller than it
             should be, which is enough to push this column past the portrait
             and make the card set its own height. */}
